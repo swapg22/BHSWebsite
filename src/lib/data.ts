@@ -84,6 +84,8 @@ export async function getUpcomingEvents(limit = 6, opts: { featuredOnly?: boolea
       and: [
         { _status: { equals: 'published' } },
         { endsAt: { greater_than: new Date().toISOString() } },
+        // Daily aarti and weekly classes live on the calendar, not in "coming up" lists
+        { recurrence: { equals: 'none' } },
         ...(opts.featuredOnly ? [{ featured: { equals: true } }] : []),
         ...(opts.category ? [{ category: { equals: opts.category } }] : []),
       ],

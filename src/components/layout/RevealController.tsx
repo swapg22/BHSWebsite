@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 export function RevealController() {
   const pathname = usePathname()
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return
     const root = document.documentElement
     root.classList.add('js-reveal')
     const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)'))

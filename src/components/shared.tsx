@@ -42,11 +42,13 @@ export function EventCard({ event, compact = false }: { event: Event; compact?: 
     <article className="card group relative flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lg">
       {!compact && (
         <div className="relative aspect-[16/10] overflow-hidden bg-ivory-200">
-          {img ? (
-            <Image src={img} alt={mediaAlt(event.image as Media, '')} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-saffron-100 via-ivory-200 to-gold-300/40" aria-hidden="true" />
-          )}
+          <Image
+            src={img ?? (event.category === 'community' ? '/images/lunch-club.jpg' : '/images/aarti-thali.jpg')}
+            alt={img ? mediaAlt(event.image as Media, '') : ''}
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
         </div>
       )}
       <div className="flex flex-1 gap-4 p-5">
