@@ -1,38 +1,25 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { FlatCompat } from '@eslint/eslintrc'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
+import nextTypescript from 'eslint-config-next/typescript'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
-
-const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+const config = [
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
     rules: {
-      '@typescript-eslint/ban-ts-comment': 'warn',
-      '@typescript-eslint/no-empty-object-type': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        {
-          vars: 'all',
-          args: 'after-used',
-          ignoreRestSiblings: false,
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          destructuredArrayIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^(_|ignore)',
-        },
-      ],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
   {
-    ignores: ['.next/', 'src/payload-types.ts', 'src/payload-generated-schema.ts'],
+    // Staff pages link into the Payload admin, a separate root layout, so plain <a> is intended
+    files: ['src/components/admin/**', 'src/app/(frontend)/staff/**', 'src/app/(frontend)/account/page.tsx'],
+    rules: { '@next/next/no-html-link-for-pages': 'off' },
   },
+  {
+    // Server components render per request, so reading the clock is fine there
+    files: ['src/app/(frontend)/**/page.tsx'],
+    rules: { 'react-hooks/purity': 'off' },
+  },
+  { ignores: ['.next/', 'node_modules/', 'src/payload-types.ts', 'src/app/(payload)/', 'playwright-report/', 'test-results/', 'media/', 'data/'] },
 ]
 
-export default eslintConfig
+export default config

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bhs-dev",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": ["-c", "export PATH=/usr/local/bin:$PATH; cd '/Users/swap/Documents/Swap/AITest/Websites Build/Framer/bharat-hindu-samaj' && npm run dev"],
+      "port": 3000
+    }
+  ]
+}

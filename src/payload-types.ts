@@ -63,40 +63,111 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
+    members: MemberAuthOperations;
     users: UserAuthOperations;
   };
   blocks: {};
   collections: {
-    users: User;
+    pages: Page;
+    events: Event;
+    news: News;
+    albums: Album;
     media: Media;
+    services: Service;
+    bookings: Booking;
+    donations: Donation;
+    'sponsorship-items': SponsorshipItem;
+    pledges: Pledge;
+    payments: Payment;
+    members: Member;
+    volunteers: Volunteer;
+    'volunteer-shifts': VolunteerShift;
+    'contact-messages': ContactMessage;
+    'newsletter-subscribers': NewsletterSubscriber;
+    users: User;
+    'email-outbox': EmailOutbox;
+    'audit-log': AuditLog;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    albums: AlbumsSelect<false> | AlbumsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    bookings: BookingsSelect<false> | BookingsSelect<true>;
+    donations: DonationsSelect<false> | DonationsSelect<true>;
+    'sponsorship-items': SponsorshipItemsSelect<false> | SponsorshipItemsSelect<true>;
+    pledges: PledgesSelect<false> | PledgesSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
+    volunteers: VolunteersSelect<false> | VolunteersSelect<true>;
+    'volunteer-shifts': VolunteerShiftsSelect<false> | VolunteerShiftsSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    'email-outbox': EmailOutboxSelect<false> | EmailOutboxSelect<true>;
+    'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    'home-page': HomePage;
+    appeal: Appeal;
+    governance: Governance;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    appeal: AppealSelect<false> | AppealSelect<true>;
+    governance: GovernanceSelect<false> | GovernanceSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: Member | User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
+  };
+}
+export interface MemberAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 export interface UserAuthOperations {
@@ -118,11 +189,512 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Text pages such as About, Daily Rituals, Festivals and policies. Version history keeps every change.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "pages".
  */
-export interface User {
-  id: string;
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * Small heading above the title.
+   */
+  eyebrow?: string | null;
+  intro?: string | null;
+  heroImage?: (number | null) | Media;
+  sections?:
+    | (
+        | {
+            heading?: string | null;
+            body: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            heading?: string | null;
+            body: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            image: number | Media;
+            imageSide?: ('left' | 'right') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'imageText';
+          }
+        | {
+            heading?: string | null;
+            items?:
+              | {
+                  question: string;
+                  answer: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'faq';
+          }
+        | {
+            heading: string;
+            /**
+             * Devanagari or Gujarati text (optional).
+             */
+            original?: string | null;
+            transliteration?: string | null;
+            meaning?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'mantra';
+          }
+        | {
+            heading: string;
+            text?: string | null;
+            label: string;
+            href: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'callToAction';
+          }
+      )[]
+    | null;
+  /**
+   * Web address. Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describe the image for people using screen readers. Required for accessibility.
+   */
+  alt: string;
+  caption?: string | null;
+  /**
+   * Photographer or source.
+   */
+  credit?: string | null;
+  /**
+   * Concept visuals of the new Mandir are always labelled "artist's impression, not final design".
+   */
+  isConceptVisual?: boolean | null;
+  /**
+   * Deity images need approval from the priests and committee, and are never placed behind text.
+   */
+  deityImage?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * Festivals, fundraising events, workshops and regular activities.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  allDay?: boolean | null;
+  /**
+   * Recurring events (daily aarti, weekly classes, lunch club) repeat in the calendar feed.
+   */
+  recurrence?: ('none' | 'FREQ=DAILY' | 'FREQ=WEEKLY' | 'FREQ=WEEKLY;INTERVAL=2' | 'monthly-weekday') | null;
+  recurrenceUntil?: string | null;
+  location?: string | null;
+  category: 'festival' | 'worship' | 'fundraising' | 'workshop' | 'class' | 'community' | 'meeting';
+  /**
+   * One or two sentences for cards and the calendar.
+   */
+  summary?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  bookable?: boolean | null;
+  /**
+   * Pence. 0 = free.
+   */
+  memberPrice?: number | null;
+  /**
+   * Pence. 0 = free.
+   */
+  guestPrice?: number | null;
+  /**
+   * Blank = unlimited.
+   */
+  capacity?: number | null;
+  waitlist?: boolean | null;
+  /**
+   * Full refund if cancelled at least this many hours before.
+   */
+  cancellationHours?: number | null;
+  showOnCalendar?: boolean | null;
+  /**
+   * Show in the home page events strip.
+   */
+  featured?: boolean | null;
+  googleEventId?: string | null;
+  /**
+   * Web address. Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  category?: ('news' | 'appeal' | 'community') | null;
+  publishedAt?: string | null;
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Web address. Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums".
+ */
+export interface Album {
+  id: number;
+  title: string;
+  date?: string | null;
+  description?: string | null;
+  cover?: (number | null) | Media;
+  photos?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        /**
+         * Only tag people who have given consent.
+         */
+        people?:
+          | {
+              name: string;
+              consentGiven: boolean;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Web address. Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Poojas, ceremonies, hall hire, classes and lunch club. Set "Availability" to Paused or Removed instead of deleting.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  name: string;
+  category: 'pooja' | 'hall' | 'class' | 'meal';
+  summary?: string | null;
+  availability: 'active' | 'paused' | 'removed';
+  /**
+   * Pence. 0 = free.
+   */
+  memberPrice: number;
+  /**
+   * Pence.
+   */
+  nonMemberPrice: number;
+  /**
+   * Optional pooja materials, pence.
+   */
+  materialsPrice?: number | null;
+  /**
+   * The office quotes the price when approving the request (set the booking amount before approving).
+   */
+  priceOnRequest?: boolean | null;
+  priceUnit?: ('each' | 'per hour' | 'per class' | 'per month' | 'per term' | 'per person') | null;
+  /**
+   * Deposit taken at booking (pence), e.g. hall hire.
+   */
+  deposit?: number | null;
+  requiresApproval?: boolean | null;
+  /**
+   * Places per session. Blank = one booking per slot.
+   */
+  capacity?: number | null;
+  availableDays?: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[] | null;
+  /**
+   * HH:MM
+   */
+  earliestTime?: string | null;
+  /**
+   * HH:MM
+   */
+  latestTime?: string | null;
+  defaultDurationMinutes?: number | null;
+  location?: ('mandir' | 'home' | 'main-hall' | 'sports-hall' | 'kitchen' | 'either') | null;
+  cancellation?: {
+    fullRefundHours?: number | null;
+    lateRefundPercent?: number | null;
+    depositRefundable?: boolean | null;
+    policyText?: string | null;
+  };
+  writesToCalendar?: boolean | null;
+  requiresPolicyAgreement?: boolean | null;
+  /**
+   * Shown to bookers, e.g. travel charges.
+   */
+  notes?: string | null;
+  sortOrder?: number | null;
+  /**
+   * Web address. Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Approve, reject or cancel requests. Approved hall and ceremony bookings are written to the master calendar.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings".
+ */
+export interface Booking {
+  id: number;
+  reference: string;
+  status: 'pending-approval' | 'awaiting-payment' | 'confirmed' | 'waitlisted' | 'cancelled' | 'refunded' | 'rejected';
+  kind: 'event' | 'service';
+  event?: (number | null) | Event;
+  service?: (number | null) | Service;
+  itemTitle?: string | null;
+  member?: (number | null) | Member;
+  name: string;
+  email: string;
+  phone?: string | null;
+  date?: string | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  quantity?: number | null;
+  includeMaterials?: boolean | null;
+  venue?: string | null;
+  /**
+   * Holds the room exclusively (hall hire, ceremonies at the Mandir).
+   */
+  blocksVenue?: boolean | null;
+  dietaryNotes?: string | null;
+  notes?: string | null;
+  policyAgreedAt?: string | null;
+  /**
+   * Total in pence
+   */
+  amount?: number | null;
+  /**
+   * Deposit in pence
+   */
+  deposit?: number | null;
+  /**
+   * Paid in pence
+   */
+  amountPaid?: number | null;
+  /**
+   * Refunded in pence
+   */
+  refunded?: number | null;
+  isMemberPrice?: boolean | null;
+  paymentProvider?: string | null;
+  paymentId?: string | null;
+  staffNote?: string | null;
+  attended?: boolean | null;
+  googleEventId?: string | null;
+  manageToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Member records. Export from the list view; import the Excel list at /staff/import.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: number;
+  membershipNumber?: string | null;
+  status?: ('pending-payment' | 'active' | 'lapsed' | 'cancelled') | null;
+  firstName: string;
+  lastName?: string | null;
+  phone?: string | null;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  town?: string | null;
+  postcode?: string | null;
+  /**
+   * Address as imported from the Excel list.
+   */
+  legacyAddress?: string | null;
+  memberSince?: string | null;
+  lastPaidDate?: string | null;
+  expiryDate?: string | null;
+  receiptNumber?: string | null;
+  paymentReference?: string | null;
+  autoRenew?: boolean | null;
+  over18Confirmed?: boolean | null;
+  stripeCustomerId?: string | null;
+  remindersSent?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  giftAid?: {
+    declared?: boolean | null;
+    declaredAt?: string | null;
+    declarationVersion?: string | null;
+  };
+  consents?: {
+    newsletter?: boolean | null;
+    sms?: boolean | null;
+    updatedAt?: string | null;
+  };
+  /**
+   * Never shown to the member.
+   */
+  committeeNotes?: string | null;
+  magicLinkHash?: string | null;
+  magicLinkExpires?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +702,184 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'members';
+}
+/**
+ * Every gift with its Gift Aid declaration. Export for HMRC at /staff/reports.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations".
+ */
+export interface Donation {
+  id: number;
+  reference: string;
+  status: 'pending' | 'awaiting-transfer' | 'paid' | 'active' | 'failed' | 'cancelled' | 'refunded';
+  /**
+   * Pence
+   */
+  amount: number;
+  currency?: string | null;
+  frequency: 'one-off' | 'monthly';
+  method: 'card' | 'direct-debit' | 'bank-transfer' | 'standing-order' | 'offline';
+  fund: 'new-mandir' | 'daily-seva' | 'food-service' | 'education' | 'general';
+  /**
+   * Only personal gifts can be Gift Aided.
+   */
+  source: 'personal' | 'company' | 'event-takings' | 'bequest' | 'sponsorship-with-benefit';
+  sponsorship?: (number | null) | SponsorshipItem;
+  plaqueName?: string | null;
+  /**
+   * Campaign code from a shared link or QR code, e.g. diwali-leaflet.
+   */
+  campaign?: string | null;
+  title?: string | null;
+  firstName: string;
+  lastName: string;
+  donorName?: string | null;
+  email: string;
+  company?: string | null;
+  houseNameOrNumber?: string | null;
+  addressLine1?: string | null;
+  town?: string | null;
+  postcode?: string | null;
+  country?: string | null;
+  giftAid?: {
+    declared?: boolean | null;
+    ukTaxpayer?: boolean | null;
+    declarationText?: string | null;
+    declarationVersion?: string | null;
+    declaredAt?: string | null;
+    /**
+     * Set when included in an HMRC claim.
+     */
+    claimedInBatch?: string | null;
+  };
+  giftAidEligible?: boolean | null;
+  giftAidReason?: string | null;
+  donorWall?: {
+    consent?: boolean | null;
+    displayName?: string | null;
+    message?: string | null;
+    approved?: boolean | null;
+  };
+  marketingConsent?: boolean | null;
+  member?: (number | null) | Member;
+  paidAt?: string | null;
+  provider?: string | null;
+  providerId?: string | null;
+  providerSubscriptionId?: string | null;
+  refundedAmount?: number | null;
+  receiptToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsorship-items".
+ */
+export interface SponsorshipItem {
+  id: number;
+  name: string;
+  type: 'brick' | 'pillar' | 'room' | 'day';
+  /**
+   * Pence
+   */
+  amount: number;
+  description?: string | null;
+  /**
+   * Blank = unlimited (e.g. bricks).
+   */
+  totalAvailable?: number | null;
+  sponsoredCount?: number | null;
+  plaque?: boolean | null;
+  active?: boolean | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pledges".
+ */
+export interface Pledge {
+  id: number;
+  reference: string;
+  status?: ('new' | 'contacted' | 'agreed' | 'in-progress' | 'fulfilled' | 'withdrawn') | null;
+  name: string;
+  email: string;
+  phone?: string | null;
+  /**
+   * Total pledged, pence
+   */
+  amount: number;
+  plan?: ('single' | 'monthly' | 'quarterly' | 'annual') | null;
+  instalments?: number | null;
+  startDate?: string | null;
+  /**
+   * In memory of / in honour of
+   */
+  dedication?: string | null;
+  message?: string | null;
+  contactPreference?: ('email' | 'phone' | 'in-person') | null;
+  assignedTrustee?: (number | null) | User;
+  followUps?:
+    | {
+        date: string;
+        by?: string | null;
+        note: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Pence received so far
+   */
+  receivedToDate?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * People who can sign in to the CMS. Invite by creating a user: they receive an email to set their password.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name: string;
+  /**
+   * Administrator = approver. Editors draft content but cannot publish.
+   */
+  roles: ('administrator' | 'editor' | 'treasurer' | 'membership-officer')[];
+  /**
+   * Suspended users cannot sign in.
+   */
+  suspended?: boolean | null;
+  /**
+   * Required for administrators. Set up at /staff/2fa. An administrator can untick this to reset a lost device.
+   */
+  twoFactorEnabled?: boolean | null;
+  twoFactorSecret?: string | null;
+  twoFactorPendingSecret?: string | null;
+  lastLoginAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -144,29 +894,151 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "payments".
  */
-export interface Media {
-  id: string;
-  alt: string;
+export interface Payment {
+  id: number;
+  receiptNumber: string;
+  purpose: 'membership' | 'booking';
+  status?: ('pending' | 'paid' | 'failed' | 'refunded' | 'partially-refunded') | null;
+  amount: number;
+  refundedAmount?: number | null;
+  member?: (number | null) | Member;
+  booking?: (number | null) | Booking;
+  payerName?: string | null;
+  payerEmail?: string | null;
+  description?: string | null;
+  provider?: string | null;
+  providerId?: string | null;
+  paidAt?: string | null;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteers".
+ */
+export interface Volunteer {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  skills?:
+    | (
+        | 'kitchen'
+        | 'events'
+        | 'teaching'
+        | 'seniors'
+        | 'fundraising'
+        | 'media'
+        | 'it'
+        | 'admin'
+        | 'trades'
+        | 'first-aid'
+      )[]
+    | null;
+  availability?: ('weekday-mornings' | 'weekday-evenings' | 'weekends' | 'festivals-only' | 'remote')[] | null;
+  /**
+   * Skills offered for the new Mandir project (architecture, law, finance…).
+   */
+  professionalSkills?: string | null;
+  message?: string | null;
+  over18?: boolean | null;
+  status?: ('new' | 'contacted' | 'active' | 'inactive') | null;
+  dbsChecked?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteer-shifts".
+ */
+export interface VolunteerShift {
+  id: number;
+  title: string;
+  event?: (number | null) | Event;
+  startsAt: string;
+  endsAt: string;
+  slots: number;
+  description?: string | null;
+  signups?:
+    | {
+        name: string;
+        email: string;
+        phone?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages".
+ */
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  topic: 'general' | 'bookings' | 'donations' | 'membership' | 'safeguarding';
+  message: string;
+  routedTo?: string | null;
+  status?: ('new' | 'replied' | 'closed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers".
+ */
+export interface NewsletterSubscriber {
+  id: number;
+  email: string;
+  name?: string | null;
+  status?: ('pending' | 'subscribed' | 'unsubscribed') | null;
+  source?: string | null;
+  consentText?: string | null;
+  consentedAt?: string | null;
+  token?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Emails the site would send. Shown here because SMTP is not configured.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-outbox".
+ */
+export interface EmailOutbox {
+  id: number;
+  to: string;
+  subject: string;
+  html?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  actorEmail?: string | null;
+  actorType?: ('staff' | 'member' | 'system') | null;
+  action?: string | null;
+  entity?: string | null;
+  entityId?: string | null;
+  summary?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -180,24 +1052,189 @@ export interface PayloadKv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'albums';
+        value: number | Album;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'bookings';
+        value: number | Booking;
+      } | null)
+    | ({
+        relationTo: 'donations';
+        value: number | Donation;
+      } | null)
+    | ({
+        relationTo: 'sponsorship-items';
+        value: number | SponsorshipItem;
+      } | null)
+    | ({
+        relationTo: 'pledges';
+        value: number | Pledge;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
+      } | null)
+    | ({
+        relationTo: 'members';
+        value: number | Member;
+      } | null)
+    | ({
+        relationTo: 'volunteers';
+        value: number | Volunteer;
+      } | null)
+    | ({
+        relationTo: 'volunteer-shifts';
+        value: number | VolunteerShift;
+      } | null)
+    | ({
+        relationTo: 'contact-messages';
+        value: number | ContactMessage;
+      } | null)
+    | ({
+        relationTo: 'newsletter-subscribers';
+        value: number | NewsletterSubscriber;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'email-outbox';
+        value: number | EmailOutbox;
+      } | null)
+    | ({
+        relationTo: 'audit-log';
+        value: number | AuditLog;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'members';
+        value: number | Member;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -206,11 +1243,16 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  id: number;
+  user:
+    | {
+        relationTo: 'members';
+        value: number | Member;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   key?: string | null;
   value?:
     | {
@@ -229,7 +1271,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -237,9 +1279,457 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "pages_select".
  */
-export interface UsersSelect<T extends boolean = true> {
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  eyebrow?: T;
+  intro?: T;
+  heroImage?: T;
+  sections?:
+    | T
+    | {
+        text?:
+          | T
+          | {
+              heading?: T;
+              body?: T;
+              id?: T;
+              blockName?: T;
+            };
+        imageText?:
+          | T
+          | {
+              heading?: T;
+              body?: T;
+              image?: T;
+              imageSide?: T;
+              id?: T;
+              blockName?: T;
+            };
+        faq?:
+          | T
+          | {
+              heading?: T;
+              items?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        mantra?:
+          | T
+          | {
+              heading?: T;
+              original?: T;
+              transliteration?: T;
+              meaning?: T;
+              id?: T;
+              blockName?: T;
+            };
+        callToAction?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              label?: T;
+              href?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  slug?: T;
+  readyForReview?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  startsAt?: T;
+  endsAt?: T;
+  allDay?: T;
+  recurrence?: T;
+  recurrenceUntil?: T;
+  location?: T;
+  category?: T;
+  summary?: T;
+  description?: T;
+  image?: T;
+  bookable?: T;
+  memberPrice?: T;
+  guestPrice?: T;
+  capacity?: T;
+  waitlist?: T;
+  cancellationHours?: T;
+  showOnCalendar?: T;
+  featured?: T;
+  googleEventId?: T;
+  slug?: T;
+  readyForReview?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  publishedAt?: T;
+  cover?: T;
+  excerpt?: T;
+  body?: T;
+  slug?: T;
+  readyForReview?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "albums_select".
+ */
+export interface AlbumsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  description?: T;
+  cover?: T;
+  photos?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        people?:
+          | T
+          | {
+              name?: T;
+              consentGiven?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  slug?: T;
+  readyForReview?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  credit?: T;
+  isConceptVisual?: T;
+  deityImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  summary?: T;
+  availability?: T;
+  memberPrice?: T;
+  nonMemberPrice?: T;
+  materialsPrice?: T;
+  priceOnRequest?: T;
+  priceUnit?: T;
+  deposit?: T;
+  requiresApproval?: T;
+  capacity?: T;
+  availableDays?: T;
+  earliestTime?: T;
+  latestTime?: T;
+  defaultDurationMinutes?: T;
+  location?: T;
+  cancellation?:
+    | T
+    | {
+        fullRefundHours?: T;
+        lateRefundPercent?: T;
+        depositRefundable?: T;
+        policyText?: T;
+      };
+  writesToCalendar?: T;
+  requiresPolicyAgreement?: T;
+  notes?: T;
+  sortOrder?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings_select".
+ */
+export interface BookingsSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  kind?: T;
+  event?: T;
+  service?: T;
+  itemTitle?: T;
+  member?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  date?: T;
+  startsAt?: T;
+  endsAt?: T;
+  quantity?: T;
+  includeMaterials?: T;
+  venue?: T;
+  blocksVenue?: T;
+  dietaryNotes?: T;
+  notes?: T;
+  policyAgreedAt?: T;
+  amount?: T;
+  deposit?: T;
+  amountPaid?: T;
+  refunded?: T;
+  isMemberPrice?: T;
+  paymentProvider?: T;
+  paymentId?: T;
+  staffNote?: T;
+  attended?: T;
+  googleEventId?: T;
+  manageToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations_select".
+ */
+export interface DonationsSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  amount?: T;
+  currency?: T;
+  frequency?: T;
+  method?: T;
+  fund?: T;
+  source?: T;
+  sponsorship?: T;
+  plaqueName?: T;
+  campaign?: T;
+  title?: T;
+  firstName?: T;
+  lastName?: T;
+  donorName?: T;
+  email?: T;
+  company?: T;
+  houseNameOrNumber?: T;
+  addressLine1?: T;
+  town?: T;
+  postcode?: T;
+  country?: T;
+  giftAid?:
+    | T
+    | {
+        declared?: T;
+        ukTaxpayer?: T;
+        declarationText?: T;
+        declarationVersion?: T;
+        declaredAt?: T;
+        claimedInBatch?: T;
+      };
+  giftAidEligible?: T;
+  giftAidReason?: T;
+  donorWall?:
+    | T
+    | {
+        consent?: T;
+        displayName?: T;
+        message?: T;
+        approved?: T;
+      };
+  marketingConsent?: T;
+  member?: T;
+  paidAt?: T;
+  provider?: T;
+  providerId?: T;
+  providerSubscriptionId?: T;
+  refundedAmount?: T;
+  receiptToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsorship-items_select".
+ */
+export interface SponsorshipItemsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  amount?: T;
+  description?: T;
+  totalAvailable?: T;
+  sponsoredCount?: T;
+  plaque?: T;
+  active?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pledges_select".
+ */
+export interface PledgesSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  amount?: T;
+  plan?: T;
+  instalments?: T;
+  startDate?: T;
+  dedication?: T;
+  message?: T;
+  contactPreference?: T;
+  assignedTrustee?: T;
+  followUps?:
+    | T
+    | {
+        date?: T;
+        by?: T;
+        note?: T;
+        id?: T;
+      };
+  receivedToDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  receiptNumber?: T;
+  purpose?: T;
+  status?: T;
+  amount?: T;
+  refundedAmount?: T;
+  member?: T;
+  booking?: T;
+  payerName?: T;
+  payerEmail?: T;
+  description?: T;
+  provider?: T;
+  providerId?: T;
+  paidAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  membershipNumber?: T;
+  status?: T;
+  firstName?: T;
+  lastName?: T;
+  phone?: T;
+  addressLine1?: T;
+  addressLine2?: T;
+  town?: T;
+  postcode?: T;
+  legacyAddress?: T;
+  memberSince?: T;
+  lastPaidDate?: T;
+  expiryDate?: T;
+  receiptNumber?: T;
+  paymentReference?: T;
+  autoRenew?: T;
+  over18Confirmed?: T;
+  stripeCustomerId?: T;
+  remindersSent?: T;
+  giftAid?:
+    | T
+    | {
+        declared?: T;
+        declaredAt?: T;
+        declarationVersion?: T;
+      };
+  consents?:
+    | T
+    | {
+        newsletter?: T;
+        sms?: T;
+        updatedAt?: T;
+      };
+  committeeNotes?: T;
+  magicLinkHash?: T;
+  magicLinkExpires?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -247,6 +1737,7 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  resetPasswordRequestedAt?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -259,21 +1750,128 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
+ * via the `definition` "volunteers_select".
  */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
+export interface VolunteersSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  skills?: T;
+  availability?: T;
+  professionalSkills?: T;
+  message?: T;
+  over18?: T;
+  status?: T;
+  dbsChecked?: T;
   updatedAt?: T;
   createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteer-shifts_select".
+ */
+export interface VolunteerShiftsSelect<T extends boolean = true> {
+  title?: T;
+  event?: T;
+  startsAt?: T;
+  endsAt?: T;
+  slots?: T;
+  description?: T;
+  signups?:
+    | T
+    | {
+        name?: T;
+        email?: T;
+        phone?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages_select".
+ */
+export interface ContactMessagesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  topic?: T;
+  message?: T;
+  routedTo?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers_select".
+ */
+export interface NewsletterSubscribersSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  status?: T;
+  source?: T;
+  consentText?: T;
+  consentedAt?: T;
+  token?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  roles?: T;
+  suspended?: T;
+  twoFactorEnabled?: T;
+  twoFactorSecret?: T;
+  twoFactorPendingSecret?: T;
+  lastLoginAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-outbox_select".
+ */
+export interface EmailOutboxSelect<T extends boolean = true> {
+  to?: T;
+  subject?: T;
+  html?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log_select".
+ */
+export interface AuditLogSelect<T extends boolean = true> {
+  actorEmail?: T;
+  actorType?: T;
+  action?: T;
+  entity?: T;
+  entityId?: T;
+  summary?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -282,6 +1880,37 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +1945,446 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Change opening and aarti times once here; the header, home page and footer all update.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  standardTimes: {
+    weekdays: string;
+    weekends: string;
+    aarti: string;
+    note?: string | null;
+  };
+  /**
+   * For festivals or holidays: times shown between the start and end dates.
+   */
+  seasonalOverrides?:
+    | {
+        label: string;
+        startDate: string;
+        endDate: string;
+        weekdays?: string | null;
+        weekends?: string | null;
+        aarti?: string | null;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  address: string;
+  phone?: string | null;
+  email?: string | null;
+  /**
+   * Google Maps link for directions.
+   */
+  mapUrl?: string | null;
+  parking?: string | null;
+  charityNumber: string;
+  registeredAddress?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  whatsappUrl?: string | null;
+  /**
+   * Optional short banner at the very top of every page.
+   */
+  announcement?: string | null;
+  announcementLink?: string | null;
+  bank?: {
+    accountName?: string | null;
+    sortCode?: string | null;
+    accountNumber?: string | null;
+  };
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  heroImage?: (number | null) | Media;
+  /**
+   * Optional MP4 shown after the page loads on fast connections; stills are shown to reduced-motion users.
+   */
+  heroVideoUrl?: string | null;
+  heritageLine?: string | null;
+  /**
+   * Three or four numbers from real records.
+   */
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  activityCards?:
+    | {
+        title: string;
+        text?: string | null;
+        image?: (number | null) | Media;
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  voices?:
+    | {
+        quote: string;
+        name: string;
+        role?: string | null;
+        consent: boolean;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appeal".
+ */
+export interface Appeal {
+  id: number;
+  targetPence: number;
+  /**
+   * Cash, cheques, GoFundMe. Online gifts to the New Mandir fund are added automatically.
+   */
+  raisedOfflinePence?: number | null;
+  /**
+   * Shown until trustees plan a budget and timeline.
+   */
+  stageLabel?: string | null;
+  /**
+   * Leave blank until the trustees have planned it.
+   */
+  buildBudgetPence?: number | null;
+  /**
+   * Leave blank until the trustees have planned it.
+   */
+  timelineText?: string | null;
+  milestones?:
+    | {
+        title: string;
+        /**
+         * e.g. "2026" or "Spring 2027"
+         */
+        date?: string | null;
+        description?: string | null;
+        status?: ('done' | 'current' | 'upcoming') | null;
+        photo?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The reason in the trustees' own words.
+   */
+  trusteesWords?: string | null;
+  trusteesAttribution?: string | null;
+  /**
+   * YouTube link. Captions and a transcript are required.
+   */
+  chairmanVideoUrl?: string | null;
+  chairmanVideoTranscript?: string | null;
+  /**
+   * Shown exactly as on the current site. Only the administrator (on behalf of the trustees) may change it.
+   */
+  courtNotice?: {
+    show?: boolean | null;
+    heading?: string | null;
+    subheading?: string | null;
+    body?: string | null;
+    pdf?: (number | null) | Media;
+    pdfLabel?: string | null;
+  };
+  visionIntro?: string | null;
+  /**
+   * Always labelled "artist's impression, not final design" on the site.
+   */
+  conceptVisuals?:
+    | {
+        image?: (number | null) | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  spaces?:
+    | {
+        name: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Trustees may remove this later (FR-49).
+   */
+  gofundme?: {
+    show?: boolean | null;
+    heading?: string | null;
+    body?: string | null;
+    url?: string | null;
+    qrImage?: (number | null) | Media;
+  };
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "governance".
+ */
+export interface Governance {
+  id: number;
+  trustees?:
+    | {
+        name: string;
+        role?: string | null;
+        photo?: (number | null) | Media;
+        photoConsent?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  committee?:
+    | {
+        name: string;
+        role?: string | null;
+        photo?: (number | null) | Media;
+        photoConsent?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  committeePhoto?: (number | null) | Media;
+  fundsStatement?: string | null;
+  accounts?:
+    | {
+        year: string;
+        file?: (number | null) | Media;
+        /**
+         * Or a link to the Charity Commission register.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  festivalCalendarPdf?: (number | null) | Media;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  standardTimes?:
+    | T
+    | {
+        weekdays?: T;
+        weekends?: T;
+        aarti?: T;
+        note?: T;
+      };
+  seasonalOverrides?:
+    | T
+    | {
+        label?: T;
+        startDate?: T;
+        endDate?: T;
+        weekdays?: T;
+        weekends?: T;
+        aarti?: T;
+        note?: T;
+        id?: T;
+      };
+  address?: T;
+  phone?: T;
+  email?: T;
+  mapUrl?: T;
+  parking?: T;
+  charityNumber?: T;
+  registeredAddress?: T;
+  facebookUrl?: T;
+  instagramUrl?: T;
+  whatsappUrl?: T;
+  announcement?: T;
+  announcementLink?: T;
+  bank?:
+    | T
+    | {
+        accountName?: T;
+        sortCode?: T;
+        accountNumber?: T;
+      };
+  readyForReview?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  heroImage?: T;
+  heroVideoUrl?: T;
+  heritageLine?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  activityCards?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        image?: T;
+        href?: T;
+        id?: T;
+      };
+  voices?:
+    | T
+    | {
+        quote?: T;
+        name?: T;
+        role?: T;
+        consent?: T;
+        id?: T;
+      };
+  readyForReview?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appeal_select".
+ */
+export interface AppealSelect<T extends boolean = true> {
+  targetPence?: T;
+  raisedOfflinePence?: T;
+  stageLabel?: T;
+  buildBudgetPence?: T;
+  timelineText?: T;
+  milestones?:
+    | T
+    | {
+        title?: T;
+        date?: T;
+        description?: T;
+        status?: T;
+        photo?: T;
+        id?: T;
+      };
+  trusteesWords?: T;
+  trusteesAttribution?: T;
+  chairmanVideoUrl?: T;
+  chairmanVideoTranscript?: T;
+  courtNotice?:
+    | T
+    | {
+        show?: T;
+        heading?: T;
+        subheading?: T;
+        body?: T;
+        pdf?: T;
+        pdfLabel?: T;
+      };
+  visionIntro?: T;
+  conceptVisuals?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  spaces?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        id?: T;
+      };
+  gofundme?:
+    | T
+    | {
+        show?: T;
+        heading?: T;
+        body?: T;
+        url?: T;
+        qrImage?: T;
+      };
+  readyForReview?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "governance_select".
+ */
+export interface GovernanceSelect<T extends boolean = true> {
+  trustees?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        photo?: T;
+        photoConsent?: T;
+        id?: T;
+      };
+  committee?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        photo?: T;
+        photoConsent?: T;
+        id?: T;
+      };
+  committeePhoto?: T;
+  fundsStatement?: T;
+  accounts?:
+    | T
+    | {
+        year?: T;
+        file?: T;
+        url?: T;
+        id?: T;
+      };
+  festivalCalendarPdf?: T;
+  readyForReview?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
@@ -324,6 +2393,44 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'news';
+          value: number | News;
+        } | null)
+      | ({
+          relationTo: 'albums';
+          value: number | Album;
+        } | null);
+    global?: string | null;
+    user?:
+      | ({
+          relationTo: 'members';
+          value: number | Member;
+        } | null)
+      | ({
+          relationTo: 'users';
+          value: number | User;
+        } | null);
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

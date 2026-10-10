@@ -1,67 +1,59 @@
-# Payload Blank Template
+# Bharat Hindu Samaj website
 
-This template comes configured with the bare minimum to get started on anything you need.
+The new website for Bharat Hindu Samaj, Peterborough (registered charity 274404), built to the *Functional Specification: Charity Website* (October 2026).
 
-## Quick start
+**Stack:** Next.js 16 (App Router) · Payload CMS 3 (admin, roles, drafts, versions, audit) · SQLite locally / Postgres in production · Tailwind CSS 4 · Stripe Checkout (cards, Apple Pay, Google Pay) · GoCardless (Direct Debit) · Google Calendar API · Vitest + Playwright + axe.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## Run it locally
 
-## Quick Start - local setup
+```bash
+npm install
+npm run setup     # creates .env test accounts (git-ignored)
+npm run reset     # fresh database with the migrated content
+npm run dev       # http://localhost:3000
+```
 
-To spin up this template locally, follow these steps:
+Test account emails and passwords are in `.env` (`SEED_*`). Staff sign in at **/staff/login**; the administrator is asked to set up two-factor sign-in with an authenticator app on first sign-in (required by the spec). The member test account signs in at **/account/login**.
 
-### Clone
+Without payment keys, a **demo checkout** stands in for Stripe/GoCardless so every journey can be tested. It only works in development (or with `ALLOW_DEMO_PAYMENTS=true`). Without SMTP, every email the site would send is captured in **CMS → Admin → Email outbox**.
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+## Tests
 
-### Development
+```bash
+npm run typecheck
+npm run test:unit   # business rules: Gift Aid, HMRC export, bookings, refunds, membership, iCal, member import
+npm run test:int    # Payload against a throwaway database: access control, approval workflow, 2FA, fulfilment, double booking
+npm run test:e2e    # Playwright journeys (donate, join, book, contact) + axe WCAG 2.2 AA scans
+```
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+CI (`.github/workflows/ci.yml`) runs all of them on every push and pull request.
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+## Where things are
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+| Spec area | Where |
+|---|---|
+| Home page journey (§4, FR-01–05) | `src/app/(frontend)/page.tsx`, `src/components/home/` |
+| Times on every page (FR-02) | CMS → Settings → Site settings & times; `src/components/layout/SiteHeader.tsx` |
+| Donations, Gift Aid, HMRC export (§6, FR-18–26) | `src/app/(frontend)/donate/`, `src/lib/giftaid.ts`, `/exports/gift-aid` |
+| Membership, login, magic link (§7, FR-27–31) | `src/app/(frontend)/membership/`, `account/`, `src/collections/Members.ts` |
+| Member Excel import (FR-31) | `/staff/import`, `src/lib/memberImport.ts` |
+| Bookings and service catalogue (FR-33–37) | `src/app/(frontend)/book/`, `src/lib/bookingService.ts`, CMS → Bookings |
+| Events, calendar, iCal feed (FR-11–17) | `src/app/(frontend)/events/`, `calendar/`, `calendar.ics`, `src/lib/calendar.ts` |
+| CMS, roles, approval, audit (§8, FR-41–45) | `src/collections/`, `src/access/roles.ts`, `src/hooks/` |
+| Reports and CSV (FR-46) | `/staff/reports`, `src/app/(frontend)/exports/` |
+| Security (NFR-03) | `next.config.ts` (CSP, HSTS), `src/lib/formGuard.ts`, `src/lib/rateLimit.ts` |
 
-#### Docker (Optional)
+## Going live
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+1. **Database:** create a Postgres database (Neon or Supabase) and set `DATABASE_URL=postgres://…`. Run `npm run payload migrate:create` then `npm run payload migrate` before the first production start.
+2. **Uploads:** production hosts like Vercel have no persistent disk — add `@payloadcms/storage-s3` (or Vercel Blob) for the `media` collection.
+3. **Secrets** (in the host's environment settings, never in code): `PAYLOAD_SECRET`, `APP_SIGNING_SECRET`, `CRON_SECRET`, `NEXT_PUBLIC_SITE_URL=https://bharathindusamaj.co.uk`.
+4. **Stripe:** `STRIPE_SECRET_KEY`, and a webhook to `https://…/webhooks/stripe` for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `invoice.paid` → `STRIPE_WEBHOOK_SECRET`. Test every journey in test mode first.
+5. **GoCardless:** `GOCARDLESS_ACCESS_TOKEN`, `GOCARDLESS_ENVIRONMENT=live`, webhook to `https://…/webhooks/gocardless` → `GOCARDLESS_WEBHOOK_SECRET`.
+6. **Google Calendar:** create a service account, share the master calendar with it ("Make changes to events"), and set `GOOGLE_CALENDAR_ID`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_KEY`.
+7. **Email:** `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, and the `INBOX_*` routing addresses.
+8. **Daily job:** schedule `GET /cron/daily` with `Authorization: Bearer $CRON_SECRET` (renewal reminders, lapsing, emptying the 30-day bin).
+9. **Monitoring:** point an uptime monitor at `/healthz`. Enable automatic database backups.
+10. **Domain (FR-48):** point bharathindusamaj.co.uk at the host once the trustees approve.
 
-To do so, follow these steps:
-
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
-
-## How it works
-
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
-
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+See `docs/HANDOVER.md` for the runbook and the decisions still needed from the trustees.

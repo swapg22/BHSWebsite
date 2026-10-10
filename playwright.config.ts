@@ -1,41 +1,23 @@
 import { defineConfig, devices } from '@playwright/test'
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
 import 'dotenv/config'
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
+// Locally, use the installed Google Chrome; CI installs Playwright's Chromium
+const channel = process.env.CI ? {} : { channel: 'chrome' as const }
+
+/** End-to-end journeys against the dev server with seeded data (npm run reset first). */
 export default defineConfig({
   testDir: './tests/e2e',
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
+  retries: process.env.CI ? 1 : 0,
+  reporter: [['list'], ['html', { open: 'never' }]],
+  timeout: 45_000,
+  expect: { timeout: 10_000 },
+  use: { baseURL: 'http://localhost:3000', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
-    },
+    { name: 'desktop', use: { ...devices['Desktop Chrome'], ...channel, viewport: { width: 1366, height: 900 } } },
+    { name: 'mobile', use: { ...devices['Pixel 7'], ...channel }, grep: /@mobile/ },
   ],
-  webServer: {
-    command: 'pnpm dev',
-    reuseExistingServer: true,
-    url: 'http://localhost:3000',
-  },
+  webServer: { command: 'npm run dev', url: 'http://localhost:3000/healthz', reuseExistingServer: true, timeout: 180_000 },
 })
