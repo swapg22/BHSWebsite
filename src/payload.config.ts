@@ -1,6 +1,7 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import fs from 'fs'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -19,6 +20,12 @@ import { emailAdapter } from './lib/emailAdapter'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const isPostgres = (process.env.DATABASE_URL ?? '').startsWith('postgres')
+
+// SQLite needs its folder to exist (data/ is git-ignored, so a fresh checkout or CI has none)
+if (!isPostgres) {
+  const file = (process.env.DATABASE_URL || 'file:./data/bhs.db').replace(/^file:/, '')
+  if (file && file !== ':memory:') fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true })
+}
 
 /** Encrypted connections (section 16). Set DATABASE_CA to Supabase's CA certificate to also verify the server. */
 function dbSsl() {
