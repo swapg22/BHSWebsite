@@ -32,8 +32,10 @@ test.describe('home page journey (FR-01 to FR-05)', () => {
   })
 
   test('key pages pass automated WCAG 2.2 AA checks', async ({ page }) => {
+    // Check the settled page: text mid-fade briefly has lower contrast than its final state
+    await page.emulateMedia({ reducedMotion: 'reduce' })
     for (const path of ['/', '/donate', '/membership', '/events', '/services', '/contact', '/about', '/account/login']) {
-      await page.goto(path)
+      await page.goto(path, { waitUntil: 'networkidle' })
       await axe(page)
     }
   })

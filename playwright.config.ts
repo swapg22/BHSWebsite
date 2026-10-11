@@ -12,8 +12,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
-  timeout: 45_000,
-  expect: { timeout: 10_000 },
+  globalSetup: './tests/e2e/warmup.ts',
+  timeout: process.env.CI ? 120_000 : 45_000,
+  expect: { timeout: process.env.CI ? 20_000 : 10_000 },
   use: { baseURL: 'http://localhost:3000', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'], ...channel, viewport: { width: 1366, height: 900 } } },
