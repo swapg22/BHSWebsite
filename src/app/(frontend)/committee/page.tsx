@@ -29,7 +29,7 @@ function People({ title, people }: { title: string; people: { name: string; role
               {photo ? (
                 <Image src={photo} alt="" width={96} height={96} className="h-24 w-24 rounded-full object-cover" />
               ) : (
-                <span aria-hidden="true" className="grid h-24 w-24 place-items-center rounded-full bg-saffron-50 font-serif text-3xl text-saffron-800">
+                <span aria-hidden="true" className="grid h-24 w-24 place-items-center rounded-full bg-kumkum-50 font-serif text-3xl text-kumkum-800">
                   {initials(p.name)}
                 </span>
               )}

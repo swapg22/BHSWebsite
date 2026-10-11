@@ -36,7 +36,7 @@ export default async function GovernancePage() {
               <dd className="font-semibold">1973 · constitution adopted 15 November 1974</dd>
             </div>
           </dl>
-          <a href={`https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/${s.charityNumber}`} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 font-semibold text-saffron-800 underline">
+          <a href={`https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/${s.charityNumber}`} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-1.5 font-semibold text-kumkum-800 underline">
             View on the Charity Commission register <ExternalLink aria-hidden="true" className="h-4 w-4" />
             <span className="sr-only">(opens in a new tab)</span>
           </a>
@@ -52,7 +52,7 @@ export default async function GovernancePage() {
               const href = mediaUrl(a.file as Media) ?? a.url
               return href ? (
                 <li key={a.year}>
-                  <a href={href} className="inline-flex items-center gap-2 text-saffron-800 underline" target={a.url ? '_blank' : undefined} rel="noopener noreferrer">
+                  <a href={href} className="inline-flex items-center gap-2 text-kumkum-800 underline" target={a.url ? '_blank' : undefined} rel="noopener noreferrer">
                     <FileText aria-hidden="true" className="h-4 w-4" /> {a.year}
                   </a>
                 </li>
@@ -74,7 +74,7 @@ export default async function GovernancePage() {
               ['/hall-hire-terms', 'Hall and kitchen hire policy'],
             ].map(([href, label]) => (
               <li key={href}>
-                <Link href={href} className="text-saffron-800 underline">
+                <Link href={href} className="text-kumkum-800 underline">
                   {label}
                 </Link>
               </li>
@@ -86,7 +86,7 @@ export default async function GovernancePage() {
               <li key={t.name}>{t.name}</li>
             ))}
           </ul>
-          <Link href="/committee" className="mt-3 inline-block font-semibold text-saffron-800 underline">
+          <Link href="/committee" className="mt-3 inline-block font-semibold text-kumkum-800 underline">
             Committee and trustees
           </Link>
         </section>

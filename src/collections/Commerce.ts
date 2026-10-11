@@ -1,7 +1,8 @@
-import { APIError, type CollectionConfig } from 'payload'
-import { finance, hasRole, isMember, isStaff, membershipTeam } from '@/access/roles'
+import type { CollectionConfig, Where } from 'payload'
+import { bookingApprovers, finance, hasRole, isMember, isStaff } from '@/access/roles'
 import { withAudit } from '@/hooks/audit'
 import { slugField } from '@/fields/slug'
+import { readyForReviewField, requireApproverToPublish, trackChangeRequest } from '@/hooks/approval'
 import { revalidateAfterChange } from '@/hooks/revalidate'
 
 const DAYS = [
@@ -28,28 +29,19 @@ export const Services: CollectionConfig = withAudit({
     group: 'Bookings',
     description: 'Poojas, ceremonies, hall hire, classes and lunch club. Set "Availability" to Paused or Removed instead of deleting.',
   },
+  // Editors create and edit services and prices as drafts; price changes are "major" and only the
+  // administrator publishes them (section 15). Bookings always use the published version.
   access: {
-    read: ({ req }) => (isStaff(req.user) ? true : { availability: { equals: 'active' } }),
-    create: ({ req }) => hasRole(req.user, 'administrator', 'treasurer'),
-    update: ({ req }) => hasRole(req.user, 'administrator', 'treasurer', 'editor'),
+    read: ({ req }): Where | boolean => (isStaff(req.user) ? true : { availability: { equals: 'active' }, _status: { equals: 'published' } }),
+    create: ({ req }) => hasRole(req.user, 'administrator', 'editor'),
+    update: ({ req }) => hasRole(req.user, 'administrator', 'editor'),
     delete: () => false,
+    readVersions: ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer'),
   },
-  versions: { maxPerDoc: 50 },
+  versions: { drafts: true, maxPerDoc: 50 },
   hooks: {
-    beforeChange: [
-      ({ data, originalDoc, req }) => {
-        // Editors may change descriptions, but prices and availability need treasurer or administrator
-        if (hasRole(req.user, 'editor') && !hasRole(req.user, 'administrator', 'treasurer') && originalDoc) {
-          for (const f of ['memberPrice', 'nonMemberPrice', 'materialsPrice', 'deposit', 'availability', 'requiresApproval'] as const) {
-            if (f in data && data[f] !== originalDoc[f]) {
-              throw new APIError('Only the administrator or treasurer can change prices, deposits or availability.', 403, null, true)
-            }
-          }
-        }
-        return data
-      },
-    ],
-    afterChange: [revalidateAfterChange('/services')],
+    beforeChange: [requireApproverToPublish],
+    afterChange: [revalidateAfterChange('/services'), trackChangeRequest],
   },
   fields: [
     { name: 'name', type: 'text', required: true },
@@ -121,6 +113,7 @@ export const Services: CollectionConfig = withAudit({
     { name: 'notes', type: 'textarea', admin: { description: 'Shown to bookers, e.g. travel charges.' } },
     { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
     slugField('name'),
+    readyForReviewField,
   ],
 })
 
@@ -136,12 +129,12 @@ export const Bookings: CollectionConfig = withAudit({
   },
   access: {
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'treasurer', 'membership-officer')) return true
+      if (hasRole(req.user, 'administrator', 'treasurer')) return true
       if (isMember(req.user)) return { member: { equals: req.user!.id } }
       return false
     },
-    create: membershipTeam,
-    update: membershipTeam,
+    create: bookingApprovers,
+    update: bookingApprovers,
     delete: () => false,
   },
   hooks: {
@@ -451,7 +444,7 @@ export const Payments: CollectionConfig = withAudit({
   admin: { useAsTitle: 'receiptNumber', defaultColumns: ['receiptNumber', 'purpose', 'amount', 'status', 'paidAt'], group: 'Fundraising' },
   access: {
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'treasurer', 'membership-officer')) return true
+      if (hasRole(req.user, 'administrator', 'treasurer')) return true
       if (isMember(req.user)) return { member: { equals: req.user!.id } }
       return false
     },

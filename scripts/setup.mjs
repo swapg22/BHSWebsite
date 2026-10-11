@@ -10,7 +10,6 @@ const accounts = {
   ADMIN: 'admin@bhs.test',
   EDITOR: 'editor@bhs.test',
   TREASURER: 'treasurer@bhs.test',
-  MEMBERSHIP: 'membership@bhs.test',
   MEMBER: 'member@bhs.test',
 }
 for (const [k, email] of Object.entries(accounts)) {

@@ -5,18 +5,28 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { s3Storage } from '@payloadcms/storage-s3'
 
 import { Users } from './collections/Users'
 import { Members } from './collections/Members'
 import { Media } from './collections/Media'
 import { Albums, Events, News, Pages } from './collections/Content'
 import { Bookings, Donations, Payments, Pledges, Services, SponsorshipItems } from './collections/Commerce'
-import { AuditLog, ContactMessages, EmailOutbox, NewsletterSubscribers, Volunteers, VolunteerShifts } from './collections/Community'
-import { Appeal, Governance, HomePage, SiteSettings } from './globals'
+import { AuditLog, ChangeRequests, ContactMessages, EmailOutbox, NewsletterSubscribers, Volunteers, VolunteerShifts } from './collections/Community'
+import { Appeal, ApprovalSettings, Governance, HomePage, SiteSettings } from './globals'
 import { emailAdapter } from './lib/emailAdapter'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const isPostgres = (process.env.DATABASE_URL ?? '').startsWith('postgres')
+
+/** Encrypted connections (section 16). Set DATABASE_CA to Supabase's CA certificate to also verify the server. */
+function dbSsl() {
+  const url = process.env.DATABASE_URL ?? ''
+  if (/@(localhost|127\.0\.0\.1)[:/]|sslmode=disable/.test(url)) return false
+  if (process.env.DATABASE_CA) return { ca: process.env.DATABASE_CA.replace(/\\n/g, '\n'), rejectUnauthorized: true }
+  return { rejectUnauthorized: false }
+}
 
 if (process.env.NODE_ENV === 'production' && (!process.env.PAYLOAD_SECRET || process.env.PAYLOAD_SECRET.length < 32)) {
   throw new Error('PAYLOAD_SECRET must be set to a long random value in production')
@@ -55,10 +65,11 @@ export default buildConfig({
     ContactMessages,
     NewsletterSubscribers,
     Users,
+    ChangeRequests,
     EmailOutbox,
     AuditLog,
   ],
-  globals: [SiteSettings, HomePage, Appeal, Governance],
+  globals: [SiteSettings, HomePage, Appeal, Governance, ApprovalSettings],
   editor: lexicalEditor(),
   email: emailAdapter(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -66,13 +77,31 @@ export default buildConfig({
   csrf: [process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'],
   graphQL: { disable: true },
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
-  // SQLite for local review; Postgres (e.g. Neon or Supabase) when DATABASE_URL is a postgres:// URL.
-  // The schema is pushed automatically in development; production uses migrations (see README).
-  db: (process.env.DATABASE_URL ?? '').startsWith('postgres')
-    ? postgresAdapter({ pool: { connectionString: process.env.DATABASE_URL }, push: process.env.NODE_ENV !== 'production' })
+  // Production database (section 16, FR-53): managed PostgreSQL on Supabase. The schema is changed
+  // only through committed migrations (src/migrations), never pushed, so every change is reviewed.
+  // SQLite remains for quick local review and the test suite.
+  db: isPostgres
+    ? postgresAdapter({
+        pool: { connectionString: process.env.DATABASE_URL, ssl: dbSsl(), max: Number(process.env.DATABASE_POOL_MAX || 5) },
+        push: false,
+        migrationDir: path.resolve(dirname, 'migrations'),
+      })
     : sqliteAdapter({ client: { url: process.env.DATABASE_URL || 'file:./data/bhs.db' }, push: process.env.NODE_ENV !== 'production' }),
   upload: { limits: { fileSize: 15 * 1024 * 1024 } },
   sharp,
   telemetry: false,
-  plugins: [],
+  plugins: [
+    // Uploads go to Supabase Storage (S3-compatible) when configured; otherwise to ./media locally
+    s3Storage({
+      enabled: Boolean(process.env.S3_BUCKET),
+      collections: { media: true },
+      bucket: process.env.S3_BUCKET || '',
+      config: {
+        endpoint: process.env.S3_ENDPOINT,
+        region: process.env.S3_REGION || 'eu-west-2',
+        forcePathStyle: true,
+        credentials: { accessKeyId: process.env.S3_ACCESS_KEY_ID || '', secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '' },
+      },
+    }),
+  ],
 })

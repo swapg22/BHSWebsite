@@ -15,7 +15,7 @@ export function TwoFactorSetup() {
     return (
       <div className="mt-6 space-y-4">
         <FormMessage state={state} />
-        <a href="/staff/login" className="inline-flex min-h-12 items-center rounded-full bg-saffron-700 px-6 font-semibold text-white">Sign in again</a>
+        <a href="/staff/login" className="inline-flex min-h-12 items-center rounded-full bg-kumkum-700 px-6 font-semibold text-white">Sign in again</a>
       </div>
     )
 
@@ -26,7 +26,7 @@ export function TwoFactorSetup() {
           type="button"
           disabled={pending}
           onClick={() => start(async () => { const r = await beginTwoFactor(); if ('error' in r) setError(r.error); else setSetup(r) })}
-          className="min-h-12 w-full cursor-pointer rounded-full bg-saffron-700 font-semibold text-white hover:bg-saffron-800 disabled:opacity-60"
+          className="min-h-12 w-full cursor-pointer rounded-full bg-kumkum-700 font-semibold text-white hover:bg-kumkum-800 disabled:opacity-60"
         >
           {pending ? 'Generating…' : 'Show my QR code'}
         </button>

@@ -27,14 +27,14 @@ export default async function ActivitiesPage() {
         <div className="grid gap-6 lg:grid-cols-7">
           {byDay.map(({ day, items }) => (
             <section key={day} aria-labelledby={`day-${day}`} className="lg:col-span-1">
-              <h2 id={`day-${day}`} className="mb-3 border-b-2 border-saffron-600 pb-2 font-serif text-2xl">
+              <h2 id={`day-${day}`} className="mb-3 border-b-2 border-kumkum-600 pb-2 font-serif text-2xl">
                 {label(day)}
               </h2>
               <ul className="space-y-3">
                 {items.length === 0 && <li className="text-sm text-charcoal-500">Mandir open as usual</li>}
                 {items.map((s) => (
                   <li key={s.id} className="rounded-2xl border border-ivory-300 bg-white p-4">
-                    <p className="text-sm font-semibold text-saffron-800">
+                    <p className="text-sm font-semibold text-kumkum-800">
                       {t12(s.earliestTime ?? '')}–{t12(s.latestTime ?? '')}
                     </p>
                     <p className="mt-0.5 font-semibold leading-snug">{s.name}</p>
@@ -63,7 +63,7 @@ export default async function ActivitiesPage() {
                 {t12(s.earliestTime ?? '')}–{t12(s.latestTime ?? '')}
               </p>
               {s.summary && <p className="mt-2 flex-1 text-sm text-charcoal-600">{s.summary}</p>}
-              <Link href={`/book/${s.slug}`} className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-saffron-200 font-semibold text-saffron-800 hover:border-saffron-700 hover:bg-saffron-50">
+              <Link href={`/book/${s.slug}`} className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-kumkum-200 font-semibold text-kumkum-800 hover:border-kumkum-700 hover:bg-kumkum-50">
                 Sign up<span className="sr-only"> for {s.name}</span>
               </Link>
             </li>

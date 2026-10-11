@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { contentEditors, publishedOrStaff, adminOnly } from '@/access/roles'
 import { withAudit } from '@/hooks/audit'
-import { readyForReviewField, requireApproverToPublish } from '@/hooks/approval'
+import { readyForReviewField, requireApproverToPublish, trackChangeRequest } from '@/hooks/approval'
 import { slugField } from '@/fields/slug'
 import { revalidateAfterChange } from '@/hooks/revalidate'
 
@@ -28,7 +28,7 @@ export const Events: CollectionConfig = withAudit({
   access: editorial,
   versions,
   trash: true,
-  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/events')] },
+  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/events'), trackChangeRequest] },
   fields: [
     { name: 'title', type: 'text', required: true, maxLength: 120 },
     {
@@ -110,7 +110,7 @@ export const News: CollectionConfig = withAudit({
   access: editorial,
   versions,
   trash: true,
-  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/news')] },
+  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/news'), trackChangeRequest] },
   fields: [
     { name: 'title', type: 'text', required: true, maxLength: 140 },
     {
@@ -139,7 +139,7 @@ export const Albums: CollectionConfig = withAudit({
   access: editorial,
   versions,
   trash: true,
-  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/gallery')] },
+  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange('/gallery'), trackChangeRequest] },
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'date', type: 'date' },
@@ -185,7 +185,7 @@ export const Pages: CollectionConfig = withAudit({
   access: { ...editorial, delete: adminOnly },
   versions,
   trash: true,
-  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange()] },
+  hooks: { beforeChange: [requireApproverToPublish], afterChange: [revalidateAfterChange(), trackChangeRequest] },
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'eyebrow', type: 'text', admin: { description: 'Small heading above the title.' } },

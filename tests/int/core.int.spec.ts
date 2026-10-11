@@ -81,11 +81,33 @@ describe('role-based access (FR-41)', () => {
     expect(updated.status).toBe('pending-payment')
   })
 
-  it('editors cannot change service prices', async () => {
-    const svc = await payload.create({ collection: 'services', data: { availability: 'active', name: 'Test pooja', category: 'pooja', memberPrice: 5100, nonMemberPrice: 7500 }, overrideAccess: true })
-    await expect(payload.update({ collection: 'services', id: svc.id, data: { memberPrice: 1 }, user: editor, overrideAccess: false })).rejects.toThrow(/treasurer/i)
-    const ok = await payload.update({ collection: 'services', id: svc.id, data: { summary: 'Updated words' }, user: editor, overrideAccess: false })
-    expect(ok.summary).toBe('Updated words')
+  it('editors draft price changes; only the administrator publishes them (section 15)', async () => {
+    const svc = await payload.create({ collection: 'services', data: { _status: 'published', availability: 'active', name: 'Test pooja', category: 'pooja', memberPrice: 5100, nonMemberPrice: 7500 }, overrideAccess: true, context: ctx })
+    await expect(payload.update({ collection: 'services', id: svc.id, data: { memberPrice: 6100, _status: 'published' }, user: editor, overrideAccess: false, context: ctx })).rejects.toThrow(/approver/i)
+    await payload.update({ collection: 'services', id: svc.id, data: { memberPrice: 6100, readyForReview: true }, user: editor, overrideAccess: false, draft: true, context: ctx })
+    // The public still sees the published price until the administrator approves
+    const live = await payload.findByID({ collection: 'services', id: svc.id, overrideAccess: false })
+    expect(live.memberPrice).toBe(5100)
+    const cr = await payload.find({ collection: 'change-requests', where: { entityId: { equals: String(svc.id) } }, overrideAccess: true })
+    expect(cr.docs[0]).toMatchObject({ entity: 'services', status: 'awaiting-approval', major: true })
+    await payload.update({ collection: 'services', id: svc.id, data: { memberPrice: 6100, _status: 'published' }, user: admin, overrideAccess: false, context: ctx })
+    const after = await payload.findByID({ collection: 'services', id: svc.id, overrideAccess: false })
+    expect(after.memberPrice).toBe(6100)
+    const cr2 = await payload.findByID({ collection: 'change-requests', id: cr.docs[0].id, overrideAccess: true })
+    expect(cr2.status).toBe('approved')
+  })
+
+  it('only the administrator sees the member list; editors and treasurer do not (section 15)', async () => {
+    await expect(payload.find({ collection: 'members', user: editor, overrideAccess: false })).rejects.toThrow()
+    const t = { ...treasurer, suspended: false }
+    await expect(payload.find({ collection: 'members', user: t, overrideAccess: false })).rejects.toThrow()
+    await expect(payload.find({ collection: 'volunteers', user: editor, overrideAccess: false })).rejects.toThrow()
+    const all = await payload.find({ collection: 'members', user: admin, overrideAccess: false })
+    expect(all.totalDocs).toBeGreaterThanOrEqual(2)
+  })
+
+  it('allows exactly one role per person', async () => {
+    await expect(staff('two@test.test', ['editor', 'treasurer'])).rejects.toThrow(/Roles/)
   })
 })
 

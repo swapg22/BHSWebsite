@@ -16,8 +16,8 @@ export default async function DemoCheckout({ searchParams }: { searchParams: Pro
   if (!data || !demoPaymentsAllowed()) notFound()
   return (
     <div className="container-page py-16">
-      <div className="mx-auto max-w-md rounded-3xl border-2 border-dashed border-saffron-300 bg-white p-8">
-        <p className="flex items-center gap-2 font-semibold text-saffron-800"><ShieldAlert aria-hidden="true" className="h-5 w-5" /> Test checkout — no money moves</p>
+      <div className="mx-auto max-w-md rounded-3xl border-2 border-dashed border-kumkum-300 bg-white p-8">
+        <p className="flex items-center gap-2 font-semibold text-kumkum-800"><ShieldAlert aria-hidden="true" className="h-5 w-5" /> Test checkout — no money moves</p>
         <p className="mt-2 text-sm text-charcoal-600">This page stands in for {data.method === 'direct-debit' ? 'GoCardless' : 'Stripe Checkout (card, Apple Pay, Google Pay)'} until live keys are added.</p>
         <dl className="mt-6 divide-y divide-ivory-300 border-y border-ivory-300">
           <div className="flex justify-between py-3"><dt className="text-charcoal-600">For</dt><dd className="text-right font-semibold">{data.description}</dd></div>
@@ -25,7 +25,7 @@ export default async function DemoCheckout({ searchParams }: { searchParams: Pro
         </dl>
         <form action={completeDemoCheckout} className="mt-6 grid gap-3">
           <input type="hidden" name="token" value={token} />
-          <button name="outcome" value="success" className="min-h-12 cursor-pointer rounded-full bg-saffron-700 font-semibold text-white hover:bg-saffron-800">Simulate successful payment</button>
+          <button name="outcome" value="success" className="min-h-12 cursor-pointer rounded-full bg-kumkum-700 font-semibold text-white hover:bg-kumkum-800">Simulate successful payment</button>
           <button name="outcome" value="fail" className="min-h-12 cursor-pointer rounded-full border border-charcoal-400 font-semibold hover:bg-ivory-100">Simulate declined payment</button>
           <button name="outcome" value="cancel" className="min-h-12 cursor-pointer rounded-full font-semibold text-charcoal-600 hover:bg-ivory-100">Cancel and go back</button>
         </form>

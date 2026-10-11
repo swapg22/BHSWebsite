@@ -19,11 +19,11 @@ export default async function MembershipPage({ searchParams }: { searchParams: P
       <div className="container-page grid gap-12 py-14 lg:grid-cols-12">
         <aside className="lg:col-span-4">
           <div className="card sticky top-28 p-6">
-            <p className="font-serif text-5xl text-saffron-700">£20</p>
+            <p className="font-serif text-5xl text-kumkum-700">£20</p>
             <p className="text-charcoal-600">per person, per year</p>
             <ul className="mt-6 space-y-3">
               {['Member prices for poojas, ceremonies and hall hire', 'Free weekly classes: yoga, dance, languages, sport', 'Lunch club and community events', 'Vote and stand for election at the AGM', 'Your own account: renew, bookings and receipts online'].map((b) => (
-                <li key={b} className="flex gap-3"><Check aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-saffron-700" />{b}</li>
+                <li key={b} className="flex gap-3"><Check aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-kumkum-700" />{b}</li>
               ))}
             </ul>
           </div>
@@ -40,7 +40,7 @@ export default async function MembershipPage({ searchParams }: { searchParams: P
           ) : (
             <>
               <p className="text-charcoal-600">
-                Already a member? <Link href="/account/login?next=/account" className="font-semibold text-saffron-800 underline">Sign in to renew</Link>.
+                Already a member? <Link href="/account/login?next=/account" className="font-semibold text-kumkum-800 underline">Sign in to renew</Link>.
               </p>
               <JoinForm token={formStartToken()} />
             </>

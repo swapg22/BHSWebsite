@@ -51,7 +51,7 @@ export default async function DonatePage({ searchParams }: { searchParams: Promi
         </div>
         <aside className="lg:col-span-5">
           <div className="sticky top-28 space-y-5">
-            <div className="overflow-hidden rounded-3xl bg-charcoal-900 text-ivory-50">
+            <div className="overflow-hidden rounded-3xl bg-midnight-900 text-ivory-50">
               <ConceptMandir className="aspect-[16/10] h-auto w-full" />
               <div className="p-6">
                 <AppealProgress raised={totals.raised} target={totals.target} donors={totals.donors} stageLabel={appeal.stageLabel} tone="dark" />

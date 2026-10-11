@@ -5,7 +5,7 @@ import type { Media } from '@/payload-types'
 import { getAppeal, getGovernance, getHome, getPayloadClient, getSettings, getTimes, getUpcomingEvents, mediaAlt, mediaUrl } from '@/lib/data'
 import { getAppealTotals } from '@/lib/reports'
 import { formatGBP } from '@/lib/money'
-import { ButtonLink, LotusMark, SectionHeading } from '@/components/ui'
+import { ButtonLink, JaaliBand, LotusMark, SectionHeading } from '@/components/ui'
 import { AppealProgress, ArrowLink, ArtistsImpressionLabel, EventCard } from '@/components/shared'
 import { ConceptMandir, ConceptPlan } from '@/components/home/ConceptMandir'
 import { HeroMedia } from '@/components/home/HeroMedia'
@@ -100,18 +100,18 @@ export default async function HomePage() {
             <dl className="reveal mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-ivory-300 bg-ivory-300 lg:grid-cols-4">
               {home.stats.map((s) => (
                 <div key={s.label} className="bg-ivory-50 px-6 py-8">
-                  <dd className="font-serif text-5xl text-saffron-700 sm:text-6xl">{s.value}</dd>
+                  <dd className="font-serif text-5xl text-kumkum-700 sm:text-6xl">{s.value}</dd>
                   <dt className="mt-2 text-charcoal-600">{s.label}</dt>
                 </div>
               ))}
             </dl>
           )}
-          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {(home.activityCards ?? []).map((c, i) => {
+          <ul className="mt-14 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
+            {(home.activityCards ?? []).map((c) => {
               const img = mediaUrl(c.image as Media, 'card')
               return (
-                <li key={c.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                  <Link href={c.href ?? '/activities'} className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-charcoal-800">
+                <li key={c.title}>
+                  <Link href={c.href ?? '/activities'} className="torana group relative block aspect-[3/4] bg-midnight-800">
                     {img && <Image src={img} alt="" fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" />}
                     <span className="scrim-bottom absolute inset-0" aria-hidden="true" />
                     <span className="absolute inset-x-0 bottom-0 p-5 text-ivory-50">
@@ -126,8 +126,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <JaaliBand className="bg-ivory-100" />
+
       {/* 3. Why a new Mandir */}
-      <section aria-labelledby="why-title" className="relative overflow-hidden bg-charcoal-900 py-20 text-ivory-100 sm:py-28">
+      <section aria-labelledby="why-title" className="relative overflow-hidden bg-midnight-900 py-20 text-ivory-100 sm:py-28">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(60%_100%_at_50%_0%,rgb(227_162_26/0.18),transparent)]" />
         <div className="container-page grid gap-14 lg:grid-cols-12">
           <div className="reveal lg:col-span-6">
             <p className="eyebrow mb-3 !text-gold-300">Why a new Mandir</p>
@@ -209,7 +212,7 @@ export default async function HomePage() {
               <ul className="mt-6 space-y-4">
                 {(appeal.spaces ?? []).map((s) => (
                   <li key={s.name} className="flex gap-4">
-                    <span className="mt-2 h-2.5 w-2.5 shrink-0 rotate-45 bg-saffron-600" aria-hidden="true" />
+                    <span className="mt-2 h-2.5 w-2.5 shrink-0 rotate-45 bg-kumkum-600" aria-hidden="true" />
                     <span>
                       <span className="font-semibold">{s.name}</span>
                       {s.description && <span className="block text-charcoal-600">{s.description}</span>}
@@ -220,11 +223,13 @@ export default async function HomePage() {
             </div>
             <div className="reveal card relative p-4 lg:col-span-7">
               <ConceptPlan spaces={appeal.spaces ?? []} />
-              <ArtistsImpressionLabel className="absolute right-4 top-4 !bg-saffron-800" />
+              <ArtistsImpressionLabel className="absolute right-4 top-4 !bg-kumkum-800" />
             </div>
           </div>
         </div>
       </section>
+
+      <JaaliBand className="bg-ivory-100" />
 
       {/* 5. Progress and target */}
       <section id="progress" aria-labelledby="progress-title" className="bg-ivory-200/70 py-20 sm:py-28">
@@ -255,9 +260,9 @@ export default async function HomePage() {
                 <li key={m.title} className="relative">
                   <span
                     aria-hidden="true"
-                    className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-items-center rounded-full border-2 ${m.status === 'done' ? 'border-saffron-700 bg-saffron-700' : m.status === 'current' ? 'border-saffron-700 bg-ivory-50 ring-4 ring-saffron-100' : 'border-ivory-400 bg-ivory-50'}`}
+                    className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-items-center rounded-full border-2 ${m.status === 'done' ? 'border-kumkum-700 bg-kumkum-700' : m.status === 'current' ? 'border-kumkum-700 bg-ivory-50 ring-4 ring-kumkum-100' : 'border-ivory-400 bg-ivory-50'}`}
                   />
-                  <p className="text-sm font-semibold text-saffron-800">
+                  <p className="text-sm font-semibold text-kumkum-800">
                     {m.date}
                     <span className="sr-only"> — {m.status === 'done' ? 'completed' : m.status === 'current' ? 'in progress' : 'upcoming'}</span>
                   </p>
@@ -280,14 +285,14 @@ export default async function HomePage() {
               { icon: Repeat, title: 'Give monthly', text: 'By Direct Debit or card. Steady support that lets us plan.', href: '/donate?frequency=monthly', cta: 'Give monthly' },
               { icon: Landmark, title: 'Sponsor a brick, pillar or day', text: 'Dedicate part of the new Mandir in a loved one’s name.', href: '/donate/sponsor', cta: 'See sponsorships' },
               { icon: HeartHandshake, title: 'Pledge a major gift', text: 'Spread a larger gift over time, with a trustee as your contact.', href: '/donate/pledge', cta: 'Make a pledge' },
-            ].map(({ icon: Icon, title, text, href, cta }, i) => (
-              <li key={title} className="reveal card relative flex flex-col p-6 transition-shadow hover:shadow-lg" style={{ transitionDelay: `${i * 70}ms` }}>
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-saffron-50 text-saffron-700">
+            ].map(({ icon: Icon, title, text, href, cta }) => (
+              <li key={title} className="card relative flex flex-col p-6 transition-shadow hover:shadow-[var(--shadow-lift)]">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-kumkum-50 text-kumkum-700">
                   <Icon aria-hidden="true" className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 font-serif text-2xl">{title}</h3>
                 <p className="mt-2 flex-1 text-charcoal-600">{text}</p>
-                <Link href={href} className="mt-5 font-semibold text-saffron-800 after:absolute after:inset-0 hover:underline">
+                <Link href={href} className="mt-5 font-semibold text-kumkum-800 after:absolute after:inset-0 hover:underline">
                   {cta} →
                 </Link>
               </li>
@@ -298,7 +303,7 @@ export default async function HomePage() {
             <div className="reveal mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-gold-300 bg-gold-300/15 px-6 py-5">
               <p className="mr-2 font-semibold">Sponsor in your family&apos;s name:</p>
               {sponsorships.docs.map((s) => (
-                <Link key={s.id} href={`/donate/sponsor#item-${s.id}`} className="rounded-full border border-gold-400 bg-ivory-50 px-4 py-2 text-sm font-semibold text-charcoal-800 hover:border-saffron-700">
+                <Link key={s.id} href={`/donate/sponsor#item-${s.id}`} className="rounded-full border border-gold-400 bg-ivory-50 px-4 py-2 text-sm font-semibold text-charcoal-800 hover:border-kumkum-700">
                   {s.name} · {formatGBP(s.amount)}
                 </Link>
               ))}
@@ -307,7 +312,7 @@ export default async function HomePage() {
 
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             <div className="reveal card flex items-start gap-5 p-6 lg:col-span-2">
-              <ShieldCheck aria-hidden="true" className="mt-1 h-8 w-8 shrink-0 text-saffron-700" />
+              <ShieldCheck aria-hidden="true" className="mt-1 h-8 w-8 shrink-0 text-kumkum-700" />
               <div>
                 <h3 className="font-serif text-2xl">Gift Aid adds 25%</h3>
                 <p className="mt-1 text-charcoal-600">
@@ -316,7 +321,7 @@ export default async function HomePage() {
               </div>
             </div>
             <div className="reveal card flex items-start gap-5 p-6">
-              <Users aria-hidden="true" className="mt-1 h-8 w-8 shrink-0 text-saffron-700" />
+              <Users aria-hidden="true" className="mt-1 h-8 w-8 shrink-0 text-kumkum-700" />
               <div>
                 <h3 className="font-serif text-2xl">Give your time</h3>
                 <p className="mt-1 text-charcoal-600">Builders, architects, cooks, teachers and organisers — your skills matter.</p>
@@ -352,7 +357,7 @@ export default async function HomePage() {
               </div>
               <ul className="grid gap-5 md:grid-cols-3">
                 {strip.map((e) => (
-                  <li key={e.id} className="reveal">
+                  <li key={e.id}>
                     <EventCard event={e} />
                   </li>
                 ))}
@@ -362,6 +367,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <JaaliBand className="bg-ivory-100" />
+
       {/* 7. Voices and trust */}
       <section aria-labelledby="voices-title" className="bg-ivory-200/70 py-20 sm:py-28">
         <div className="container-page">
@@ -369,7 +376,7 @@ export default async function HomePage() {
           {voices.length > 0 && (
             <ul className="grid gap-5 md:grid-cols-3">
               {voices.map((v) => (
-                <li key={v.name} className="reveal card flex flex-col p-7">
+                <li key={v.name} className="card flex flex-col p-7">
                   <span aria-hidden="true" className="font-serif text-6xl leading-none text-gold-400">
                     “
                   </span>

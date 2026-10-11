@@ -41,14 +41,14 @@ export function VolunteerForm({ token }: { token: string }) {
         <TextField name="phone" type="tel" label="Phone" autoComplete="tel" defaultValue={v.phone} />
       </div>
       <fieldset>
-        <legend className="field-label">Where could you help? <span className="text-saffron-700">*</span></legend>
+        <legend className="field-label">Where could you help? <span className="text-kumkum-700">*</span></legend>
         <div className="mt-1 grid gap-1 sm:grid-cols-2">
           {SKILLS.map(([val, label]) => <Checkbox key={val} name="skills" value={val} label={label} />)}
         </div>
         {e.skills && <p className="field-error">{e.skills}</p>}
       </fieldset>
       <fieldset>
-        <legend className="field-label">When are you free? <span className="text-saffron-700">*</span></legend>
+        <legend className="field-label">When are you free? <span className="text-kumkum-700">*</span></legend>
         <div className="mt-1 grid gap-1 sm:grid-cols-2">
           {AVAIL.map(([val, label]) => <Checkbox key={val} name="availability" value={val} label={label} />)}
         </div>
@@ -66,8 +66,8 @@ export function VolunteerForm({ token }: { token: string }) {
 export function ShiftSignup({ shiftId, token }: { shiftId: number; token: string }) {
   const [open, setOpen] = useState(false)
   const [state, action] = useActionState<FormState, FormData>(signUpForShift, {})
-  if (state.ok) return <p role="status" className="mt-3 text-sm font-semibold text-[#15803d]">{state.message}</p>
-  if (!open) return <button type="button" onClick={() => setOpen(true)} className="mt-3 min-h-11 cursor-pointer rounded-full border border-saffron-200 px-4 text-sm font-semibold text-saffron-800 hover:bg-saffron-50">Sign up for this shift</button>
+  if (state.ok) return <p role="status" className="mt-3 text-sm font-semibold text-tulsi-700">{state.message}</p>
+  if (!open) return <button type="button" onClick={() => setOpen(true)} className="mt-3 min-h-11 cursor-pointer rounded-full border border-kumkum-200 px-4 text-sm font-semibold text-kumkum-800 hover:bg-kumkum-50">Sign up for this shift</button>
   return (
     <form action={action} className="relative mt-4 space-y-3" noValidate>
       <FormGuardFields token={token} />

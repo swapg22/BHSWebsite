@@ -19,7 +19,8 @@ export const VOLUNTEER_SKILLS = [
 export const Volunteers: CollectionConfig = withAudit({
   slug: 'volunteers',
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'email', 'skills', 'status', 'createdAt'], group: 'People' },
-  access: { read: staffOnly, create: staffOnly, update: staffOnly, delete: ({ req }) => hasRole(req.user, 'administrator') },
+  // Personal details: administrator only (editors never see other people's details, section 15)
+  access: { read: adminOnly, create: adminOnly, update: adminOnly, delete: adminOnly },
   fields: [
     { type: 'row', fields: [{ name: 'name', type: 'text', required: true }, { name: 'email', type: 'email', required: true }, { name: 'phone', type: 'text' }] },
     { name: 'skills', type: 'select', hasMany: true, options: VOLUNTEER_SKILLS },
@@ -51,7 +52,7 @@ export const VolunteerShifts: CollectionConfig = withAudit({
     {
       name: 'signups',
       type: 'array',
-      access: { read: ({ req }) => hasRole(req.user, 'administrator', 'editor', 'membership-officer', 'treasurer') },
+      access: { read: ({ req }) => hasRole(req.user, 'administrator') },
       fields: [
         { name: 'name', type: 'text', required: true },
         { name: 'email', type: 'email', required: true },
@@ -74,9 +75,9 @@ export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'topic', 'status', 'createdAt'], group: 'People' },
   access: {
-    read: ({ req }) => hasRole(req.user, 'administrator', 'membership-officer', 'treasurer'),
+    read: ({ req }) => hasRole(req.user, 'administrator', 'treasurer'),
     create: () => false,
-    update: ({ req }) => hasRole(req.user, 'administrator', 'membership-officer', 'treasurer'),
+    update: ({ req }) => hasRole(req.user, 'administrator', 'treasurer'),
     delete: adminOnly,
   },
   fields: [
@@ -92,7 +93,7 @@ export const ContactMessages: CollectionConfig = {
 export const NewsletterSubscribers: CollectionConfig = {
   slug: 'newsletter-subscribers',
   admin: { useAsTitle: 'email', defaultColumns: ['email', 'status', 'source', 'consentedAt'], group: 'People' },
-  access: { read: staffOnly, create: () => false, update: staffOnly, delete: adminOnly },
+  access: { read: adminOnly, create: () => false, update: adminOnly, delete: adminOnly },
   fields: [
     { name: 'email', type: 'email', required: true, unique: true },
     { name: 'name', type: 'text' },
@@ -143,3 +144,68 @@ export const AuditLog: CollectionConfig = {
   ],
 }
 
+
+/**
+ * Change requests (section 16 `change_requests`): drafts waiting for approval, who proposed them,
+ * whether the change is major, and who approved or declined it. Written by the approval hooks.
+ */
+export const ChangeRequests: CollectionConfig = {
+  slug: 'change-requests',
+  labels: { singular: 'Change request', plural: 'Changes awaiting approval' },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'entity', 'major', 'status', 'proposedBy', 'proposedAt'],
+    group: 'Admin',
+    description: 'Drafts editors have marked "Ready for review". Open the item, check it, then publish it — or decline here with a note.',
+  },
+  access: {
+    read: ({ req }) => hasRole(req.user, 'administrator', 'editor'),
+    create: () => false,
+    update: adminOnly,
+    delete: () => false,
+  },
+  defaultSort: '-proposedAt',
+  fields: [
+    { name: 'title', type: 'text', required: true, admin: { readOnly: true } },
+    { type: 'row', fields: [
+      { name: 'entity', type: 'text', required: true, index: true, admin: { readOnly: true, description: 'Content type' } },
+      { name: 'entityId', type: 'text', required: true, admin: { readOnly: true } },
+      { name: 'kind', type: 'select', options: ['collection', 'global'], admin: { readOnly: true } },
+    ] },
+    { name: 'major', type: 'checkbox', defaultValue: false, label: 'Major change', admin: { readOnly: true, position: 'sidebar' } },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      index: true,
+      defaultValue: 'awaiting-approval',
+      options: [
+        { label: 'Awaiting approval', value: 'awaiting-approval' },
+        { label: 'Approved and published', value: 'approved' },
+        { label: 'Declined', value: 'declined' },
+      ],
+      admin: { position: 'sidebar' },
+    },
+    { name: 'proposedBy', type: 'relationship', relationTo: 'users', admin: { readOnly: true } },
+    { name: 'proposedAt', type: 'date', admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
+    { name: 'decidedBy', type: 'relationship', relationTo: 'users', admin: { readOnly: true } },
+    { name: 'decidedAt', type: 'date', admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
+    { name: 'note', type: 'textarea', label: 'Note to the editor', admin: { description: 'Why it was declined, or what to change.' } },
+    {
+      name: 'openItem',
+      type: 'ui',
+      admin: { components: { Field: '@/components/admin/ChangeRequestLink#ChangeRequestLink' } },
+    },
+  ],
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc, req }) => {
+        if (originalDoc && data.status === 'declined' && originalDoc.status !== 'declined') {
+          data.decidedBy = req.user?.id
+          data.decidedAt = new Date().toISOString()
+        }
+        return data
+      },
+    ],
+  },
+}

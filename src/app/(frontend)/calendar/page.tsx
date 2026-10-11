@@ -61,7 +61,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
     <>
       <PageHeader eyebrow="Events" title="Calendar" intro="Festivals, events and regular activities. Subscribe to keep the Mandir calendar on your phone.">
         <div className="flex flex-wrap gap-3">
-          <a href={webcal} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-saffron-700 px-5 font-semibold text-white hover:bg-saffron-800">
+          <a href={webcal} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-kumkum-700 px-5 font-semibold text-white hover:bg-kumkum-800">
             <Rss aria-hidden="true" className="h-5 w-5" /> Subscribe
           </a>
           <a href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center rounded-full border border-charcoal-400 bg-white px-5 font-semibold hover:bg-ivory-100">
@@ -86,7 +86,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
               <ChevronRight aria-hidden="true" className="h-5 w-5" />
               <span className="sr-only">Next month</span>
             </Link>
-            <Link href={`/calendar?month=${y}-${String(m).padStart(2, '0')}${showDaily ? '' : '&all=1'}`} className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold text-saffron-800 hover:bg-ivory-200">
+            <Link href={`/calendar?month=${y}-${String(m).padStart(2, '0')}${showDaily ? '' : '&all=1'}`} className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold text-kumkum-800 hover:bg-ivory-200">
               {showDaily ? 'Hide daily aarti' : 'Show daily aarti'}
             </Link>
           </div>
@@ -107,12 +107,12 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
               const k = valid ? `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}` : ''
               const items = valid ? (byDay.get(k) ?? []) : []
               return (
-                <div key={i} className={`min-h-32 p-2 ${valid ? 'bg-white' : 'bg-ivory-100'} ${k === todayKey ? 'ring-2 ring-inset ring-saffron-600' : ''}`}>
-                  {valid && <p className={`mb-1 text-sm font-semibold ${k === todayKey ? 'text-saffron-800' : 'text-charcoal-500'}`}>{day}</p>}
+                <div key={i} className={`min-h-32 p-2 ${valid ? 'bg-white' : 'bg-ivory-100'} ${k === todayKey ? 'ring-2 ring-inset ring-kumkum-600' : ''}`}>
+                  {valid && <p className={`mb-1 text-sm font-semibold ${k === todayKey ? 'text-kumkum-800' : 'text-charcoal-500'}`}>{day}</p>}
                   <ul className="space-y-1">
                     {items.slice(0, 4).map(({ e, start }) => (
                       <li key={`${e.id}-${start.toISOString()}`}>
-                        <Link href={`/events/${e.slug}`} className={`block truncate rounded-md px-1.5 py-1 text-xs font-medium ${e.category === 'festival' ? 'bg-saffron-50 text-saffron-900 hover:bg-saffron-100' : 'bg-ivory-200 text-charcoal-800 hover:bg-ivory-300'}`}>
+                        <Link href={`/events/${e.slug}`} className={`block truncate rounded-md px-1.5 py-1 text-xs font-medium ${e.category === 'festival' ? 'bg-kumkum-50 text-kumkum-900 hover:bg-kumkum-100' : 'bg-ivory-200 text-charcoal-800 hover:bg-ivory-300'}`}>
                           {!e.allDay && <span className="font-semibold">{timeOf(start)} </span>}
                           {e.title}
                         </Link>
@@ -136,7 +136,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 <ul className="mt-2 divide-y divide-ivory-300">
                   {items.map(({ e, start }) => (
                     <li key={`${e.id}-${start.toISOString()}`}>
-                      <Link href={`/events/${e.slug}`} className="flex min-h-11 items-center gap-3 py-2 hover:text-saffron-800">
+                      <Link href={`/events/${e.slug}`} className="flex min-h-11 items-center gap-3 py-2 hover:text-kumkum-800">
                         <span className="w-16 shrink-0 text-sm font-semibold text-charcoal-500">{e.allDay ? 'All day' : timeOf(start)}</span>
                         <span>{e.title}</span>
                       </Link>

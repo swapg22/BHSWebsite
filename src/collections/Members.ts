@@ -1,9 +1,10 @@
 import type { CollectionConfig, FieldAccess } from 'payload'
-import { hasRole, isMember, isStaff } from '@/access/roles'
+import { hasRole, isMember } from '@/access/roles'
 import { withAudit } from '@/hooks/audit'
 import { renderEmail } from '@/lib/email'
 
-const membershipTeamField: FieldAccess = ({ req }) => hasRole(req.user, 'administrator', 'membership-officer', 'treasurer')
+// Only the administrator views, edits and exports the member list (section 15)
+const membershipTeamField: FieldAccess = ({ req }) => hasRole(req.user, 'administrator')
 
 /** Fields a member may not change themselves. */
 const staffManaged = { update: membershipTeamField, create: membershipTeamField }
@@ -38,19 +39,19 @@ export const Members: CollectionConfig = withAudit({
   },
   access: {
     admin: () => false,
-    create: ({ req }) => hasRole(req.user, 'administrator', 'membership-officer'),
+    create: ({ req }) => hasRole(req.user, 'administrator'),
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'membership-officer', 'treasurer')) return true
+      if (hasRole(req.user, 'administrator')) return true
       if (isMember(req.user)) return { id: { equals: req.user!.id } }
       return false
     },
     update: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'membership-officer')) return true
+      if (hasRole(req.user, 'administrator')) return true
       if (isMember(req.user)) return { id: { equals: req.user!.id } }
       return false
     },
-    delete: ({ req }) => hasRole(req.user, 'administrator', 'membership-officer'),
-    unlock: ({ req }) => hasRole(req.user, 'administrator', 'membership-officer'),
+    delete: ({ req }) => hasRole(req.user, 'administrator'),
+    unlock: ({ req }) => hasRole(req.user, 'administrator'),
   },
   fields: [
     {
@@ -139,7 +140,7 @@ export const Members: CollectionConfig = withAudit({
       name: 'committeeNotes',
       type: 'textarea',
       label: 'Committee-only notes',
-      access: { read: ({ req }) => isStaff(req.user), update: membershipTeamField, create: membershipTeamField },
+      access: { read: membershipTeamField, update: membershipTeamField, create: membershipTeamField },
       admin: { description: 'Never shown to the member.' },
     },
     { name: 'magicLinkHash', type: 'text', hidden: true, index: true },

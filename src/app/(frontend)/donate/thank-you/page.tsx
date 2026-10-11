@@ -19,7 +19,7 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
   return (
     <div className="container-page py-20">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-saffron-700 text-ivory-50">
+        <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-kumkum-700 text-ivory-50">
           <LotusMark className="h-11 w-11" />
         </span>
         <h1 className="mt-6 text-5xl">Thank you{donation ? `, ${donation.firstName}` : ''}</h1>
@@ -32,7 +32,7 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
                 'We are confirming your payment with the provider. Your receipt will arrive by email shortly.'
               )}
             </p>
-            {paid && donation.giftAidEligible && <p className="mt-2 flex items-center justify-center gap-2 text-charcoal-600"><CheckCircle2 aria-hidden="true" className="h-5 w-5 text-[#15803d]" /> Gift Aid adds {formatMoney(Math.floor(donation.amount * 0.25))} at no cost to you.</p>}
+            {paid && donation.giftAidEligible && <p className="mt-2 flex items-center justify-center gap-2 text-charcoal-600"><CheckCircle2 aria-hidden="true" className="h-5 w-5 text-tulsi-700" /> Gift Aid adds {formatMoney(Math.floor(donation.amount * 0.25))} at no cost to you.</p>}
             <p className="mt-2 text-charcoal-600">Reference: <strong>{donation.reference}</strong></p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {paid && <ButtonLink href={receiptUrl(donation.reference).replace(siteUrl(), '')}>Download receipt</ButtonLink>}

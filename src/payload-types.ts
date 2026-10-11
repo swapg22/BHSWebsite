@@ -85,6 +85,7 @@ export interface Config {
     'contact-messages': ContactMessage;
     'newsletter-subscribers': NewsletterSubscriber;
     users: User;
+    'change-requests': ChangeRequest;
     'email-outbox': EmailOutbox;
     'audit-log': AuditLog;
     'payload-kv': PayloadKv;
@@ -112,6 +113,7 @@ export interface Config {
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'change-requests': ChangeRequestsSelect<false> | ChangeRequestsSelect<true>;
     'email-outbox': EmailOutboxSelect<false> | EmailOutboxSelect<true>;
     'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -129,12 +131,14 @@ export interface Config {
     'home-page': HomePage;
     appeal: Appeal;
     governance: Governance;
+    'approval-settings': ApprovalSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     appeal: AppealSelect<false> | AppealSelect<true>;
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
+    'approval-settings': ApprovalSettingsSelect<false> | ApprovalSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -581,8 +585,13 @@ export interface Service {
    * Web address. Leave blank to generate from the title.
    */
   slug?: string | null;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Approve, reject or cancel requests. Approved hall and ceremony bookings are written to the master calendar.
@@ -858,9 +867,9 @@ export interface User {
   id: number;
   name: string;
   /**
-   * Administrator = approver. Editors draft content but cannot publish.
+   * One role per person. Administrator = approver; editors draft content and prices but cannot publish; treasurer = finance view.
    */
-  roles: ('administrator' | 'editor' | 'treasurer' | 'membership-officer')[];
+  roles: ('administrator' | 'editor' | 'treasurer')[];
   /**
    * Suspended users cannot sign in.
    */
@@ -1001,6 +1010,34 @@ export interface NewsletterSubscriber {
   consentText?: string | null;
   consentedAt?: string | null;
   token?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Drafts editors have marked "Ready for review". Open the item, check it, then publish it — or decline here with a note.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "change-requests".
+ */
+export interface ChangeRequest {
+  id: number;
+  title: string;
+  /**
+   * Content type
+   */
+  entity: string;
+  entityId: string;
+  kind?: ('collection' | 'global') | null;
+  major?: boolean | null;
+  status: 'awaiting-approval' | 'approved' | 'declined';
+  proposedBy?: (number | null) | User;
+  proposedAt?: string | null;
+  decidedBy?: (number | null) | User;
+  decidedAt?: string | null;
+  /**
+   * Why it was declined, or what to change.
+   */
+  note?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1216,6 +1253,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'change-requests';
+        value: number | ChangeRequest;
       } | null)
     | ({
         relationTo: 'email-outbox';
@@ -1521,8 +1562,10 @@ export interface ServicesSelect<T extends boolean = true> {
   notes?: T;
   sortOrder?: T;
   slug?: T;
+  readyForReview?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1847,6 +1890,25 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "change-requests_select".
+ */
+export interface ChangeRequestsSelect<T extends boolean = true> {
+  title?: T;
+  entity?: T;
+  entityId?: T;
+  kind?: T;
+  major?: T;
+  status?: T;
+  proposedBy?: T;
+  proposedAt?: T;
+  decidedBy?: T;
+  decidedAt?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2192,6 +2254,20 @@ export interface Governance {
   createdAt?: string | null;
 }
 /**
+ * Choose which content types count as major changes. Major changes are flagged first in "Changes awaiting approval".
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "approval-settings".
+ */
+export interface ApprovalSetting {
+  id: number;
+  majorChanges?:
+    | ('home-page' | 'appeal' | 'services' | 'site-settings' | 'governance' | 'pages' | 'events' | 'news' | 'albums')[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -2380,6 +2456,16 @@ export interface GovernanceSelect<T extends boolean = true> {
   festivalCalendarPdf?: T;
   readyForReview?: T;
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "approval-settings_select".
+ */
+export interface ApprovalSettingsSelect<T extends boolean = true> {
+  majorChanges?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

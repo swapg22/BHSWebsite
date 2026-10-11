@@ -39,7 +39,7 @@ export function EventCard({ event, compact = false }: { event: Event; compact?: 
   const img = mediaUrl(event.image as Media, 'card')
   const start = new Date(event.startsAt)
   return (
-    <article className="card group relative flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lg">
+    <article className="card group relative flex h-full flex-col overflow-hidden transition-shadow hover:shadow-[var(--shadow-lift)]">
       {!compact && (
         <div className="relative aspect-[16/10] overflow-hidden bg-ivory-200">
           <Image
@@ -52,17 +52,17 @@ export function EventCard({ event, compact = false }: { event: Event; compact?: 
         </div>
       )}
       <div className="flex flex-1 gap-4 p-5">
-        <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-saffron-100 bg-saffron-50 py-2 text-saffron-800" aria-hidden="true">
+        <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-kumkum-100 bg-kumkum-50 py-2 text-kumkum-800" aria-hidden="true">
           <span className="text-xs font-semibold uppercase tracking-wider">{monFmt.format(start)}</span>
           <span className="font-serif text-3xl leading-none">{dayFmt.format(start)}</span>
         </div>
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap gap-2">
-            <Badge tone={event.category === 'fundraising' ? 'gold' : 'saffron'}>{CATEGORY_LABEL[event.category] ?? event.category}</Badge>
+            <Badge tone={event.category === 'fundraising' ? 'gold' : 'kumkum'}>{CATEGORY_LABEL[event.category] ?? event.category}</Badge>
             {event.bookable && <Badge tone="green">Booking open</Badge>}
           </div>
           <h3 className="font-serif text-2xl text-charcoal-900">
-            <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 hover:text-saffron-800">
+            <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 hover:text-kumkum-800">
               {event.title}
             </Link>
           </h3>
@@ -91,7 +91,7 @@ export function AppealProgress({ raised, target, donors, stageLabel, tone = 'lig
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className={`text-sm font-semibold uppercase tracking-[0.14em] ${dark ? 'text-gold-300' : 'text-saffron-700'}`}>Raised so far</p>
+          <p className={`font-serif text-lg italic ${dark ? 'text-gold-300' : 'text-kumkum-700'}`}>Raised so far</p>
           <p className={`font-serif text-5xl sm:text-6xl ${dark ? 'text-ivory-50' : 'text-charcoal-900'}`}>{formatGBP(raised)}</p>
         </div>
         <p className={`text-right ${dark ? 'text-ivory-200' : 'text-charcoal-600'}`}>
@@ -99,7 +99,7 @@ export function AppealProgress({ raised, target, donors, stageLabel, tone = 'lig
           {stageLabel && (
             <>
               <br />
-              <span className={`text-sm ${dark ? 'text-gold-300' : 'text-saffron-800'}`}>{stageLabel}</span>
+              <span className={`text-sm ${dark ? 'text-gold-300' : 'text-kumkum-800'}`}>{stageLabel}</span>
             </>
           )}
         </p>
@@ -113,7 +113,7 @@ export function AppealProgress({ raised, target, donors, stageLabel, tone = 'lig
         aria-label="New Mandir appeal progress"
         className={`relative mt-5 h-4 overflow-hidden rounded-full ${dark ? 'bg-white/15' : 'bg-ivory-300'}`}
       >
-        <div className="h-full rounded-full bg-gradient-to-r from-saffron-600 via-saffron-500 to-gold-400 transition-[width] duration-1000" style={{ width: `${Math.max(pct, 1.5)}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-300 transition-[width] duration-1000" style={{ width: `${Math.max(pct, 1.5)}%` }} />
       </div>
       <p className={`mt-2 text-sm ${dark ? 'text-ivory-300' : 'text-charcoal-500'}`}>
         {pct.toFixed(1)}% of target{donors ? ` · ${donors} online donors` : ''}
@@ -124,7 +124,7 @@ export function AppealProgress({ raised, target, donors, stageLabel, tone = 'lig
 
 export function ArrowLink({ href, children, light = false }: { href: string; children: React.ReactNode; light?: boolean }) {
   return (
-    <Link href={href} className={`group inline-flex min-h-11 items-center gap-2 font-semibold ${light ? 'text-gold-300 hover:text-white' : 'text-saffron-800 hover:text-saffron-900'}`}>
+    <Link href={href} className={`group inline-flex min-h-11 items-center gap-2 font-semibold ${light ? 'text-gold-300 hover:text-white' : 'text-kumkum-800 hover:text-kumkum-900'}`}>
       {children}
       <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
     </Link>
@@ -133,7 +133,7 @@ export function ArrowLink({ href, children, light = false }: { href: string; chi
 
 export function ArtistsImpressionLabel({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full bg-charcoal-900/85 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-ivory-50 backdrop-blur ${className}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full bg-midnight-900/85 px-3.5 py-1.5 text-sm font-medium text-ivory-50 backdrop-blur ${className}`}>
       Artist&apos;s impression, not final design
     </span>
   )

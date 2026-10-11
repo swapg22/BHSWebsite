@@ -19,10 +19,10 @@ export default async function ContactPage() {
         </div>
         <aside className="space-y-5 lg:col-span-5">
           <div className="card space-y-4 p-6">
-            <p className="flex gap-3"><MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-saffron-700" /><span className="whitespace-pre-line">{s.address}</span></p>
-            {s.phone && <p className="flex gap-3"><Phone aria-hidden="true" className="mt-1 h-5 w-5 text-saffron-700" /><a className="underline" href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></p>}
-            {s.email && <p className="flex gap-3"><Mail aria-hidden="true" className="mt-1 h-5 w-5 text-saffron-700" /><a className="break-all underline" href={`mailto:${s.email}`}>{s.email}</a></p>}
-            <div className="flex gap-3"><Clock aria-hidden="true" className="mt-1 h-5 w-5 text-saffron-700" /><p>Weekdays {times.weekdays}<br />Weekends {times.weekends}<br />Daily aarti {times.aarti}</p></div>
+            <p className="flex gap-3"><MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-kumkum-700" /><span className="whitespace-pre-line">{s.address}</span></p>
+            {s.phone && <p className="flex gap-3"><Phone aria-hidden="true" className="mt-1 h-5 w-5 text-kumkum-700" /><a className="underline" href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></p>}
+            {s.email && <p className="flex gap-3"><Mail aria-hidden="true" className="mt-1 h-5 w-5 text-kumkum-700" /><a className="break-all underline" href={`mailto:${s.email}`}>{s.email}</a></p>}
+            <div className="flex gap-3"><Clock aria-hidden="true" className="mt-1 h-5 w-5 text-kumkum-700" /><p>Weekdays {times.weekdays}<br />Weekends {times.weekends}<br />Daily aarti {times.aarti}</p></div>
           </div>
           <div className="overflow-hidden rounded-3xl border border-ivory-300">
             <iframe title="Map showing Bharat Hindu Samaj, Rock Road, Peterborough" src="https://www.google.com/maps?q=Rock+Road+Peterborough+PE1+3BU&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-72 w-full" />

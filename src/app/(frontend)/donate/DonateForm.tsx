@@ -58,7 +58,7 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
         <div className="card p-6">
           <p className="eyebrow">Your sponsorship</p>
           <p className="mt-2 font-serif text-3xl">{sp.name}</p>
-          <p className="text-xl font-semibold text-saffron-800">{formatMoney(sp.amount)}</p>
+          <p className="text-xl font-semibold text-kumkum-800">{formatMoney(sp.amount)}</p>
           {sp.plaque && <TextField className="mt-4" name="plaqueName" label="Name or dedication for the plaque" maxLength={60} defaultValue={v.plaqueName} hint="e.g. In loving memory of …" />}
           <input type="hidden" name="frequency" value="one-off" />
         </div>
@@ -67,7 +67,7 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
           <legend className="float-left w-full font-serif text-2xl">Your gift</legend>
           <div role="radiogroup" aria-label="How often" className="grid grid-cols-2 gap-1 rounded-full bg-ivory-200 p-1">
             {(['one-off', 'monthly'] as const).map((f) => (
-              <label key={f} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-full font-semibold transition-colors ${frequency === f ? 'bg-white text-saffron-800 shadow' : 'text-charcoal-600'}`}>
+              <label key={f} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-full font-semibold transition-colors ${frequency === f ? 'bg-white text-kumkum-800 shadow' : 'text-charcoal-600'}`}>
                 <input type="radio" name="frequency" value={f} checked={frequency === f} onChange={() => { setFrequency(f); if (f === 'one-off' && method === 'direct-debit') setMethod('card') }} className="sr-only" />
                 {f === 'one-off' ? 'One-off' : 'Monthly'}
               </label>
@@ -75,12 +75,12 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
           </div>
           <div role="radiogroup" aria-label="Amount" className="grid grid-cols-3 gap-2">
             {PRESETS.map((p) => (
-              <label key={p} className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 text-lg font-semibold transition-colors ${amount === String(p) ? 'border-saffron-700 bg-saffron-50 text-saffron-900' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
+              <label key={p} className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 text-lg font-semibold transition-colors ${amount === String(p) ? 'border-kumkum-700 bg-kumkum-50 text-kumkum-900' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
                 <input type="radio" name="amount" value={p} checked={amount === String(p)} onChange={() => setAmount(String(p))} className="sr-only" />
                 {formatMoney(p, currency).replace(/\.00$/, '')}
               </label>
             ))}
-            <label className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 text-lg font-semibold ${amount === 'other' ? 'border-saffron-700 bg-saffron-50' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
+            <label className={`flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border-2 text-lg font-semibold ${amount === 'other' ? 'border-kumkum-700 bg-kumkum-50' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
               <input type="radio" name="amount" value="other" checked={amount === 'other'} onChange={() => setAmount('other')} className="sr-only" />
               Other
             </label>
@@ -151,8 +151,8 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
           ]
             .filter((o) => o.show)
             .map((o) => (
-              <label key={o.v} className={`flex min-h-14 cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 ${method === o.v ? 'border-saffron-700 bg-saffron-50' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
-                <input type="radio" name="method" value={o.v} checked={method === o.v} onChange={() => setMethod(o.v)} className="mt-1 h-5 w-5 accent-saffron-700" />
+              <label key={o.v} className={`flex min-h-14 cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 ${method === o.v ? 'border-kumkum-700 bg-kumkum-50' : 'border-ivory-300 bg-white hover:border-charcoal-400'}`}>
+                <input type="radio" name="method" value={o.v} checked={method === o.v} onChange={() => setMethod(o.v)} className="mt-1 h-5 w-5 accent-kumkum-700" />
                 <span>
                   <span className="block font-semibold">{o.l}</span>
                   <span className="block text-sm text-charcoal-600">{o.d}</span>
@@ -164,7 +164,7 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
         {method === 'direct-debit' && directDebitDemo && <p className="text-sm text-charcoal-500">Demo mode: Direct Debit is simulated until GoCardless keys are added.</p>}
         {!sp && (
           <details className="text-sm">
-            <summary className="min-h-11 cursor-pointer py-2 font-semibold text-saffron-800">Giving from overseas? Change currency</summary>
+            <summary className="min-h-11 cursor-pointer py-2 font-semibold text-kumkum-800">Giving from overseas? Change currency</summary>
             <Select name="currency" label="Currency" value={currency} onChange={(e) => { setCurrency(e.target.value); if (e.target.value !== 'GBP') { setMethod('card'); setGiftAid(false) } }} options={SUPPORTED_CURRENCIES.map((c) => ({ value: c, label: c }))} hint="Gift Aid is only available on UK taxpayers’ gifts in pounds. Please check any tax relief available in your own country." />
           </details>
         )}

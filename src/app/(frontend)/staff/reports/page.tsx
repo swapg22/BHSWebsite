@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 
 /** Dashboard and CSV exports (FR-46), HMRC Gift Aid schedule (FR-20). */
 export default async function ReportsPage() {
-  const user = await requireStaff('administrator', 'treasurer', 'membership-officer')
+  const user = await requireStaff('administrator', 'treasurer')
   const payload = await getPayloadClient()
   const s = await getDashboardStats(payload)
   const finance = hasRole(user, 'administrator', 'treasurer')
@@ -19,7 +19,8 @@ export default async function ReportsPage() {
     finance && { href: '/exports/gift-aid', label: 'HMRC Gift Aid schedule (CSV)', text: 'Eligible, unclaimed personal gifts in the Charities Online column order. The treasurer must review the first export before any claim.' },
     finance && { href: '/exports/donations', label: 'All donations (CSV)', text: 'Every gift with fund, method, Gift Aid status and campaign code.' },
     finance && { href: '/exports/payments', label: 'Membership and booking payments (CSV)', text: 'Receipts for the treasurer’s reconciliation.' },
-    { href: '/exports/members', label: 'Members (CSV)', text: 'The member database with status, renewal dates and consents.' },
+    hasRole(user, 'administrator') && { href: '/exports/members', label: 'Members (CSV)', text: 'The member database with status, renewal dates and consents.' },
+    hasRole(user, 'administrator') && { href: '/exports/members-xlsx', label: 'Members (Excel)', text: 'The member list as an Excel workbook, in the same nine columns as the original list plus status and consents.' },
     { href: '/exports/bookings', label: 'Bookings (CSV)', text: 'All bookings with status and amounts.' },
   ].filter(Boolean) as { href: string; label: string; text: string }[]
   return (
@@ -50,7 +51,7 @@ export default async function ReportsPage() {
                 <label className="field-label" htmlFor={`${e.href}-to`}>To</label>
                 <input id={`${e.href}-to`} name="to" type="date" className="field-input" />
               </div>
-              <button className="min-h-12 cursor-pointer rounded-full bg-saffron-700 px-5 font-semibold text-white hover:bg-saffron-800">Download</button>
+              <button className="min-h-12 cursor-pointer rounded-full bg-kumkum-700 px-5 font-semibold text-white hover:bg-kumkum-800">Download</button>
             </form>
           </li>
         ))}

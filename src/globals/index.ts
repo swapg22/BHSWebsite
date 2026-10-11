@@ -1,7 +1,7 @@
 import type { GlobalConfig } from 'payload'
-import { adminFieldOnly, contentEditors, hasRole } from '@/access/roles'
+import { adminFieldOnly, adminOnly, contentEditors, hasRole } from '@/access/roles'
 import { auditGlobalAfterChange } from '@/hooks/audit'
-import { readyForReviewField, requireApproverToPublishGlobal } from '@/hooks/approval'
+import { MAJOR_DEFAULTS, readyForReviewField, requireApproverToPublishGlobal, trackGlobalChangeRequest } from '@/hooks/approval'
 import { revalidateGlobal } from '@/hooks/revalidate'
 
 const editorialGlobal = {
@@ -13,7 +13,7 @@ const editorialGlobal = {
 
 const hooks = {
   beforeChange: [requireApproverToPublishGlobal],
-  afterChange: [revalidateGlobal, auditGlobalAfterChange],
+  afterChange: [revalidateGlobal, auditGlobalAfterChange, trackGlobalChangeRequest],
 }
 
 const timesFields = [
@@ -268,3 +268,31 @@ export const Governance: GlobalConfig = {
   ],
 }
 
+
+/** Which changes count as "major" is a setting the administrator maintains (section 15). */
+export const ApprovalSettings: GlobalConfig = {
+  slug: 'approval-settings',
+  label: 'Approval settings',
+  admin: { group: 'Admin', description: 'Choose which content types count as major changes. Major changes are flagged first in "Changes awaiting approval".' },
+  access: { read: contentEditors, update: adminOnly },
+  hooks: { afterChange: [auditGlobalAfterChange] },
+  fields: [
+    {
+      name: 'majorChanges',
+      type: 'select',
+      hasMany: true,
+      defaultValue: MAJOR_DEFAULTS,
+      options: [
+        { label: 'Home page', value: 'home-page' },
+        { label: 'New Mandir appeal (text, figures, case notice, visuals)', value: 'appeal' },
+        { label: 'Service catalogue and prices', value: 'services' },
+        { label: 'Site settings and times', value: 'site-settings' },
+        { label: 'Trustees, policies and accounts', value: 'governance' },
+        { label: 'Pages', value: 'pages' },
+        { label: 'Events', value: 'events' },
+        { label: 'News', value: 'news' },
+        { label: 'Photo albums', value: 'albums' },
+      ],
+    },
+  ],
+}

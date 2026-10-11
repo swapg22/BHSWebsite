@@ -31,7 +31,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         <form role="search" className="flex max-w-xl gap-2">
           <label htmlFor="q" className="sr-only">Search</label>
           <input id="q" name="q" type="search" defaultValue={q} placeholder="e.g. Diwali, havan, hall hire" className="field-input !rounded-full" />
-          <button className="inline-flex min-h-12 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-saffron-700 px-5 font-semibold text-white hover:bg-saffron-800"><Search aria-hidden="true" className="h-5 w-5" />Search</button>
+          <button className="inline-flex min-h-12 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-kumkum-700 px-5 font-semibold text-white hover:bg-kumkum-800"><Search aria-hidden="true" className="h-5 w-5" />Search</button>
         </form>
       </PageHeader>
       <div className="container-page py-12">
@@ -39,8 +39,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         <ul className="space-y-3">
           {results.map((r) => (
             <li key={r.href} className="card p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-saffron-700">{r.type}</p>
-              <Link href={r.href} className="font-serif text-2xl hover:text-saffron-800">{r.title}</Link>
+              <p className="text-sm font-semibold text-kumkum-700">{r.type}</p>
+              <Link href={r.href} className="font-serif text-2xl hover:text-kumkum-800">{r.title}</Link>
               {r.text && <p className="mt-1 line-clamp-2 text-charcoal-600">{r.text}</p>}
             </li>
           ))}

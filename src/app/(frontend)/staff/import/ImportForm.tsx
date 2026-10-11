@@ -14,7 +14,7 @@ export function ImportForm() {
           <input id="file" name="file" type="file" accept=".xlsx,.csv" required className="field-input cursor-pointer" />
         </div>
         <button name="mode" value="check" disabled={pending} className="min-h-12 cursor-pointer rounded-full border border-charcoal-400 px-6 font-semibold hover:bg-ivory-100">Check file</button>
-        <button name="mode" value="import" disabled={pending || !r} className="min-h-12 cursor-pointer rounded-full bg-saffron-700 px-6 font-semibold text-white hover:bg-saffron-800 disabled:opacity-50">Import</button>
+        <button name="mode" value="import" disabled={pending || !r} className="min-h-12 cursor-pointer rounded-full bg-kumkum-700 px-6 font-semibold text-white hover:bg-kumkum-800 disabled:opacity-50">Import</button>
       </form>
       {state.message && <p role="status" className="rounded-2xl border border-ivory-400 bg-white p-4">{state.message}</p>}
       {r && (
@@ -29,7 +29,7 @@ export function ImportForm() {
                   {r.issues.map((i, n) => (
                     <tr key={n}>
                       <td className="px-4 py-2">{i.rowNumber}</td>
-                      <td className={`px-4 py-2 font-semibold ${i.severity === 'error' ? 'text-[#b42318]' : 'text-saffron-800'}`}>{i.severity}</td>
+                      <td className={`px-4 py-2 font-semibold ${i.severity === 'error' ? 'text-[#b42318]' : 'text-kumkum-800'}`}>{i.severity}</td>
                       <td className="px-4 py-2">{i.field}</td>
                       <td className="px-4 py-2">{i.message}</td>
                     </tr>

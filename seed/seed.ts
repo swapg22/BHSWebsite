@@ -75,7 +75,6 @@ async function main() {
     { email: env('SEED_ADMIN_EMAIL'), password: env('SEED_ADMIN_PASSWORD'), name: 'Site Administrator', roles: ['administrator'] },
     { email: env('SEED_EDITOR_EMAIL'), password: env('SEED_EDITOR_PASSWORD'), name: 'Test Editor', roles: ['editor'] },
     { email: env('SEED_TREASURER_EMAIL'), password: env('SEED_TREASURER_PASSWORD'), name: 'Test Treasurer', roles: ['treasurer'] },
-    { email: env('SEED_MEMBERSHIP_EMAIL'), password: env('SEED_MEMBERSHIP_PASSWORD'), name: 'Test Membership Officer', roles: ['membership-officer'] },
   ] as const
   for (const s of staff) {
     await payload.create({ collection: 'users', data: { ...s, roles: [...s.roles] }, overrideAccess: true, context: ctx })
@@ -245,6 +244,7 @@ async function main() {
     await payload.create({
       collection: 'services',
       data: {
+        _status: 'published',
         name: c.name,
         category: 'pooja',
         availability: 'active',
@@ -276,6 +276,7 @@ async function main() {
     await payload.create({
       collection: 'services',
       data: {
+        _status: 'published',
         name: h.name,
         category: 'hall',
         summary: h.summary,
@@ -305,6 +306,7 @@ async function main() {
     await payload.create({
       collection: 'services',
       data: {
+        _status: 'published',
         name: a.name,
         category: (a as { category?: 'meal' }).category ?? 'class',
         summary: [(a as { note?: string }).note, (a as { membersOnly?: boolean }).membersOnly ? 'Free for BHS members.' : null, 'A voluntary contribution of £1 per session helps keep activities running.'].filter(Boolean).join(' '),

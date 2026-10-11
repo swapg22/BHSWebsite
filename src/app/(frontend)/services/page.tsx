@@ -85,7 +85,7 @@ export default async function ServicesPage() {
                     <td className="px-5 py-4 text-right tabular-nums">{price(s, false)}</td>
                     <td className="px-5 py-4 text-right tabular-nums">{s.materialsPrice ? formatGBP(s.materialsPrice) : 'N/A'}</td>
                     <td className="px-5 py-3 text-right">
-                      <Link href={`/book/${s.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-saffron-700 px-4 text-sm font-semibold text-white hover:bg-saffron-800">
+                      <Link href={`/book/${s.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-kumkum-700 px-4 text-sm font-semibold text-white hover:bg-kumkum-800">
                         Request<span className="sr-only"> {s.name}</span>
                       </Link>
                     </td>
@@ -107,7 +107,7 @@ export default async function ServicesPage() {
                 {SERVICE_CATEGORY_LABELS.hall}
               </h2>
               <p className="mt-3 text-lg text-charcoal-600">Choose a date and see free times straight away. The office confirms your booking and price, then you pay online. Legal licensed marriages can be held at the Mandir.</p>
-              <Link href="/hall-hire-terms" className="mt-4 inline-block font-semibold text-saffron-800 underline">
+              <Link href="/hall-hire-terms" className="mt-4 inline-block font-semibold text-kumkum-800 underline">
                 Read the hall and kitchen hire policy
               </Link>
               <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-3xl">

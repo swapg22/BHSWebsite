@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'Import members', robots: { index: fa
 export const dynamic = 'force-dynamic'
 
 export default async function ImportPage() {
-  await requireStaff('administrator', 'membership-officer')
+  await requireStaff('administrator')
   return (
     <div className="container-page py-12">
       <p className="eyebrow">Staff tools</p>

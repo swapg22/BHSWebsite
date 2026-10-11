@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom'
 import type { ComponentProps, ReactNode } from 'react'
-import { buttonClass } from '@/components/ui'
+import { buttonClass, Diya } from '@/components/ui'
 
 /** Accessible form building blocks: labels tied to inputs, errors announced and linked with aria-describedby. */
 
@@ -29,7 +29,7 @@ export function Field({
     <div className={className}>
       <label htmlFor={id} className="field-label">
         {label}
-        {required ? <span className="text-saffron-700"> *</span> : <span className="font-normal text-charcoal-500"> (optional)</span>}
+        {required ? <span className="text-kumkum-700"> *</span> : <span className="font-normal text-charcoal-500"> (optional)</span>}
       </label>
       {children({ id, name, required, 'aria-invalid': error ? true : undefined, 'aria-describedby': describedBy })}
       {hint && (
@@ -92,7 +92,7 @@ export function Checkbox({ name, label, hint, error, required, defaultChecked, v
           defaultChecked={defaultChecked}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-          className="mt-0.5 h-6 w-6 shrink-0 cursor-pointer rounded-md border-2 border-charcoal-400 accent-saffron-700"
+          className="mt-0.5 h-6 w-6 shrink-0 cursor-pointer rounded-md border-2 border-charcoal-400 accent-kumkum-700"
           {...rest}
         />
         <span className="text-[0.98rem] text-charcoal-800">{label}</span>
@@ -117,7 +117,7 @@ export function SubmitButton({ children, pendingLabel = 'Please wait…', classN
     <button type="submit" disabled={pending} aria-disabled={pending} className={buttonClass('primary', size, className)}>
       {pending ? (
         <>
-          <span aria-hidden="true" className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+          <Diya className="h-5 w-5 text-ivory-50" />
           {pendingLabel}
         </>
       ) : (
@@ -143,7 +143,7 @@ export function FormGuardFields({ token }: { token: string }) {
 export function FormMessage({ state }: { state: { ok?: boolean; message?: string } | undefined }) {
   if (!state?.message) return null
   return (
-    <div role={state.ok ? 'status' : 'alert'} className={`rounded-2xl border px-5 py-4 ${state.ok ? 'border-[#8cc79c] bg-[#ecf7ef] text-[#14532d]' : 'border-[#f0a3a3] bg-[#fdecec] text-[#7f1d1d]'}`}>
+    <div role={state.ok ? 'status' : 'alert'} className={`rounded-2xl border px-5 py-4 ${state.ok ? 'border-tulsi-300 bg-tulsi-50 text-tulsi-900' : 'border-[#f0a3a3] bg-[#fdecec] text-[#7f1d1d]'}`}>
       {state.message}
     </div>
   )

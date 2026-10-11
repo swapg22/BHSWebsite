@@ -60,7 +60,7 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
                     aria-expanded={open === g.label}
                     aria-controls={`menu-${g.label}`}
                     onClick={() => setOpen(open === g.label ? null : g.label)}
-                    className={`flex min-h-11 cursor-pointer items-center gap-1 whitespace-nowrap rounded-full px-3 text-[0.95rem] font-medium transition-colors hover:bg-ivory-200 ${isActive(g.href) ? 'text-saffron-800' : 'text-charcoal-800'}`}
+                    className={`flex min-h-11 cursor-pointer items-center gap-1 whitespace-nowrap rounded-full px-3 text-[0.95rem] font-medium transition-colors hover:bg-ivory-200 ${isActive(g.href) ? 'text-kumkum-800' : 'text-charcoal-800'}`}
                   >
                     {g.label}
                     <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform ${open === g.label ? 'rotate-180' : ''}`} />
@@ -86,7 +86,7 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
                 <Link
                   href={g.href}
                   aria-current={isActive(g.href) ? 'page' : undefined}
-                  className={`flex min-h-11 items-center whitespace-nowrap rounded-full px-3 text-[0.95rem] font-medium transition-colors hover:bg-ivory-200 ${isActive(g.href) ? 'text-saffron-800' : 'text-charcoal-800'}`}
+                  className={`flex min-h-11 items-center whitespace-nowrap rounded-full px-3 text-[0.95rem] font-medium transition-colors hover:bg-ivory-200 ${isActive(g.href) ? 'text-kumkum-800' : 'text-charcoal-800'}`}
                 >
                   {g.label}
                 </Link>
@@ -97,10 +97,10 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
       </nav>
 
       <div className="flex items-center gap-1.5 xl:hidden">
-        <Link href="/membership" className="inline-flex min-h-11 items-center rounded-full border border-saffron-200 bg-white px-3 text-sm font-semibold text-saffron-800 hover:border-saffron-700">
+        <Link href="/membership" className="inline-flex min-h-11 items-center rounded-full border border-gold-500/60 bg-ivory-50 px-3 text-sm font-semibold text-kumkum-800 hover:border-kumkum-700">
           Join
         </Link>
-        <Link href="/donate" className="inline-flex min-h-11 items-center rounded-full bg-saffron-700 px-3.5 text-sm font-semibold text-white hover:bg-saffron-800">
+        <Link href="/donate" className="inline-flex min-h-11 items-center rounded-full bg-kumkum-700 px-3.5 text-sm font-semibold text-white hover:bg-kumkum-800">
           Donate
         </Link>
         <button
@@ -126,10 +126,10 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
           </div>
           <div className="container-page pb-10">
             <div className="mb-6 grid grid-cols-2 gap-3">
-              <Link href="/donate" className="flex min-h-12 items-center justify-center rounded-full bg-saffron-700 font-semibold text-white">
+              <Link href="/donate" className="flex min-h-12 items-center justify-center rounded-full bg-kumkum-700 font-semibold text-white">
                 Donate
               </Link>
-              <Link href="/membership" className="flex min-h-12 items-center justify-center rounded-full border border-saffron-200 bg-white font-semibold text-saffron-800">
+              <Link href="/membership" className="flex min-h-12 items-center justify-center rounded-full border border-gold-500/60 bg-ivory-50 font-semibold text-kumkum-800">
                 Join
               </Link>
             </div>
@@ -143,7 +143,7 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
                     <ul className="mt-1 grid gap-1 pl-1">
                       {g.items.map((i) => (
                         <li key={i.href}>
-                          <Link href={i.href} className="block py-2 text-charcoal-600 hover:text-saffron-800">
+                          <Link href={i.href} className="block py-2 text-charcoal-600 hover:text-kumkum-800">
                             {i.label}
                           </Link>
                         </li>
@@ -153,7 +153,7 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
                 </li>
               ))}
             </ul>
-            <Link href="/account" className="mt-6 block py-2 font-semibold text-saffron-800">
+            <Link href="/account" className="mt-6 block py-2 font-semibold text-kumkum-800">
               {signedIn ? 'My account' : 'Member sign in'}
             </Link>
           </div>

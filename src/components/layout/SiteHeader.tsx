@@ -23,7 +23,7 @@ export async function SiteHeader() {
           </div>
         </div>
       )}
-      <div className="border-b border-saffron-800/30 bg-saffron-800 text-ivory-50">
+      <div className="border-b border-kumkum-800/30 bg-kumkum-800 text-ivory-50">
         <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2 text-[0.9rem]">
           <p className="flex flex-wrap items-center gap-x-5 gap-y-1">
             <span className="inline-flex items-center gap-1.5">
@@ -49,11 +49,11 @@ export async function SiteHeader() {
       <header className="sticky top-0 z-40 border-b border-ivory-300/80 bg-ivory-100/92 backdrop-blur supports-[backdrop-filter]:bg-ivory-100/80">
         <div className="container-page flex h-[4.5rem] items-center justify-between gap-2 sm:gap-4">
           <Link href="/" className="group flex min-h-12 items-center gap-3" aria-label="Bharat Hindu Samaj, home">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-saffron-700 sm:h-11 sm:w-11 text-ivory-50 transition-colors group-hover:bg-saffron-800">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-kumkum-700 sm:h-11 sm:w-11 text-ivory-50 transition-colors group-hover:bg-kumkum-800">
               <LotusMark className="h-7 w-7" />
             </span>
             <span className="leading-tight">
-              <span className="block font-serif whitespace-nowrap text-[1.15rem] font-semibold text-charcoal-900 sm:text-[1.45rem]">Bharat Hindu Samaj</span>
+              <span className="block max-w-[6.5rem] font-serif text-[1.08rem] font-semibold leading-[1.05] text-charcoal-900 sm:max-w-none sm:whitespace-nowrap sm:text-[1.45rem] sm:leading-tight">Bharat Hindu Samaj</span>
               <span className="hidden text-xs tracking-wide text-charcoal-500 sm:block xl:hidden 2xl:block">Shree Ram Mandir · Peterborough</span>
             </span>
           </Link>

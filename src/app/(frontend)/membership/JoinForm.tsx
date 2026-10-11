@@ -46,7 +46,7 @@ export function JoinForm({ token }: { token: string }) {
         <Checkbox name="giftAid" label="Gift Aid my future donations: I am a UK taxpayer (the £20 fee itself is not Gift Aided)" />
         <Checkbox name="newsletter" label="Email me the newsletter" />
         <Checkbox name="sms" label="Send me occasional text or WhatsApp messages about events" />
-        <Checkbox name="privacy" required error={e.privacy} label={<>I have read the <Link href="/privacy" target="_blank" className="font-semibold text-saffron-800 underline">privacy notice</Link></>} />
+        <Checkbox name="privacy" required error={e.privacy} label={<>I have read the <Link href="/privacy" target="_blank" className="font-semibold text-kumkum-800 underline">privacy notice</Link></>} />
       </fieldset>
       <SubmitButton className="w-full sm:w-auto" pendingLabel="Creating your account…">Continue to pay £20</SubmitButton>
     </form>

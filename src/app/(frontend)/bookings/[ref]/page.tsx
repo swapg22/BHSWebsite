@@ -30,7 +30,7 @@ export default async function ManageBooking({ params, searchParams }: { params: 
       <div className="mx-auto max-w-2xl">
         <p className="eyebrow">Booking {b.reference}</p>
         <h1 className="mt-2 text-4xl">{b.itemTitle}</h1>
-        <div className="mt-3"><Badge tone={b.status === 'confirmed' ? 'green' : 'saffron'}>{BOOKING_STATUS_LABELS[b.status]}</Badge></div>
+        <div className="mt-3"><Badge tone={b.status === 'confirmed' ? 'green' : 'kumkum'}>{BOOKING_STATUS_LABELS[b.status]}</Badge></div>
         {failed && <p role="alert" className="mt-4 text-[#b42318]">The payment did not go through. Please try again.</p>}
         <dl className="card mt-6 divide-y divide-ivory-300">
           {[
@@ -46,7 +46,7 @@ export default async function ManageBooking({ params, searchParams }: { params: 
           <form action={payForBooking} className="mt-6">
             <input type="hidden" name="reference" value={b.reference} />
             <input type="hidden" name="t" value={t ?? ''} />
-            <button className="min-h-12 w-full cursor-pointer rounded-full bg-saffron-700 px-6 font-semibold text-white hover:bg-saffron-800">Pay {formatGBP(b.amount ?? 0)} now</button>
+            <button className="min-h-12 w-full cursor-pointer rounded-full bg-kumkum-700 px-6 font-semibold text-white hover:bg-kumkum-800">Pay {formatGBP(b.amount ?? 0)} now</button>
           </form>
         )}
         {['pending-approval', 'awaiting-payment', 'confirmed', 'waitlisted'].includes(b.status) && <CancelBookingForm reference={b.reference} token={t ?? ''} />}

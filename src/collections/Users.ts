@@ -127,7 +127,9 @@ export const Users: CollectionConfig = {
       options: STAFF_ROLES,
       saveToJWT: true,
       access: { update: adminFieldOnly, create: adminFieldOnly },
-      admin: { description: 'Administrator = approver. Editors draft content but cannot publish.' },
+      // A person has one role at a time (section 15)
+      validate: (value: unknown) => (Array.isArray(value) && value.length === 1) || 'Choose exactly one role',
+      admin: { description: 'One role per person. Administrator = approver; editors draft content and prices but cannot publish; treasurer = finance view.' },
     },
     {
       name: 'suspended',

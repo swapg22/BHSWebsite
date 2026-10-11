@@ -20,7 +20,7 @@ export function LoginForms({ next }: { next: string }) {
     <div className="mt-8">
       <div role="tablist" aria-label="Sign-in method" className="grid grid-cols-2 gap-1 rounded-full bg-ivory-200 p-1">
         {tabs.map(([m, l]) => (
-          <button key={m} role="tab" type="button" aria-selected={mode === m || (m === 'password' && mode === 'forgot')} onClick={() => setMode(m)} className={`min-h-11 cursor-pointer rounded-full font-semibold ${mode === m || (m === 'password' && mode === 'forgot') ? 'bg-white text-saffron-800 shadow' : 'text-charcoal-600'}`}>
+          <button key={m} role="tab" type="button" aria-selected={mode === m || (m === 'password' && mode === 'forgot')} onClick={() => setMode(m)} className={`min-h-11 cursor-pointer rounded-full font-semibold ${mode === m || (m === 'password' && mode === 'forgot') ? 'bg-white text-kumkum-800 shadow' : 'text-charcoal-600'}`}>
             {l}
           </button>
         ))}
@@ -33,7 +33,7 @@ export function LoginForms({ next }: { next: string }) {
             <TextField name="email" type="email" label="Email" autoComplete="email" required defaultValue={loginState.values?.email} error={loginState.errors?.email} />
             <TextField name="password" type="password" label="Password" autoComplete="current-password" required error={loginState.errors?.password} />
             <SubmitButton className="w-full" pendingLabel="Signing in…">Sign in</SubmitButton>
-            <button type="button" onClick={() => setMode('forgot')} className="min-h-11 w-full cursor-pointer text-sm font-semibold text-saffron-800 underline">Forgotten your password?</button>
+            <button type="button" onClick={() => setMode('forgot')} className="min-h-11 w-full cursor-pointer text-sm font-semibold text-kumkum-800 underline">Forgotten your password?</button>
           </form>
         )}
         {mode === 'link' && (
@@ -59,7 +59,7 @@ export function LoginForms({ next }: { next: string }) {
                 <SubmitButton className="w-full" pendingLabel="Sending…">Send reset link</SubmitButton>
               </>
             )}
-            <button type="button" onClick={() => setMode('password')} className="min-h-11 w-full cursor-pointer text-sm font-semibold text-saffron-800 underline">Back to sign in</button>
+            <button type="button" onClick={() => setMode('password')} className="min-h-11 w-full cursor-pointer text-sm font-semibold text-kumkum-800 underline">Back to sign in</button>
           </form>
         )}
       </div>

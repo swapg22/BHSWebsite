@@ -82,7 +82,7 @@ export interface ImportState {
 
 export async function importMembers(_prev: ImportState, fd: FormData): Promise<ImportState> {
   const user = await getCurrentStaff()
-  if (!user || !hasRole(user, 'administrator', 'membership-officer')) return { message: 'Only the administrator or membership officer can import members.' }
+  if (!user || !hasRole(user, 'administrator')) return { message: 'Only the administrator can import members.' }
   const file = fd.get('file')
   if (!(file instanceof File) || file.size === 0) return { message: 'Choose an Excel (.xlsx) or CSV file.' }
   if (file.size > 5 * 1024 * 1024) return { message: 'The file is larger than 5 MB.' }

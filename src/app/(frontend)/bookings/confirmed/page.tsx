@@ -23,7 +23,7 @@ export default async function BookingConfirmed({ searchParams }: { searchParams:
           : 'We have emailed you the details.'
   return (
     <div className="container-page py-20 text-center">
-      <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-saffron-700 text-ivory-50"><LotusMark className="h-11 w-11" /></span>
+      <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-kumkum-700 text-ivory-50"><LotusMark className="h-11 w-11" /></span>
       <h1 className="mt-6 text-5xl">{heading}</h1>
       <p className="mx-auto mt-4 max-w-xl text-xl text-charcoal-700">{body}</p>
       {b && <p className="mt-2 text-charcoal-600">Reference <strong>{b.reference}</strong></p>}

@@ -25,7 +25,7 @@ export default async function GalleryPage() {
                     {cover && <Image src={cover} alt={mediaAlt(a.cover as Media)} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
                   </div>
                   <div className="p-5">
-                    <h2 className="font-serif text-2xl group-hover:text-saffron-800">{a.title}</h2>
+                    <h2 className="font-serif text-2xl group-hover:text-kumkum-800">{a.title}</h2>
                     <p className="text-sm text-charcoal-500">{a.photos?.length ?? 0} photos</p>
                   </div>
                 </Link>

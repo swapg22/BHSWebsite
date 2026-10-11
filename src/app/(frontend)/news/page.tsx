@@ -31,7 +31,7 @@ export default async function NewsPage() {
                       {n.publishedAt && <time dateTime={n.publishedAt}>{date(n.publishedAt)}</time>}
                     </div>
                     <h2 className="mt-2 font-serif text-2xl">
-                      <Link href={`/news/${n.slug}`} className="after:absolute after:inset-0 group-hover:text-saffron-800">
+                      <Link href={`/news/${n.slug}`} className="after:absolute after:inset-0 group-hover:text-kumkum-800">
                         {n.title}
                       </Link>
                     </h2>

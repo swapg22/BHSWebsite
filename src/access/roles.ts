@@ -1,19 +1,20 @@
 import type { Access, FieldAccess, PayloadRequest } from 'payload'
 
 /**
- * Staff roles (spec section 8, FR-41):
- *  - administrator: the approver; publishes content and manages users
- *  - editor: creates and edits content as drafts, cannot publish
- *  - treasurer: donations, Gift Aid, payments, refunds, service catalogue
- *  - membership-officer: member records and bookings
+ * Profiles (spec section 15, FR-51/52). Visitors and members are not staff; members use the
+ * `members` collection. Staff hold exactly one role:
+ *  - administrator: approves and publishes every change, manages members, editors and bookings
+ *  - editor: creates and edits content, timings, services and prices as drafts; cannot publish
+ *    and never sees members' personal details
+ *  - treasurer: the limited finance view (donations, Gift Aid, payments) and co-approves bookings
+ *    (section 15 leaves this "to confirm" with the trustees)
  */
-export type StaffRole = 'administrator' | 'editor' | 'treasurer' | 'membership-officer'
+export type StaffRole = 'administrator' | 'editor' | 'treasurer'
 
 export const STAFF_ROLES: { label: string; value: StaffRole }[] = [
   { label: 'Administrator (approver)', value: 'administrator' },
   { label: 'Editor', value: 'editor' },
-  { label: 'Treasurer', value: 'treasurer' },
-  { label: 'Membership officer', value: 'membership-officer' },
+  { label: 'Treasurer (finance view)', value: 'treasurer' },
 ]
 
 type AnyUser = PayloadRequest['user']
@@ -50,8 +51,8 @@ export const staffOnly: Access = ({ req }) => isStaff(req.user)
 export const adminOnly: Access = ({ req }) => hasRole(req.user, 'administrator')
 export const contentEditors: Access = ({ req }) => hasRole(req.user, 'administrator', 'editor')
 export const finance: Access = ({ req }) => hasRole(req.user, 'administrator', 'treasurer')
-export const membershipTeam: Access = ({ req }) =>
-  hasRole(req.user, 'administrator', 'membership-officer', 'treasurer')
+/** Booking requests are approved by the administrator, with the treasurer (section 15). */
+export const bookingApprovers: Access = ({ req }) => hasRole(req.user, 'administrator', 'treasurer')
 
 /** Published content is public; staff can also see drafts. */
 export const publishedOrStaff: Access = ({ req }) => {

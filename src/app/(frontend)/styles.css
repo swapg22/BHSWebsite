@@ -1,48 +1,75 @@
 @import 'tailwindcss';
 
 /*
- * Bharat Hindu Samaj design tokens (spec section 5).
- * Deep saffron, warm ivory and charcoal as the base; gold as a rare accent.
- * #FF4C00 is the current site's heritage saffron: used for decoration and large display only.
- * Text and buttons use saffron-700 (#B83700) which passes WCAG AA on ivory and with white text.
+ * Bharat Hindu Samaj visual identity (spec section 17): a warm, luminous temple at dusk.
+ * Named colours from the spec sit at the anchor of each scale:
+ *   Kumkum #A31D1D (kumkum-700)  buttons, links, key headings
+ *   Haldi #E3A21A (gold-400)     highlights and the progress bar only (decorative, never small text)
+ *   Gold leaf #B8893B (gold-500) fine lines, borders, icons
+ *   Sandstone #F6EFE2 (ivory-100) page background
+ *   Chandan #EADCC3 (ivory-200)   cards and panels
+ *   Basalt #2B2421 (charcoal-900) body text, dark sections
+ *   Tulsi #2F4A3A (tulsi-700)     secondary accent, success states
+ *   Midnight #151B3A (midnight-900) hero overlays, evening sections
+ * Text pairings are contrast-checked (WCAG AA): text uses basalt or kumkum; gold stays decorative.
  */
 @theme {
-  --color-saffron-50: #fff4ec;
-  --color-saffron-100: #ffe4d1;
-  --color-saffron-200: #ffc49c;
-  --color-saffron-300: #ff9a5c;
-  --color-saffron-400: #ff7029;
-  --color-saffron-500: #ff4c00;
-  --color-saffron-600: #e04300;
-  --color-saffron-700: #b83700;
-  --color-saffron-800: #8f2b00;
-  --color-saffron-900: #5e1d00;
+  --color-kumkum-50: #fbf1ef;
+  --color-kumkum-100: #f6dcd8;
+  --color-kumkum-200: #ebb3ac;
+  --color-kumkum-300: #da8178;
+  --color-kumkum-400: #c4504a;
+  --color-kumkum-500: #b8312b;
+  --color-kumkum-600: #ab2420;
+  --color-kumkum-700: #a31d1d;
+  --color-kumkum-800: #7f1616;
+  --color-kumkum-900: #561010;
 
-  --color-ivory-50: #fffdf9;
-  --color-ivory-100: #fbf6ee;
-  --color-ivory-200: #f3ebe4;
-  --color-ivory-300: #e9dccb;
-  --color-ivory-400: #d8c6ae;
+  --color-ivory-50: #fbf7ef;
+  --color-ivory-100: #f6efe2;
+  --color-ivory-200: #eadcc3;
+  --color-ivory-300: #dccaa9;
+  --color-ivory-400: #c7b08a;
 
-  --color-charcoal-400: #8a7e74;
-  --color-charcoal-500: #5e544c;
-  --color-charcoal-600: #4a423c;
-  --color-charcoal-700: #3a332e;
-  --color-charcoal-800: #2a2420;
-  --color-charcoal-900: #1f1b18;
+  --color-charcoal-400: #8a7d74;
+  --color-charcoal-500: #5c5049;
+  --color-charcoal-600: #4a403a;
+  --color-charcoal-700: #3a312c;
+  --color-charcoal-800: #312925;
+  --color-charcoal-900: #2b2421;
 
-  --color-gold-300: #e6cf94;
-  --color-gold-400: #d9b86a;
-  --color-gold-500: #b08d3c;
-  --color-gold-600: #8a6c28;
+  --color-gold-300: #f2d48c;
+  --color-gold-400: #e3a21a;
+  --color-gold-500: #b8893b;
+  --color-gold-600: #8c6a2c;
   --color-gold-700: #5f4a17;
 
+  --color-tulsi-50: #eef3ef;
+  --color-tulsi-100: #d6e3da;
+  --color-tulsi-300: #8fb09c;
+  --color-tulsi-500: #4b6d5a;
+  --color-tulsi-700: #2f4a3a;
+  --color-tulsi-900: #1c2e24;
+
+  --color-midnight-500: #3b4378;
+  --color-midnight-700: #232b55;
+  --color-midnight-800: #1b2246;
+  --color-midnight-900: #151b3a;
+
   --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, 'Noto Serif Devanagari', serif;
-  --font-sans: var(--font-inter), Inter, 'Noto Sans Devanagari', 'Noto Sans Gujarati', system-ui, sans-serif;
-  --font-indic: var(--font-devanagari), var(--font-gujarati), 'Noto Sans Devanagari', 'Noto Sans Gujarati', sans-serif;
+  --font-sans: var(--font-mukta), Mukta, 'Noto Sans Gujarati', system-ui, sans-serif;
+  --font-indic: var(--font-mukta), var(--font-gujarati), 'Noto Sans Gujarati', sans-serif;
+
+  /* Shape and depth tokens, defined once and reused (section 17: no default framework styling) */
+  --radius-card: 1.125rem;
+  --radius-panel: 1.75rem;
+  --radius-arch: 50% 50% 1.125rem 1.125rem / 34% 34% 1.125rem 1.125rem;
+  --shadow-soft: 0 1px 0 rgb(184 137 59 / 0.18), 0 14px 32px -22px rgb(43 36 33 / 0.35);
+  --shadow-lift: 0 1px 0 rgb(184 137 59 / 0.25), 0 24px 48px -28px rgb(21 27 58 / 0.45);
 
   --ease-calm: cubic-bezier(0.22, 0.61, 0.36, 1);
   --animate-fade-up: fade-up 0.9s var(--ease-calm) both;
+  --animate-flame: flame 1.6s ease-in-out infinite;
 
   @keyframes fade-up {
     from {
@@ -52,6 +79,17 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+  @keyframes flame {
+    0%,
+    100% {
+      transform: scaleY(1) translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: scaleY(1.14) translateY(-1px);
+      opacity: 0.85;
     }
   }
 }
@@ -87,11 +125,11 @@
     text-underline-offset: 0.2em;
   }
   ::selection {
-    background: var(--color-saffron-200);
+    background: var(--color-kumkum-200);
     color: var(--color-charcoal-900);
   }
   :focus-visible {
-    outline: 3px solid var(--color-saffron-600);
+    outline: 3px solid var(--color-kumkum-600);
     outline-offset: 3px;
     border-radius: 6px;
   }
@@ -119,13 +157,23 @@
       padding-inline: 2rem;
     }
   }
+  /* Section label: sentence case in the heading serif, led by a thin gold-leaf rule */
   .eyebrow {
-    font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-saffron-700);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--color-kumkum-700);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: var(--color-gold-500);
   }
   .prose-temple {
     max-width: 68ch;
@@ -152,7 +200,7 @@
     margin: 1.4em 0 0.4em;
   }
   .prose-temple a {
-    color: var(--color-saffron-700);
+    color: var(--color-kumkum-700);
     text-decoration: underline;
   }
   .prose-temple blockquote {
@@ -163,11 +211,12 @@
     color: var(--color-charcoal-700);
   }
   /* Readable text over photography: a scrim that guarantees contrast at any image brightness */
+  /* Midnight overlays keep text readable over any photograph (section 17: hero overlays) */
   .scrim-bottom {
-    background: linear-gradient(180deg, rgb(20 14 10 / 0.25) 0%, rgb(20 14 10 / 0.45) 45%, rgb(20 14 10 / 0.88) 100%);
+    background: linear-gradient(180deg, rgb(21 27 58 / 0.2) 0%, rgb(21 27 58 / 0.5) 45%, rgb(21 27 58 / 0.92) 100%);
   }
   .scrim-left {
-    background: linear-gradient(90deg, rgb(20 14 10 / 0.9) 0%, rgb(20 14 10 / 0.65) 45%, rgb(20 14 10 / 0.2) 100%);
+    background: linear-gradient(90deg, rgb(21 27 58 / 0.92) 0%, rgb(21 27 58 / 0.7) 45%, rgb(21 27 58 / 0.25) 100%);
   }
   .field-label {
     display: block;
@@ -179,7 +228,7 @@
   .field-input {
     width: 100%;
     min-height: 3rem;
-    border-radius: 0.75rem;
+    border-radius: 0.625rem;
     border: 1.5px solid var(--color-ivory-400);
     background: #fff;
     padding: 0.7rem 0.9rem;
@@ -192,8 +241,8 @@
   }
   .field-input:focus {
     outline: none;
-    border-color: var(--color-saffron-700);
-    box-shadow: 0 0 0 4px rgb(184 55 0 / 0.15);
+    border-color: var(--color-kumkum-700);
+    box-shadow: 0 0 0 4px rgb(163 29 29 / 0.14);
   }
   .field-input[aria-invalid='true'] {
     border-color: #b42318;
@@ -209,11 +258,46 @@
     margin-top: 0.3rem;
     font-weight: 500;
   }
+  /* Cards and panels in chandan with a gold-leaf hairline (section 17) */
   .card {
-    background: #fff;
-    border-radius: 1.25rem;
-    border: 1px solid var(--color-ivory-300);
-    box-shadow: 0 1px 2px rgb(31 27 24 / 0.04), 0 8px 24px -12px rgb(31 27 24 / 0.12);
+    background: color-mix(in oklab, var(--color-ivory-200) 55%, var(--color-ivory-50));
+    border-radius: var(--radius-card);
+    border: 1px solid color-mix(in oklab, var(--color-gold-500) 32%, transparent);
+    box-shadow: var(--shadow-soft);
+  }
+  .panel {
+    background: var(--color-ivory-200);
+    border-radius: var(--radius-panel);
+  }
+  /* Temple-arch (torana) crop for feature photographs */
+  .torana {
+    border-radius: var(--radius-arch);
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+  }
+  .torana::after {
+    content: '';
+    position: absolute;
+    inset: 0.5rem;
+    border-radius: inherit;
+    border: 1px solid rgb(242 212 140 / 0.7);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .rule-gold {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, transparent, var(--color-gold-500), transparent);
+  }
+  /* Diya flame used in loading states */
+  .diya-flame {
+    transform-origin: 50% 100%;
+    animation: var(--animate-flame);
+  }
+  .jaali-band {
+    height: 2.25rem;
+    color: var(--color-gold-500);
   }
   .divider-lotus {
     display: flex;

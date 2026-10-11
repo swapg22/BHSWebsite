@@ -49,7 +49,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                 <Link
                   href={f === 'all' ? '/events' : `/events?category=${f}`}
                   aria-current={active === f ? 'page' : undefined}
-                  className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold transition-colors ${active === f ? 'border-saffron-700 bg-saffron-700 text-white' : 'border-ivory-400 bg-white text-charcoal-700 hover:border-charcoal-400'}`}
+                  className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold transition-colors ${active === f ? 'border-kumkum-700 bg-kumkum-700 text-white' : 'border-ivory-400 bg-white text-charcoal-700 hover:border-charcoal-400'}`}
                 >
                   {f === 'all' ? 'All events' : f === 'class' ? 'Classes' : `${CATEGORY_LABEL[f]}s`}
                 </Link>
@@ -69,7 +69,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           </ul>
         )}
         <p className="mt-12 text-charcoal-600">
-          Looking for weekly classes? See the <Link href="/activities" className="font-semibold text-saffron-800 underline">activities timetable</Link>. Daily aarti is at the times shown at the top of every page.
+          Looking for weekly classes? See the <Link href="/activities" className="font-semibold text-kumkum-800 underline">activities timetable</Link>. Daily aarti is at the times shown at the top of every page.
         </p>
       </div>
     </>

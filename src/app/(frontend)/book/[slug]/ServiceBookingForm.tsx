@@ -122,7 +122,7 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
         ) : (
           <div>
             <p id="slot-label" className="field-label">
-              Start time <span className="text-saffron-700">*</span>
+              Start time <span className="text-kumkum-700">*</span>
             </p>
             {!date ? (
               <p className="field-hint">Choose a date to see free times.</p>
@@ -135,7 +135,7 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
                 {slots.map((s) => (
                   <label
                     key={s.time}
-                    className={`flex min-h-11 items-center justify-center rounded-xl border text-sm font-semibold transition-colors ${!s.free ? 'cursor-not-allowed border-ivory-300 bg-ivory-200 text-charcoal-400 line-through' : start === s.time ? 'cursor-pointer border-saffron-700 bg-saffron-700 text-white' : 'cursor-pointer border-ivory-400 bg-white hover:border-charcoal-400'}`}
+                    className={`flex min-h-11 items-center justify-center rounded-xl border text-sm font-semibold transition-colors ${!s.free ? 'cursor-not-allowed border-ivory-300 bg-ivory-200 text-charcoal-400 line-through' : start === s.time ? 'cursor-pointer border-kumkum-700 bg-kumkum-700 text-white' : 'cursor-pointer border-ivory-400 bg-white hover:border-charcoal-400'}`}
                   >
                     <input type="radio" name="startTime" value={s.time} disabled={!s.free} checked={start === s.time} onChange={() => setStart(s.time)} className="sr-only" />
                     {s.time}
@@ -170,7 +170,7 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
             label={
               <>
                 I have read and agree to the{' '}
-                <Link href="/hall-hire-terms" target="_blank" className="font-semibold text-saffron-800 underline">
+                <Link href="/hall-hire-terms" target="_blank" className="font-semibold text-kumkum-800 underline">
                   hall and kitchen hire policy
                 </Link>
               </>

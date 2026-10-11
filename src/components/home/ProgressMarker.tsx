@@ -35,7 +35,7 @@ export function ProgressMarker() {
               <a
                 href={`#${s.id}`}
                 aria-current={on ? 'step' : undefined}
-                className={`group flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold transition-colors ${on ? 'bg-saffron-700 text-white' : 'text-charcoal-600 hover:bg-ivory-200'}`}
+                className={`group flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold transition-colors ${on ? 'bg-kumkum-700 text-white' : 'text-charcoal-600 hover:bg-ivory-200'}`}
               >
                 <span className={`grid h-6 w-6 place-items-center rounded-full text-xs ${on ? 'bg-white/20' : 'bg-ivory-200 text-charcoal-700'}`}>{i + 1}</span>
                 {s.label}

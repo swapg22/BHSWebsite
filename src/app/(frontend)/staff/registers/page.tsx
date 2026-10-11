@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 async function markAttended(fd: FormData) {
   'use server'
-  await requireStaff('administrator', 'membership-officer', 'treasurer')
+  await requireStaff('administrator', 'treasurer')
   const payload = await getPayloadClient()
   const ids = fd.getAll('attended').map(Number)
   const all = fd.getAll('booking').map(Number)
@@ -21,7 +21,7 @@ async function markAttended(fd: FormData) {
 
 /** Registers for classes and activities (FR-36). */
 export default async function RegistersPage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
-  await requireStaff('administrator', 'membership-officer', 'treasurer')
+  await requireStaff('administrator', 'treasurer')
   const date = (await searchParams).date ?? new Date().toISOString().slice(0, 10)
   const payload = await getPayloadClient()
   const start = `${date}T00:00:00.000Z`
@@ -60,7 +60,7 @@ export default async function RegistersPage({ searchParams }: { searchParams: Pr
                   <tr key={b.id}>
                     <td className="py-2">
                       <input type="hidden" name="booking" value={b.id} />
-                      <input type="checkbox" name="attended" value={b.id} defaultChecked={Boolean(b.attended)} aria-label={`${b.name} attended`} className="h-6 w-6 accent-saffron-700" />
+                      <input type="checkbox" name="attended" value={b.id} defaultChecked={Boolean(b.attended)} aria-label={`${b.name} attended`} className="h-6 w-6 accent-kumkum-700" />
                     </td>
                     <td>{b.name}</td>
                     <td>{b.phone}</td>
@@ -72,7 +72,7 @@ export default async function RegistersPage({ searchParams }: { searchParams: Pr
             </table>
           </section>
         ))}
-        {groups.size > 0 && <button className="no-print min-h-12 cursor-pointer rounded-full bg-saffron-700 px-6 font-semibold text-white">Save attendance</button>}
+        {groups.size > 0 && <button className="no-print min-h-12 cursor-pointer rounded-full bg-kumkum-700 px-6 font-semibold text-white">Save attendance</button>}
       </form>
     </div>
   )

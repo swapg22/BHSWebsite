@@ -19,7 +19,7 @@ const config = [
     files: ['src/app/(frontend)/**/page.tsx'],
     rules: { 'react-hooks/purity': 'off' },
   },
-  { ignores: ['.next/', 'node_modules/', 'src/payload-types.ts', 'src/app/(payload)/', 'playwright-report/', 'test-results/', 'media/', 'data/'] },
+  { ignores: ['.next/', 'node_modules/', 'src/payload-types.ts', 'src/app/(payload)/', 'src/migrations/*_initial_schema.ts', 'playwright-report/', 'test-results/', 'media/', 'data/'] },
 ]
 
 export default config

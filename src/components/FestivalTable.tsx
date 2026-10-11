@@ -21,7 +21,7 @@ export function FestivalTable({ pdfUrl }: { pdfUrl: string | null }) {
           <tbody className="divide-y divide-ivory-300">
             {FESTIVAL_TABLE_2026.map(([month, items]) => (
               <tr key={month} className="align-top">
-                <th scope="row" className="w-36 px-5 py-4 font-serif text-xl font-medium text-saffron-800">
+                <th scope="row" className="w-36 px-5 py-4 font-serif text-xl font-medium text-kumkum-800">
                   {month}
                 </th>
                 <td className="px-5 py-4">

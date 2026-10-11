@@ -10,10 +10,10 @@ export function ConceptMandir({ className = '', title = "Artist's impression of 
       <title>{title}</title>
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2a2420" />
-          <stop offset="0.45" stopColor="#5e2a12" />
-          <stop offset="0.78" stopColor="#c2551a" />
-          <stop offset="1" stopColor="#f0a35e" />
+          <stop offset="0" stopColor="#151b3a" />
+          <stop offset="0.42" stopColor="#3b2246" />
+          <stop offset="0.74" stopColor="#a31d1d" />
+          <stop offset="1" stopColor="#e3a21a" />
         </linearGradient>
         <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#fbf1e2" />
@@ -28,8 +28,8 @@ export function ConceptMandir({ className = '', title = "Artist's impression of 
           <stop offset="1" stopColor="#ffd9a0" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3a2a20" />
-          <stop offset="1" stopColor="#1f1b18" />
+          <stop offset="0" stopColor="#232b55" />
+          <stop offset="1" stopColor="#151b3a" />
         </linearGradient>
       </defs>
 
@@ -43,8 +43,8 @@ export function ConceptMandir({ className = '', title = "Artist's impression of 
       <circle cx="600" cy="470" r="420" fill="url(#glow)" />
 
       {/* distant trees */}
-      <path d="M0 600 C80 560 140 590 210 565 S330 575 380 585 L380 640 L0 640Z" fill="#2c2019" opacity="0.8" />
-      <path d="M820 585 C880 560 960 575 1030 556 S1150 570 1200 560 L1200 640 L820 640Z" fill="#2c2019" opacity="0.8" />
+      <path d="M0 600 C80 560 140 590 210 565 S330 575 380 585 L380 640 L0 640Z" fill="#1b2246" opacity="0.85" />
+      <path d="M820 585 C880 560 960 575 1030 556 S1150 570 1200 560 L1200 640 L820 640Z" fill="#1b2246" opacity="0.85" />
 
       {/* plinth (jagati) and steps */}
       <path d="M250 610 H950 L980 640 H220Z" fill="#d6bb93" />
@@ -116,7 +116,7 @@ export function ConceptMandir({ className = '', title = "Artist's impression of 
         <path d="M588 137 Q600 112 612 137Z" fill="#b08d3c" />
         <circle cx="600" cy="114" r="5" fill="#d9b86a" />
         <line x1="600" y1="110" x2="600" y2="62" stroke="#8a6c28" strokeWidth="2.5" />
-        <path d="M600 64 L642 76 L600 90Z" fill="#ff4c00" />
+        <path d="M600 64 L642 76 L600 90Z" fill="#e3a21a" />
       </g>
 
       {/* entrance torana */}
@@ -141,7 +141,7 @@ export function ConceptMandir({ className = '', title = "Artist's impression of 
 
       {/* ground */}
       <rect x="0" y="666" width="1200" height="94" fill="url(#ground)" />
-      <path d="M0 666 H1200" stroke="#5e2a12" strokeWidth="2" opacity="0.6" />
+      <path d="M0 666 H1200" stroke="#b8893b" strokeWidth="1.5" opacity="0.5" />
     </svg>
   )
 }

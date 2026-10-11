@@ -18,7 +18,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <p className="mt-2 text-charcoal-600">Renew your membership, see your bookings and download receipts.</p>
         {error === 'link' && <div className="mt-4"><Notice tone="error">That sign-in link has expired or was already used. Please request a new one.</Notice></div>}
         <LoginForms next={next && next.startsWith('/') && !next.startsWith('//') ? next : '/account'} />
-        <p className="mt-8 text-center text-charcoal-600">Not a member yet? <Link href="/membership" className="font-semibold text-saffron-800 underline">Join for £20 a year</Link></p>
+        <p className="mt-8 text-center text-charcoal-600">Not a member yet? <Link href="/membership" className="font-semibold text-kumkum-800 underline">Join for £20 a year</Link></p>
       </div>
     </div>
   )

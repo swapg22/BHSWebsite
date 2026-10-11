@@ -46,7 +46,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
         <section className="card p-6 lg:col-span-1" aria-labelledby="mem-h">
           <h2 id="mem-h" className="font-serif text-2xl">Membership</h2>
-          <div className="mt-3"><Badge tone={status === 'active' ? 'green' : 'saffron'}>{statusLabel}</Badge></div>
+          <div className="mt-3"><Badge tone={status === 'active' ? 'green' : 'kumkum'}>{statusLabel}</Badge></div>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-charcoal-600">Number</dt><dd className="font-semibold">{member.membershipNumber ?? '—'}</dd></div>
             <div className="flex justify-between"><dt className="text-charcoal-600">Member since</dt><dd className="font-semibold">{d(member.memberSince)}</dd></div>
@@ -55,7 +55,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           </dl>
           {status !== 'active' || true ? (
             <form action={renewMembership} className="mt-5">
-              <button className={`min-h-12 w-full cursor-pointer rounded-full font-semibold ${status === 'active' ? 'border border-saffron-200 text-saffron-800 hover:bg-saffron-50' : 'bg-saffron-700 text-white hover:bg-saffron-800'}`}>{status === 'pending-payment' ? 'Pay £20 to activate' : 'Renew for £20'}</button>
+              <button className={`min-h-12 w-full cursor-pointer rounded-full font-semibold ${status === 'active' ? 'border border-kumkum-200 text-kumkum-800 hover:bg-kumkum-50' : 'bg-kumkum-700 text-white hover:bg-kumkum-800'}`}>{status === 'pending-payment' ? 'Pay £20 to activate' : 'Renew for £20'}</button>
             </form>
           ) : null}
         </section>
@@ -63,7 +63,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         <section className="card p-6 lg:col-span-2" aria-labelledby="book-h">
           <h2 id="book-h" className="font-serif text-2xl">My bookings</h2>
           {upcoming.length === 0 ? (
-            <p className="mt-3 text-charcoal-600">No upcoming bookings. <Link href="/events" className="font-semibold text-saffron-800 underline">See events</Link> or <Link href="/services" className="font-semibold text-saffron-800 underline">book a service</Link>.</p>
+            <p className="mt-3 text-charcoal-600">No upcoming bookings. <Link href="/events" className="font-semibold text-kumkum-800 underline">See events</Link> or <Link href="/services" className="font-semibold text-kumkum-800 underline">book a service</Link>.</p>
           ) : (
             <ul className="mt-4 divide-y divide-ivory-300">
               {upcoming.map((b) => (
@@ -73,8 +73,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
                     <p className="text-sm text-charcoal-600">{dt(b.startsAt)} · {b.reference}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge tone={b.status === 'confirmed' ? 'green' : 'saffron'}>{BOOKING_STATUS_LABELS[b.status]}</Badge>
-                    <Link href={`/bookings/${b.reference}`} className="min-h-11 content-center text-sm font-semibold text-saffron-800 underline">Manage</Link>
+                    <Badge tone={b.status === 'confirmed' ? 'green' : 'kumkum'}>{BOOKING_STATUS_LABELS[b.status]}</Badge>
+                    <Link href={`/bookings/${b.reference}`} className="min-h-11 content-center text-sm font-semibold text-kumkum-800 underline">Manage</Link>
                   </div>
                 </li>
               ))}
@@ -86,7 +86,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         <section className="card p-6 lg:col-span-2" aria-labelledby="giv-h">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="giv-h" className="font-serif text-2xl">Giving and receipts</h2>
-            <Link href="/account/statement" className="font-semibold text-saffron-800 underline">Annual giving statement</Link>
+            <Link href="/account/statement" className="font-semibold text-kumkum-800 underline">Annual giving statement</Link>
           </div>
           {donations.docs.length + payments.docs.length === 0 ? (
             <p className="mt-3 text-charcoal-600">No gifts or payments yet.</p>
@@ -98,7 +98,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
                     <p className="font-semibold">{formatMoney(g.amount, g.currency ?? 'GBP')} · {FUND_LABELS[g.fund as keyof typeof FUND_LABELS]}</p>
                     <p className="text-sm text-charcoal-600">{d(g.paidAt ?? g.createdAt)} · {g.frequency === 'monthly' ? 'Monthly' : 'One-off'}{g.giftAidEligible ? ' · Gift Aid' : ''}</p>
                   </div>
-                  {(g.status === 'paid' || g.status === 'active') && <Link href={`/receipt/${g.reference}`} className="min-h-11 content-center text-sm font-semibold text-saffron-800 underline">Receipt</Link>}
+                  {(g.status === 'paid' || g.status === 'active') && <Link href={`/receipt/${g.reference}`} className="min-h-11 content-center text-sm font-semibold text-kumkum-800 underline">Receipt</Link>}
                 </li>
               ))}
               {payments.docs.map((p) => (
@@ -107,7 +107,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
                     <p className="font-semibold">{formatGBP(p.amount)} · {p.description}</p>
                     <p className="text-sm text-charcoal-600">{d(p.paidAt)}</p>
                   </div>
-                  <Link href={`/receipt/${p.receiptNumber}`} className="min-h-11 content-center text-sm font-semibold text-saffron-800 underline">Receipt</Link>
+                  <Link href={`/receipt/${p.receiptNumber}`} className="min-h-11 content-center text-sm font-semibold text-kumkum-800 underline">Receipt</Link>
                 </li>
               ))}
             </ul>

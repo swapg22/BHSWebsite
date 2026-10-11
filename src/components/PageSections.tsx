@@ -30,7 +30,7 @@ export function PageSections({ sections }: { sections: Section[] }) {
                 </div>
                 {img && (
                   <figure className={s.imageSide === 'left' ? 'lg:order-1' : ''}>
-                    <div className={`relative overflow-hidden rounded-3xl bg-ivory-200 shadow-xl shadow-charcoal-900/10 ${deity ? 'aspect-square border-8 border-white' : 'aspect-[4/3]'}`}>
+                    <div className={`relative bg-ivory-200 ${deity ? 'aspect-square overflow-hidden rounded-[var(--radius-panel)] border-8 border-ivory-50' : 'torana aspect-[4/5] sm:aspect-[4/3]'}`}>
                       <Image src={img} alt={mediaAlt(s.image as Media)} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
                     </div>
                     {(s.image as Media)?.caption && <figcaption className="mt-3 text-sm text-charcoal-500">{(s.image as Media).caption}</figcaption>}
@@ -48,7 +48,7 @@ export function PageSections({ sections }: { sections: Section[] }) {
                     <details key={item.id ?? item.question} className="group">
                       <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 font-serif text-xl text-charcoal-900 hover:bg-ivory-50 [&::-webkit-details-marker]:hidden">
                         {item.question}
-                        <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-ivory-400 text-saffron-700 transition-transform group-open:rotate-45">
+                        <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-ivory-400 text-kumkum-700 transition-transform group-open:rotate-45">
                           +
                         </span>
                       </summary>
@@ -63,7 +63,7 @@ export function PageSections({ sections }: { sections: Section[] }) {
               <section key={s.id ?? i} className="reveal rounded-3xl border border-gold-300 bg-gradient-to-br from-ivory-50 to-gold-300/15 p-7 sm:p-10">
                 <h2 className="text-3xl sm:text-4xl">{s.heading}</h2>
                 {s.original && (
-                  <p lang="sa" className="mt-6 text-2xl leading-relaxed text-saffron-800 sm:text-3xl">
+                  <p lang="sa" className="mt-6 text-2xl leading-relaxed text-kumkum-800 sm:text-3xl">
                     {s.original}
                   </p>
                 )}
@@ -78,7 +78,7 @@ export function PageSections({ sections }: { sections: Section[] }) {
             )
           case 'callToAction':
             return (
-              <section key={s.id ?? i} className="reveal flex flex-col items-start justify-between gap-6 rounded-3xl bg-charcoal-900 p-8 text-ivory-50 sm:flex-row sm:items-center sm:p-10">
+              <section key={s.id ?? i} className="reveal flex flex-col items-start justify-between gap-6 rounded-[var(--radius-panel)] bg-midnight-900 p-8 text-ivory-50 sm:flex-row sm:items-center sm:p-10">
                 <div>
                   <h2 className="text-3xl text-ivory-50">{s.heading}</h2>
                   {s.text && <p className="mt-2 text-ivory-200">{s.text}</p>}

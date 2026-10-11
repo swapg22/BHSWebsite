@@ -7,9 +7,9 @@ type Size = 'md' | 'lg' | 'sm'
 const base =
   'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 text-center'
 const variants: Record<Variant, string> = {
-  primary: 'bg-saffron-700 text-white hover:bg-saffron-800 focus-visible:outline-saffron-600',
-  secondary: 'bg-white text-saffron-800 border border-saffron-200 hover:border-saffron-700 hover:bg-saffron-50',
-  ghost: 'text-saffron-800 hover:bg-saffron-50',
+  primary: 'bg-kumkum-700 text-white hover:bg-kumkum-800 focus-visible:outline-kumkum-600',
+  secondary: 'bg-ivory-50 text-kumkum-800 border border-gold-500/60 hover:border-kumkum-700 hover:bg-kumkum-50',
+  ghost: 'text-kumkum-800 hover:bg-kumkum-50',
   light: 'bg-ivory-100 text-charcoal-900 hover:bg-white',
   'outline-light': 'border border-white/70 text-white hover:bg-white/10',
 }
@@ -41,8 +41,9 @@ export function Button({ variant = 'primary', size = 'md', className = '', child
 
 export function PageHeader({ eyebrow, title, intro, children }: { eyebrow?: string; title: string; intro?: ReactNode; children?: ReactNode }) {
   return (
-    <header className="relative overflow-hidden border-b border-ivory-300 bg-ivory-200/60">
+    <header className="relative overflow-hidden bg-ivory-200/70">
       <MandalaBackdrop />
+      <JaaliBand className="absolute inset-x-0 bottom-0 opacity-60" />
       <div className="container-page relative py-14 sm:py-20">
         {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
         <h1 className="max-w-3xl text-4xl text-charcoal-900 sm:text-6xl">{title}</h1>
@@ -82,8 +83,8 @@ export function SectionHeading({ eyebrow, title, intro, id, align = 'left', ligh
 export function Notice({ tone = 'info', title, children }: { tone?: 'info' | 'success' | 'warning' | 'error'; title?: string; children: ReactNode }) {
   const tones = {
     info: 'bg-ivory-50 border-ivory-400 text-charcoal-800',
-    success: 'bg-[#ecf7ef] border-[#8cc79c] text-[#14532d]',
-    warning: 'bg-saffron-50 border-saffron-200 text-saffron-900',
+    success: 'bg-tulsi-50 border-tulsi-300 text-tulsi-900',
+    warning: 'bg-kumkum-50 border-kumkum-200 text-kumkum-900',
     error: 'bg-[#fdecec] border-[#f0a3a3] text-[#7f1d1d]',
   }
   return (
@@ -121,12 +122,47 @@ export function LotusMark({ className = 'h-8 w-8' }: { className?: string }) {
   )
 }
 
-export function Badge({ children, tone = 'saffron' }: { children: ReactNode; tone?: 'saffron' | 'gold' | 'neutral' | 'green' }) {
+export function Badge({ children, tone = 'kumkum' }: { children: ReactNode; tone?: 'kumkum' | 'gold' | 'neutral' | 'green' }) {
   const tones = {
-    saffron: 'bg-saffron-50 text-saffron-800 border-saffron-100',
+    kumkum: 'bg-kumkum-50 text-kumkum-800 border-kumkum-100',
     gold: 'bg-gold-300/30 text-gold-700 border-gold-300',
     neutral: 'bg-ivory-200 text-charcoal-700 border-ivory-300',
-    green: 'bg-[#ecf7ef] text-[#14532d] border-[#bfe3c8]',
+    green: 'bg-tulsi-50 text-tulsi-900 border-tulsi-100',
   }
   return <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold tracking-wide ${tones[tone]}`}>{children}</span>
+}
+
+/**
+ * Jaali (carved lattice) band used as a quiet section divider (section 17). Decorative only.
+ * Drawn as a repeating SVG pattern of interlocking quatrefoils in gold leaf.
+ */
+export function JaaliBand({ className = '', tone = 'gold' }: { className?: string; tone?: 'gold' | 'light' }) {
+  const id = tone === 'gold' ? 'jaali-gold' : 'jaali-light'
+  return (
+    <svg aria-hidden="true" className={`jaali-band block w-full ${tone === 'light' ? '!text-gold-300/60' : ''} ${className}`} preserveAspectRatio="none">
+      <defs>
+        <pattern id={id} width="36" height="36" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55">
+            <path d="M18 2 C24 10 24 10 34 18 C24 26 24 26 18 34 C12 26 12 26 2 18 C12 10 12 10 18 2Z" />
+            <circle cx="18" cy="18" r="3.2" />
+            <path d="M0 0 L5 5 M36 0 L31 5 M0 36 L5 31 M36 36 L31 31" />
+          </g>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+      <line x1="0" y1="0.5" x2="100%" y2="0.5" stroke="currentColor" strokeWidth="1" opacity="0.45" />
+      <line x1="0" y1="35.5" x2="100%" y2="35.5" stroke="currentColor" strokeWidth="1" opacity="0.45" />
+    </svg>
+  )
+}
+
+/** Small diya with a flickering flame, for loading states (motion stops for reduced-motion users). */
+export function Diya({ className = 'h-5 w-5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path className="diya-flame" d="M12 2.5c2.2 2.9 2.4 5.2.6 7.1-.4.4-1 .4-1.3 0-1.7-1.9-1.5-4.2.7-7.1Z" fill="#E3A21A" />
+      <path d="M3 13.2c2.6.9 5.6 1.4 9 1.4s6.4-.5 9-1.4c-.6 4-4.3 7-9 7s-8.4-3-9-7Z" fill="currentColor" />
+      <path d="M8 13.9c1.2.2 2.6.3 4 .3s2.8-.1 4-.3" stroke="#F2D48C" strokeWidth="1" fill="none" />
+    </svg>
+  )
 }

@@ -51,7 +51,7 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
     <div className="container-page py-12">
       <div className="mx-auto max-w-2xl rounded-3xl border border-ivory-300 bg-white p-8 sm:p-12 print:border-0 print:p-0">
         <div className="flex items-center gap-3">
-          <span className="grid h-12 w-12 place-items-center rounded-full bg-saffron-700 text-ivory-50"><LotusMark className="h-7 w-7" /></span>
+          <span className="grid h-12 w-12 place-items-center rounded-full bg-kumkum-700 text-ivory-50"><LotusMark className="h-7 w-7" /></span>
           <div>
             <p className="font-serif text-2xl">Bharat Hindu Samaj</p>
             <p className="text-sm text-charcoal-500">Registered charity {settings.charityNumber}</p>

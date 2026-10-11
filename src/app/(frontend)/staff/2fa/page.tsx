@@ -20,7 +20,7 @@ export default async function TwoFactorPage() {
           <div className="card mt-6 p-6">
             <p className="font-semibold">Two-factor sign-in is on for {u.email}.</p>
             <p className="mt-2 text-charcoal-600">If you lose your phone, ask another administrator to untick “Two-factor sign-in enabled” on your user record, then set it up again here.</p>
-            <a href="/admin" className="mt-4 inline-flex min-h-11 items-center rounded-full bg-saffron-700 px-5 font-semibold text-white">Go to the CMS</a>
+            <a href="/admin" className="mt-4 inline-flex min-h-11 items-center rounded-full bg-kumkum-700 px-5 font-semibold text-white">Go to the CMS</a>
           </div>
         ) : (
           <>

@@ -47,7 +47,7 @@ export async function SiteFooter() {
       <div className="container-page grid gap-12 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-saffron-700 text-ivory-50">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-kumkum-700 text-ivory-50">
               <LotusMark className="h-7 w-7" />
             </span>
             <span className="font-serif text-2xl text-ivory-50">Bharat Hindu Samaj</span>

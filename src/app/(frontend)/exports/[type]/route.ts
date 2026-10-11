@@ -11,8 +11,9 @@ const ROLES: Record<string, StaffRole[]> = {
   'gift-aid': ['administrator', 'treasurer'],
   donations: ['administrator', 'treasurer'],
   payments: ['administrator', 'treasurer'],
-  members: ['administrator', 'membership-officer', 'treasurer'],
-  bookings: ['administrator', 'membership-officer', 'treasurer'],
+  members: ['administrator'],
+  'members-xlsx': ['administrator'],
+  bookings: ['administrator', 'treasurer'],
 }
 
 const pounds = (p?: number | null) => ((p ?? 0) / 100).toFixed(2)
@@ -72,6 +73,59 @@ export async function GET(req: Request, { params }: { params: Promise<{ type: st
   if (type === 'payments') {
     const rows = await findAll<Payment>(payload, 'payments', range('createdAt').length ? { and: range('createdAt') } : undefined)
     return csvResponse(`payments-${stamp}.csv`, toCSV(rows.map((p) => [p.receiptNumber, p.purpose, p.status, day(p.paidAt), p.payerName, p.payerEmail, p.description, pounds(p.amount), pounds(p.refundedAmount), p.provider, p.providerId]), ['Receipt', 'Purpose', 'Status', 'Paid', 'Payer', 'Email', 'Description', 'Amount', 'Refunded', 'Provider', 'Provider ID']))
+  }
+  if (type === 'members-xlsx') {
+    // Excel workbook in the original list's nine columns, plus status and consents (section 16)
+    const ExcelJS = (await import('exceljs')).default
+    const rows = await findAll<Member>(payload, 'members')
+    const wb = new ExcelJS.Workbook()
+    wb.creator = 'Bharat Hindu Samaj website'
+    const ws = wb.addWorksheet('Members', { views: [{ state: 'frozen', ySplit: 1 }] })
+    ws.columns = [
+      { header: 'Membership number', key: 'num', width: 18 },
+      { header: 'Name', key: 'name', width: 28 },
+      { header: 'Address', key: 'address', width: 44 },
+      { header: 'Email', key: 'email', width: 32 },
+      { header: 'Phone number', key: 'phone', width: 16 },
+      { header: 'Receipt number', key: 'receipt', width: 18 },
+      { header: 'Opted for newsletter', key: 'news', width: 12 },
+      { header: 'Member since', key: 'since', width: 14 },
+      { header: 'Date last membership paid', key: 'paid', width: 16 },
+      { header: 'Status', key: 'status', width: 16 },
+      { header: 'Expiry', key: 'expiry', width: 14 },
+      { header: 'Gift Aid declared', key: 'giftAid', width: 12 },
+      { header: 'Text/WhatsApp consent', key: 'sms', width: 12 },
+    ]
+    ws.getRow(1).font = { bold: true }
+    const asDate = (d?: string | null) => (d ? new Date(d) : null)
+    // Guard against formula injection: text cells starting with = + - @ are prefixed
+    const safe = (v?: string | null) => (v && /^[=+\-@]/.test(v) ? `'${v}` : (v ?? ''))
+    for (const m of rows) {
+      ws.addRow({
+        num: safe(m.membershipNumber),
+        name: safe([m.firstName, m.lastName].filter(Boolean).join(' ')),
+        address: safe([m.addressLine1, m.addressLine2, m.town, m.postcode].filter(Boolean).join(', ') || m.legacyAddress),
+        email: safe(m.email),
+        phone: safe(m.phone),
+        receipt: safe(m.receiptNumber),
+        news: m.consents?.newsletter ? 'Yes' : 'No',
+        since: asDate(m.memberSince),
+        paid: asDate(m.lastPaidDate),
+        status: m.status,
+        expiry: asDate(m.expiryDate),
+        giftAid: m.giftAid?.declared ? 'Yes' : 'No',
+        sms: m.consents?.sms ? 'Yes' : 'No',
+      })
+    }
+    for (const k of ['since', 'paid', 'expiry']) ws.getColumn(k).numFmt = 'dd/mm/yyyy'
+    const buf = await wb.xlsx.writeBuffer()
+    return new Response(buf as ArrayBuffer, {
+      headers: {
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': `attachment; filename="members-${stamp}.xlsx"`,
+        'Cache-Control': 'no-store',
+      },
+    })
   }
   if (type === 'members') {
     const rows = await findAll<Member>(payload, 'members')

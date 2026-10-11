@@ -47,7 +47,7 @@ export function CookieNotice() {
       <p className="hidden font-serif text-xl text-charcoal-900 sm:block">Cookies on this site</p>
       <p className="text-sm text-charcoal-600 sm:mt-1 sm:text-[0.95rem]">
         We use essential cookies to keep the site working.<span className="hidden sm:inline"> With your permission we would also like to use optional cookies to understand how the site is used.</span> Change your choice any time on our{' '}
-        <Link href="/cookies" className="font-semibold text-saffron-800 underline">
+        <Link href="/cookies" className="font-semibold text-kumkum-800 underline">
           cookies page
         </Link>
         .

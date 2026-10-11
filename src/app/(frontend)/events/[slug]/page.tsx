@@ -120,7 +120,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 </dl>
                 {placesLeft !== null && (
                   <p className="mt-4 flex items-center gap-2 text-charcoal-700">
-                    <Users aria-hidden="true" className="h-5 w-5 text-saffron-700" />
+                    <Users aria-hidden="true" className="h-5 w-5 text-kumkum-700" />
                     {placesLeft > 0 ? `${placesLeft} places left` : event.waitlist ? 'Fully booked — join the waiting list' : 'Fully booked'}
                   </p>
                 )}

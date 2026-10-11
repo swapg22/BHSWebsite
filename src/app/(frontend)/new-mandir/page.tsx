@@ -21,9 +21,9 @@ export default async function NewMandirPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-charcoal-900 text-ivory-50">
+      <section className="relative overflow-hidden bg-midnight-900 text-ivory-50">
         <ConceptMandir className="absolute inset-0 h-full w-full opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/60 to-transparent" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-t from-midnight-900 via-midnight-900/60 to-transparent" aria-hidden="true" />
         <div className="container-page relative flex min-h-[70svh] flex-col justify-end pb-14 pt-32">
           <ArtistsImpressionLabel className="mb-6 self-start" />
           <p className="eyebrow !text-gold-300">The new Mandir · {appeal.stageLabel ?? 'Vision stage'}</p>
@@ -101,8 +101,8 @@ export default async function NewMandirPage() {
             <ol className="relative space-y-8 border-l-2 border-ivory-400 pl-8">
               {(appeal.milestones ?? []).map((m) => (
                 <li key={m.title} className="relative">
-                  <span aria-hidden="true" className={`absolute -left-[2.6rem] top-1 h-5 w-5 rounded-full border-2 ${m.status === 'done' ? 'border-saffron-700 bg-saffron-700' : m.status === 'current' ? 'border-saffron-700 bg-ivory-50 ring-4 ring-saffron-100' : 'border-ivory-400 bg-ivory-50'}`} />
-                  <p className="text-sm font-semibold text-saffron-800">{m.date}</p>
+                  <span aria-hidden="true" className={`absolute -left-[2.6rem] top-1 h-5 w-5 rounded-full border-2 ${m.status === 'done' ? 'border-kumkum-700 bg-kumkum-700' : m.status === 'current' ? 'border-kumkum-700 bg-ivory-50 ring-4 ring-kumkum-100' : 'border-ivory-400 bg-ivory-50'}`} />
+                  <p className="text-sm font-semibold text-kumkum-800">{m.date}</p>
                   <p className="font-serif text-2xl">{m.title}</p>
                   {m.description && <p className="mt-1 text-charcoal-600">{m.description}</p>}
                 </li>

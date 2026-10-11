@@ -25,7 +25,7 @@ export default async function SponsorPage() {
                   <Landmark aria-hidden="true" className="h-6 w-6" />
                 </span>
                 <h2 className="mt-4 font-serif text-3xl">{s.name}</h2>
-                <p className="text-2xl font-semibold text-saffron-800">{formatGBP(s.amount)}</p>
+                <p className="text-2xl font-semibold text-kumkum-800">{formatGBP(s.amount)}</p>
                 {s.description && <p className="mt-2 flex-1 text-charcoal-600">{s.description}</p>}
                 <div className="mt-4 flex flex-wrap gap-2">
                   {s.plaque && <Badge tone="gold">Name on plaque</Badge>}
@@ -34,7 +34,7 @@ export default async function SponsorPage() {
                 {soldOut ? (
                   <p className="mt-5 text-center font-semibold text-charcoal-500">Fully sponsored — thank you</p>
                 ) : (
-                  <Link href={`/donate?sponsor=${s.id}`} className="mt-5 inline-flex min-h-12 items-center justify-center rounded-full bg-saffron-700 font-semibold text-white hover:bg-saffron-800">
+                  <Link href={`/donate?sponsor=${s.id}`} className="mt-5 inline-flex min-h-12 items-center justify-center rounded-full bg-kumkum-700 font-semibold text-white hover:bg-kumkum-800">
                     Sponsor<span className="sr-only"> a {s.name}</span>
                   </Link>
                 )}

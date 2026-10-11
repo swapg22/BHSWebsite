@@ -19,7 +19,11 @@
     "test": "npm run test:unit && npm run test:int",
     "test:unit": "vitest run tests/unit",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run tests/int",
-    "test:e2e": "cross-env NODE_OPTIONS=--no-deprecation playwright test"
+    "test:e2e": "cross-env NODE_OPTIONS=--no-deprecation playwright test",
+    "db:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "db:migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
+    "db:migration": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
+    "db:check": "node scripts/db-check.mjs"
   },
   "dependencies": {
     "@googleapis/calendar": "^20.1.0",
@@ -28,6 +32,7 @@
     "@payloadcms/email-nodemailer": "^3.90.2",
     "@payloadcms/next": "3.90.2",
     "@payloadcms/richtext-lexical": "3.90.2",
+    "@payloadcms/storage-s3": "^3.90.2",
     "@payloadcms/ui": "3.90.2",
     "@tailwindcss/postcss": "^4.3.3",
     "cross-env": "^7.0.3",
@@ -39,6 +44,7 @@
     "next": "16.3.3",
     "otplib": "^13.5.0",
     "payload": "3.90.2",
+    "pg": "^8.23.1",
     "postcss": "^8.5.29",
     "qrcode": "^1.5.4",
     "react": "19.2.6",
