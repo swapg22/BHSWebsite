@@ -24,7 +24,8 @@
     "db:migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
     "db:migration": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "db:check": "node scripts/db-check.mjs",
-    "supabase": "node scripts/supabase.mjs"
+    "supabase": "node scripts/supabase.mjs",
+    "vercel-build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build"
   },
   "dependencies": {
     "@googleapis/calendar": "^20.1.0",

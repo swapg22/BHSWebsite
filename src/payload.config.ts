@@ -21,10 +21,23 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const isPostgres = (process.env.DATABASE_URL ?? '').startsWith('postgres')
 
+// On Vercel, fall back to the deployment's own address until the real domain is configured
+if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+  process.env.NEXT_PUBLIC_SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+}
+
 // SQLite needs its folder to exist (data/ is git-ignored, so a fresh checkout or CI has none)
 if (!isPostgres) {
   const file = (process.env.DATABASE_URL || 'file:./data/bhs.db').replace(/^file:/, '')
   if (file && file !== ':memory:') fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true })
+}
+
+function allowedOrigins(): string[] {
+  const list = [process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000']
+  for (const host of [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]) {
+    if (host) list.push(`https://${host}`)
+  }
+  return [...new Set(list)]
 }
 
 /** Encrypted connections (section 16). Set DATABASE_CA to Supabase's CA certificate to also verify the server. */
@@ -80,8 +93,9 @@ export default buildConfig({
   editor: lexicalEditor(),
   email: emailAdapter(),
   secret: process.env.PAYLOAD_SECRET || '',
-  cors: [process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'],
-  csrf: [process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'],
+  // Allowed origins: the site address, plus Vercel preview addresses for this deployment
+  cors: allowedOrigins(),
+  csrf: allowedOrigins(),
   graphQL: { disable: true },
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   // Production database (section 16, FR-53): managed PostgreSQL on Supabase. The schema is changed

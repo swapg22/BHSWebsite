@@ -8,6 +8,11 @@ const dirname = path.dirname(__filename)
 
 const isDev = process.env.NODE_ENV !== 'production'
 
+// On Vercel, fall back to the deployment's own address until the real domain is configured
+if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+  process.env.NEXT_PUBLIC_SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+}
+
 // Card details never touch our servers: payments are taken on Stripe Checkout and
 // GoCardless hosted pages, so the only third-party origins we allow are theirs.
 const csp = [
