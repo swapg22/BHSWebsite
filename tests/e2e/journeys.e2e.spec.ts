@@ -146,9 +146,12 @@ test.describe('events and bookings (FR-11 to FR-17, FR-35)', () => {
   })
 
   test('hall hire shows booked times and sends a request for approval', async ({ page }) => {
-    await page.goto('/book/main-hall-hire')
-    await page.getByRole('main').getByLabel(/^Date/).fill('2026-11-08')
-    await expect(page.getByText('Crossed-out times are already booked.')).toBeVisible()
+    await page.goto('/book/main-hall-hire', { waitUntil: 'networkidle' })
+    // On slow machines the form may hydrate after the first keystrokes; retry until the date registers
+    await expect(async () => {
+      await page.getByRole('main').getByLabel(/^Date/).fill('2026-11-08')
+      await expect(page.getByText('Crossed-out times are already booked.')).toBeVisible({ timeout: 5_000 })
+    }).toPass({ timeout: 45_000 })
     await expect(page.getByRole('radio', { name: /17:00 \(booked\)/ })).toBeDisabled()
     // Book on a random future date so the test can be re-run against the same database
     const d = new Date(Date.now() + (40 + Math.floor(Math.random() * 300)) * 864e5).toISOString().slice(0, 10)

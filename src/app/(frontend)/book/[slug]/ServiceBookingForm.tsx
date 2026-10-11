@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState, useEffect, useMemo, useState } from 'react'
+import { useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import { bookService } from '@/app/(frontend)/actions/booking'
 import { Checkbox, FormGuardFields, FormMessage, Select, SubmitButton, TextArea, TextField } from '@/components/forms'
 import type { FormState } from '@/lib/formGuard'
@@ -35,6 +35,14 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
   const v = state.values ?? {}
   const isClass = service.category === 'class' || service.category === 'meal'
   const [date, setDate] = useState(v.date ?? '')
+  // If a date was typed before the form finished loading (slow connections), keep it
+  const dateRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const typed = dateRef.current?.value
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (typed && !date) setDate(typed)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [start, setStart] = useState(v.startTime ?? (isClass ? service.earliestTime : ''))
   const [duration, setDuration] = useState(Number(v.durationMinutes ?? service.defaultDuration))
   const [venue, setVenue] = useState(v.venue ?? (service.location === 'either' ? 'mandir' : service.location))
@@ -89,6 +97,7 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
           required
           min={minDate}
           max={maxDate}
+          ref={dateRef}
           value={date}
           onChange={(e) => setDate(e.target.value)}
           error={state.errors?.date ?? (!dayOk ? `${service.name} is available on ${service.availableDays.map((d) => d[0].toUpperCase() + d.slice(1)).join(', ')} only.` : undefined)}
