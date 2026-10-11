@@ -50,7 +50,7 @@ CI (`.github/workflows/ci.yml`) runs all of them on every push and pull request.
 
 The production database is the Supabase project `ojbykacvgvibefnyqgyl`. The schema is created and changed only by the committed migrations in `src/migrations` (never pushed automatically):
 
-1. In Supabase → **Connect → Connection string**, copy the string and put it in `.env` as `SUPABASE_DATABASE_URL=…` (password filled in). Never commit it. Use the **Session pooler** string on hosts without IPv6 (e.g. Vercel); the direct `db.<ref>.supabase.co` address is IPv6-only.
+1. In Supabase → **Connect → Connection string**, copy the string and put it in `.env` as `SUPABASE_DATABASE_URL=…` (password filled in). Never commit it. On Vercel use the **Transaction pooler** string (`…pooler.supabase.com:6543`) with `DATABASE_POOL_MAX=2`: serverless functions each open connections, and the session pooler (port 5432) caps at 15 clients, which a live site exhausts quickly. The direct `db.<ref>.supabase.co` address is IPv6-only and unreachable from Vercel.
 2. `npm run supabase db:migrate` (the `supabase` helper runs any script against that database without printing the password) — creates the tables, then enables row-level security on every table and removes Supabase's `anon`/`authenticated` data-API privileges.
 3. `npm run supabase db:check` — confirms RLS is on everywhere and the data API has no table access.
 4. `npm run supabase seed` — loads the migrated content (only on an empty database).
@@ -59,6 +59,10 @@ The production database is the Supabase project `ojbykacvgvibefnyqgyl`. The sche
 After any schema change: `npm run db:migration -- <name>`, commit the new file, and `npm run db:migrate` on deploy. CI runs every migration and the seed against a real PostgreSQL 16 on each push.
 
 Members' rows are isolated by the website's access rules (tested); RLS with no public policies means nothing is reachable through Supabase's auto-generated API. The administrator opens the data in Supabase's table editor with their own named account (turn on MFA in Supabase → Account → Security).
+
+## Hosting (Vercel)
+
+Live at https://bhs-website-pi.vercel.app (project `bhs-website`, Dublin region `dub1`). Every push to `main` deploys; `vercel-build` applies new migrations first. The daily job is a Vercel cron (see `vercel.json`); Vercel sends `CRON_SECRET` automatically. `node scripts/vercel.mjs <command>` runs the Vercel CLI with `VERCEL_TOKEN` from `.env` without printing it.
 
 ## Going live
 
