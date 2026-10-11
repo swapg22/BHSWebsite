@@ -23,7 +23,8 @@
     "db:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "db:migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
     "db:migration": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
-    "db:check": "node scripts/db-check.mjs"
+    "db:check": "node scripts/db-check.mjs",
+    "supabase": "node scripts/supabase.mjs"
   },
   "dependencies": {
     "@googleapis/calendar": "^20.1.0",

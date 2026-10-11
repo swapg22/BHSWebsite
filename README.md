@@ -50,10 +50,10 @@ CI (`.github/workflows/ci.yml`) runs all of them on every push and pull request.
 
 The production database is the Supabase project `ojbykacvgvibefnyqgyl`. The schema is created and changed only by the committed migrations in `src/migrations` (never pushed automatically):
 
-1. In Supabase → **Project settings → Database → Connection string**, copy the **Session pooler** string (port 5432) and put it in `.env` as `DATABASE_URL=…` (replace `[YOUR-PASSWORD]`). Never commit it.
-2. `npm run db:migrate` — creates the tables, then enables row-level security on every table and removes Supabase's `anon`/`authenticated` data-API privileges.
-3. `npm run db:check` — confirms RLS is on everywhere and the data API has no table access.
-4. `npm run setup && npm run seed` — loads the migrated content (only on an empty database).
+1. In Supabase → **Connect → Connection string**, copy the string and put it in `.env` as `SUPABASE_DATABASE_URL=…` (password filled in). Never commit it. Use the **Session pooler** string on hosts without IPv6 (e.g. Vercel); the direct `db.<ref>.supabase.co` address is IPv6-only.
+2. `npm run supabase db:migrate` (the `supabase` helper runs any script against that database without printing the password) — creates the tables, then enables row-level security on every table and removes Supabase's `anon`/`authenticated` data-API privileges.
+3. `npm run supabase db:check` — confirms RLS is on everywhere and the data API has no table access.
+4. `npm run supabase seed` — loads the migrated content (only on an empty database).
 5. **Uploads:** create a private bucket `media` in Supabase Storage, create S3 access keys (Project settings → Storage), and set `S3_BUCKET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
 
 After any schema change: `npm run db:migration -- <name>`, commit the new file, and `npm run db:migrate` on deploy. CI runs every migration and the seed against a real PostgreSQL 16 on each push.
