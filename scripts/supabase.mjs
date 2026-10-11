@@ -20,6 +20,16 @@ if (!script) {
 }
 const res = spawnSync('npm', ['run', script, '--', ...process.argv.slice(3)], {
   stdio: 'inherit',
-  env: { ...process.env, DATABASE_URL: url, NODE_ENV: process.env.NODE_ENV ?? 'production' },
+  env: {
+    ...process.env,
+    DATABASE_URL: url,
+    NODE_ENV: process.env.NODE_ENV ?? 'production',
+    // Supabase Storage settings are used only when working against Supabase, never by the local preview
+    ...Object.fromEntries(
+      ['BUCKET', 'ENDPOINT', 'REGION', 'ACCESS_KEY_ID', 'SECRET_ACCESS_KEY']
+        .filter((k) => process.env[`SUPABASE_S3_${k}`])
+        .map((k) => [`S3_${k}`, process.env[`SUPABASE_S3_${k}`]]),
+    ),
+  },
 })
 process.exit(res.status ?? 1)
