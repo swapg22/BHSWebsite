@@ -11,7 +11,8 @@ export default defineConfig({
   workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  // On CI the github reporter turns each failure into a readable annotation on the run
+  reporter: process.env.CI ? [['github'], ['list'], ['html', { open: 'never' }]] : [['list'], ['html', { open: 'never' }]],
   globalSetup: './tests/e2e/warmup.ts',
   timeout: process.env.CI ? 120_000 : 45_000,
   expect: { timeout: process.env.CI ? 20_000 : 10_000 },
