@@ -325,6 +325,7 @@ export interface Media {
    * Deity images need approval from the priests and committee, and are never placed behind text.
    */
   deityImage?: boolean | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1480,6 +1481,7 @@ export interface MediaSelect<T extends boolean = true> {
   credit?: T;
   isConceptVisual?: T;
   deityImage?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;

@@ -16,12 +16,15 @@ import { ukDateTime } from '../src/lib/booking'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const asset = (f: string) => path.resolve(dirname, 'assets', f)
-const ctx = { skipAudit: true, skipRevalidate: true, skipInvite: true, skipBookingHooks: true }
+// A fresh context object per call: plugins (e.g. cloud storage) set flags on req.context,
+// and a shared object would carry those flags into the next save
+const CTX = { skipAudit: true, skipRevalidate: true, skipInvite: true, skipBookingHooks: true }
+const ctxObj = () => ({ ...CTX })
 
 const mediaCache = new Map<string, number>()
 async function media(payload: Payload, file: string, alt: string, extra: Record<string, unknown> = {}): Promise<number> {
   if (mediaCache.has(file)) return mediaCache.get(file)!
-  const doc = await payload.create({ collection: 'media', data: { alt, ...extra }, filePath: asset(file), overrideAccess: true, context: ctx })
+  const doc = await payload.create({ collection: 'media', data: { alt, ...extra }, filePath: asset(file), overrideAccess: true, context: ctxObj() })
   mediaCache.set(file, doc.id)
   return doc.id
 }
@@ -77,7 +80,7 @@ async function main() {
     { email: env('SEED_TREASURER_EMAIL'), password: env('SEED_TREASURER_PASSWORD'), name: 'Test Treasurer', roles: ['treasurer'] },
   ] as const
   for (const s of staff) {
-    await payload.create({ collection: 'users', data: { ...s, roles: [...s.roles] }, overrideAccess: true, context: ctx })
+    await payload.create({ collection: 'users', data: { ...s, roles: [...s.roles] }, overrideAccess: true, context: ctxObj() })
   }
 
   payload.logger.info('Uploading photos and documents…')
@@ -108,7 +111,7 @@ async function main() {
       announcementLink: '/events',
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   await payload.updateGlobal({
@@ -133,7 +136,7 @@ async function main() {
       voices: [],
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   await payload.updateGlobal({
@@ -180,7 +183,7 @@ async function main() {
       },
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   await payload.updateGlobal({
@@ -213,7 +216,7 @@ async function main() {
       festivalCalendarPdf: festivalPdf,
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   payload.logger.info('Pages…')
@@ -234,7 +237,7 @@ async function main() {
         }) as never,
       },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
 
@@ -264,7 +267,7 @@ async function main() {
         sortOrder: order++,
       },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
   const halls = [
@@ -299,7 +302,7 @@ async function main() {
         sortOrder: order++,
       },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
   for (const a of ACTIVITIES) {
@@ -326,7 +329,7 @@ async function main() {
         sortOrder: order++,
       },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
 
@@ -338,7 +341,7 @@ async function main() {
     { name: 'Classroom', type: 'room', amount: 2500100, description: 'Name a classroom for the next generation of learners.', totalAvailable: 4 },
   ] as const
   for (const [i, s] of sponsorships.entries()) {
-    await payload.create({ collection: 'sponsorship-items', data: { ...s, totalAvailable: s.totalAvailable ?? undefined, sortOrder: i, plaque: true, active: true }, overrideAccess: true, context: ctx })
+    await payload.create({ collection: 'sponsorship-items', data: { ...s, totalAvailable: s.totalAvailable ?? undefined, sortOrder: i, plaque: true, active: true }, overrideAccess: true, context: ctxObj() })
   }
 
   payload.logger.info('Events from the 2026 festival calendar…')
@@ -372,7 +375,7 @@ async function main() {
         showOnCalendar: true,
       },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
   // Recurring daily aarti and weekly activities appear in the calendar feed (FR-12)
@@ -385,7 +388,7 @@ async function main() {
       collection: 'events',
       data: { _status: 'published', title, startsAt: ukDateTime(today, time).toISOString(), endsAt: ukDateTime(today, end).toISOString(), recurrence: 'FREQ=DAILY', category: 'worship', summary: 'Daily aarti at the Mandir. Everyone is welcome.', showOnCalendar: true },
       overrideAccess: true,
-      context: ctx,
+      context: ctxObj(),
     })
   }
 
@@ -401,7 +404,7 @@ async function main() {
       photos: ['bollywood-dance.jpg', 'table-tennis.jpg', 'badminton.jpg', 'cricket.jpg', 'beach-trip.jpg', 'picnic.jpg', 'shakha.jpg', 'kids-theatre.jpg'].map((f) => ({ image: m(f), caption: ALT[f] })),
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
   await payload.create({
     collection: 'albums',
@@ -414,7 +417,7 @@ async function main() {
       photos: ['bhajan-youth.jpg', 'bhajan-children.jpg', 'bhajan-sabha.jpg', 'aarti-thali.jpg'].map((f) => ({ image: m(f), caption: ALT[f] })),
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
   await payload.create({
     collection: 'albums',
@@ -427,7 +430,7 @@ async function main() {
       photos: ['nhs-meals.jpg', 'nhs-deliveries.jpg', 'food-bank.jpg', 'soup-kitchen.jpg', 'community-support.jpg', 'lunch-club.jpg', 'dementia-support.jpg'].map((f) => ({ image: m(f), caption: ALT[f] })),
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
   await payload.create({
     collection: 'news',
@@ -443,15 +446,15 @@ async function main() {
       ),
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   payload.logger.info('Volunteer shifts and a test member…')
   const diwali = await payload.find({ collection: 'events', where: { title: { like: 'Diwali' } }, limit: 1, overrideAccess: true })
   if (diwali.docs[0]) {
     const d = diwali.docs[0]
-    await payload.create({ collection: 'volunteer-shifts', data: { title: 'Diwali: car park stewards', event: d.id, startsAt: d.startsAt, endsAt: d.endsAt, slots: 6, description: 'Welcome guests and guide parking.' }, overrideAccess: true, context: ctx })
-    await payload.create({ collection: 'volunteer-shifts', data: { title: 'Diwali: prasad serving', event: d.id, startsAt: d.startsAt, endsAt: d.endsAt, slots: 10, description: 'Serve prasad after the aarti.' }, overrideAccess: true, context: ctx })
+    await payload.create({ collection: 'volunteer-shifts', data: { title: 'Diwali: car park stewards', event: d.id, startsAt: d.startsAt, endsAt: d.endsAt, slots: 6, description: 'Welcome guests and guide parking.' }, overrideAccess: true, context: ctxObj() })
+    await payload.create({ collection: 'volunteer-shifts', data: { title: 'Diwali: prasad serving', event: d.id, startsAt: d.startsAt, endsAt: d.endsAt, slots: 10, description: 'Serve prasad after the aarti.' }, overrideAccess: true, context: ctxObj() })
   }
   const expiry = new Date()
   expiry.setUTCFullYear(expiry.getUTCFullYear() + 1)
@@ -474,7 +477,7 @@ async function main() {
       consents: { newsletter: true, sms: false },
     },
     overrideAccess: true,
-    context: ctx,
+    context: ctxObj(),
   })
 
   payload.logger.info('Seed complete.')
