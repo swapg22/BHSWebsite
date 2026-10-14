@@ -15,11 +15,16 @@ async function axe(page: Page) {
 }
 
 test.describe('home page journey (FR-01 to FR-05)', () => {
-  test('shows the eight stages, times on every page, and Donate/Join @mobile', async ({ page }) => {
+  test('shows the welcome, what\'s on, the new Mandir and ways to help, with times and Donate/Join @mobile', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'Bharat Hindu Samaj' })).toBeVisible()
-    await expect(page.getByText('Aarti daily').first()).toBeVisible()
-    for (const heading of ['Fifty years of worship', 'A permanent home', 'The new Mandir, on the same site', 'Together towards', 'Every gift lays a stone', 'In the words of our community']) {
+    await expect(page.getByRole('heading', { level: 1, name: /Celebrating 50 years of Bharat Hindu Samaj/ })).toBeVisible()
+    await expect(page.getByRole('img', { name: /murtis of Shree Ram, Sita and Lakshman/ })).toBeVisible()
+    await expect(page.getByText('Daily aarti').first()).toBeVisible()
+    const ticker = page.getByRole('region', { name: "What's on" })
+    await expect(ticker).toBeVisible()
+    await ticker.getByRole('button', { name: /pause/i }).click()
+    await expect(ticker.getByRole('button', { name: /play/i })).toHaveAttribute('aria-pressed', 'true')
+    for (const heading of ['Fifty years of worship', 'Charity and our community centre', 'A Mandir for the next fifty years', 'How a Hindu temple is built', 'Every gift lays a stone', 'In the words of our community']) {
       await expect(page.getByRole('heading', { name: new RegExp(heading) })).toBeAttached()
     }
     await expect(page.getByText("Artist's impression, not final design").first()).toBeAttached()
@@ -207,5 +212,8 @@ test.describe('new Mandir page', () => {
     await page.getByRole('button', { name: /Garbhagriha/ }).click()
     await expect(page.getByRole('button', { name: /Garbhagriha/ })).toHaveAttribute('aria-pressed', 'true')
     await expect(detail).toContainText('womb chamber')
+    await expect(page.getByRole('img', { name: /new Mandir complex at dusk/ })).toBeVisible()
+    await expect(page.getByRole('img', { name: /Indicative site plan/ })).toBeVisible()
+    await expect(page.getByText(/Seating for 500\+/)).toBeVisible()
   })
 })

@@ -1,16 +1,17 @@
 import { preload } from 'react-dom'
 import { Clock, Flame } from 'lucide-react'
 import { ButtonLink, LotusMark } from '@/components/ui'
-import { EngravedBackdrop, LotusPond, MarigoldToran, ToranaArch } from '@/components/temple/Motifs'
-import { OmMark, PetalShower, RotatingSeal } from '@/components/temple/Animated'
+import { EngravedBackdrop, MarigoldToran, ToranaArch } from '@/components/temple/Motifs'
+import { PetalShower } from '@/components/temple/Animated'
 
-type Times = { aarti: string; weekdays: string; weekends: string }
+type Times = { aarti: string; weekdays: string; weekends: string; overrideLabel?: string | null }
 
 /**
- * Home welcome (stage 1): darshan of the murtis inside the Mandir, framed by an engraved torana,
- * with the welcome text beside the photograph, never over the deities (section 17).
+ * Home welcome (stage 1), modelled on the current site: darshan of the murtis framed by an
+ * engraved torana, with the welcome line and opening and aarti times beside it (never over the
+ * deities, section 17). The section is sized to the photograph.
  */
-export function TempleHero({ image, alt, heritageLine, times }: { image: string; alt: string; heritageLine?: string | null; times: Times }) {
+export function TempleHero({ image, alt, heading, times }: { image: string; alt: string; heading: string; times: Times }) {
   // Served through the image optimiser (resized, modern format) and preloaded as the page's main image
   const src = `/_next/image?url=${encodeURIComponent(image)}&w=1200&q=75`
   preload(src, { as: 'image', fetchPriority: 'high' })
@@ -18,55 +19,50 @@ export function TempleHero({ image, alt, heritageLine, times }: { image: string;
   return (
     <section id="today" aria-labelledby="welcome-title" className="bg-festival relative isolate overflow-hidden text-ivory-50">
       <EngravedBackdrop className="text-gold-300 opacity-[0.07]" />
-      <PetalShower count={18} />
-      <MarigoldToran className="absolute inset-x-0 top-0 z-10 h-14 w-full sm:h-20" swags={7} />
+      <PetalShower count={14} />
+      <MarigoldToran className="absolute inset-x-0 top-0 z-10 h-10 w-full sm:h-14" swags={8} />
 
-      <div className="container-page relative grid items-center gap-8 pb-10 pt-20 sm:pt-24 lg:grid-cols-12 lg:gap-6 lg:pb-16 lg:pt-28">
-        <div className="relative mx-auto w-full max-w-[34rem] lg:order-2 lg:col-span-7 lg:-mr-6 lg:max-w-none">
-          <ToranaArch image={src} alt={alt} className="h-auto w-full text-gold-300 drop-shadow-[0_20px_40px_rgb(0_0_0/0.45)]" />
-          <RotatingSeal text="SHREE RAM MANDIR · PETERBOROUGH · 1973 · " className="absolute -bottom-3 right-0 h-24 w-24 text-gold-300 sm:h-32 sm:w-32 lg:-left-6 lg:right-auto">
-            <OmMark className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-kumkum-800 text-3xl text-gold-300 ring-1 ring-gold-300/60" />
-          </RotatingSeal>
+      <div className="container-page relative grid items-center gap-4 pb-4 pt-11 sm:pt-14 lg:grid-cols-12 lg:gap-10 lg:pb-4">
+        <div className="mx-auto w-full max-w-[22rem] sm:max-w-[30rem] lg:col-span-6 lg:max-w-none">
+          <ToranaArch image={src} alt={alt} className="mx-auto block h-auto max-h-[min(72svh,36rem)] w-full text-gold-300 drop-shadow-[0_20px_40px_rgb(0_0_0/0.45)]" />
         </div>
 
-        <div className="lg:order-1 lg:col-span-5">
-          <p className="eyebrow animate-fade-up !text-gold-300 before:!bg-gold-300">{heritageLine ?? 'Serving Peterborough since 1973'}</p>
-          <p lang="hi" className="mt-4 animate-fade-up font-indic text-2xl font-medium text-marigold-300 [animation-delay:100ms] sm:text-3xl">
-            भारत हिन्दू समाज · श्री राम मंदिर
+        <div className="pb-6 text-center lg:col-span-6 lg:pb-0 lg:text-left">
+          <p lang="hi" className="animate-fade-up font-indic text-xl font-medium text-marigold-300">
+            जय श्री राम
           </p>
-          <h1 id="welcome-title" className="mt-2 animate-fade-up text-5xl leading-[0.98] text-white [animation-delay:180ms] sm:text-7xl lg:text-7xl 2xl:text-8xl">
-            Bharat Hindu Samaj
-            <span className="text-gradient-gold mt-2 block text-[0.55em] italic leading-tight">Shree Ram Mandir, Peterborough</span>
+          <h1 id="welcome-title" className="mx-auto mt-2 max-w-xl animate-fade-up text-[2.1rem] leading-[1.05] text-white [animation-delay:120ms] sm:text-5xl lg:mx-0">
+            {heading}
           </h1>
-          <p className="mt-6 max-w-xl animate-fade-up text-lg text-ivory-100 [animation-delay:300ms] sm:text-xl">
-            Peterborough&apos;s Hindu temple and community centre — a home for worship, festivals and friendship for over fifty years, and now the beginning of a new Mandir.
-          </p>
-          <div className="mt-8 flex animate-fade-up flex-wrap gap-3 [animation-delay:420ms]">
-            <ButtonLink href="/donate" size="lg" variant="marigold">
-              <LotusMark className="h-5 w-5" />
-              Donate to the new Mandir
-            </ButtonLink>
-            <ButtonLink href="/membership" size="lg" variant="outline-light">
-              Join for £20 a year
-            </ButtonLink>
-          </div>
-          <dl className="mt-10 grid max-w-2xl animate-fade-up gap-px overflow-hidden rounded-2xl border border-gold-300/30 bg-gold-300/20 [animation-delay:540ms] sm:grid-cols-3">
+          <dl className="mx-auto mt-5 grid max-w-xl animate-fade-up gap-px overflow-hidden rounded-2xl border border-gold-300/30 bg-gold-300/20 text-left [animation-delay:240ms] grid-cols-3 lg:mx-0">
             {[
-              { icon: Flame, label: 'Daily aarti', value: times.aarti },
               { icon: Clock, label: 'Weekdays', value: times.weekdays },
               { icon: Clock, label: 'Weekends', value: times.weekends },
+              { icon: Flame, label: 'Daily aarti', value: times.aarti },
             ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="bg-kumkum-900/70 px-5 py-4">
-                <dt className="flex items-center gap-2 text-sm text-gold-300">
-                  <Icon aria-hidden="true" className="h-4 w-4" /> {label}
+              <div key={label} className="bg-kumkum-900/70 px-2.5 py-2.5 sm:px-4 sm:py-3">
+                <dt className="flex items-center gap-1.5 text-xs text-gold-300 sm:gap-2 sm:text-sm">
+                  <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" /> {label}
                 </dt>
-                <dd className="mt-1 text-lg font-semibold">{value}</dd>
+                <dd className="mt-0.5 text-sm font-semibold leading-snug sm:text-base">{value}</dd>
               </div>
             ))}
           </dl>
+          {times.overrideLabel && <p className="mt-3 animate-fade-up text-sm text-gold-300 [animation-delay:300ms]">{times.overrideLabel} times are shown above.</p>}
+          <div className="mt-6 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:360ms] lg:justify-start">
+            <ButtonLink href="/donate" variant="marigold">
+              <LotusMark className="h-5 w-5" />
+              Donate to the new Mandir
+            </ButtonLink>
+            <ButtonLink href="/membership" variant="outline-light">
+              Join for £20 a year
+            </ButtonLink>
+            <ButtonLink href="/visit" variant="outline-light">
+              Plan your visit
+            </ButtonLink>
+          </div>
         </div>
       </div>
-      <LotusPond className="relative block h-16 w-full text-gold-300/70 sm:h-24" />
     </section>
   )
 }

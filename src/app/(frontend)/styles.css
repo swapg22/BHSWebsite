@@ -469,10 +469,11 @@
 
 /* Marquee of festival names */
 .marquee-track {
-  animation: marquee 48s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 .marquee:hover .marquee-track,
-.marquee:focus-within .marquee-track {
+.marquee:focus-within .marquee-track,
+.marquee.is-paused .marquee-track {
   animation-play-state: paused;
 }
 @keyframes marquee {

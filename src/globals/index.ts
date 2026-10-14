@@ -213,6 +213,34 @@ export const HomePage: GlobalConfig = {
     { name: 'heroImage', type: 'upload', relationTo: 'media' },
     { name: 'heroVideoUrl', type: 'text', admin: { description: 'Optional MP4 shown after the page loads on fast connections; stills are shown to reduced-motion users.' } },
     { name: 'heritageLine', type: 'text', defaultValue: 'Serving Peterborough since 1973' },
+    { name: 'heroHeading', type: 'text', defaultValue: 'Celebrating 50 years of Bharat Hindu Samaj', admin: { description: 'The welcome line beside the photograph of the deities.' } },
+    {
+      name: 'ticker',
+      type: 'group',
+      label: "What's on ticker",
+      admin: { description: 'The moving strip under the welcome. Upcoming events are added automatically; add your own notices below (e.g. "Navratri garba every evening, 11–19 October").' },
+      fields: [
+        { name: 'show', type: 'checkbox', defaultValue: true },
+        { type: 'row', fields: [
+          { name: 'includeEvents', type: 'checkbox', defaultValue: true, label: 'Include upcoming events' },
+          { name: 'eventCount', type: 'number', defaultValue: 5, min: 0, max: 12, label: 'How many events' },
+        ] },
+        {
+          name: 'items',
+          type: 'array',
+          label: 'Notices',
+          maxRows: 12,
+          fields: [
+            { name: 'text', type: 'text', required: true, maxLength: 120 },
+            { name: 'href', type: 'text', label: 'Link (optional)', admin: { description: 'A page on this site, e.g. /events or /donate' } },
+            { type: 'row', fields: [
+              { name: 'showFrom', type: 'date', admin: { description: 'Optional: first day to show' } },
+              { name: 'showUntil', type: 'date', admin: { description: 'Optional: last day to show' } },
+            ] },
+          ],
+        },
+      ],
+    },
     {
       name: 'stats',
       type: 'array',

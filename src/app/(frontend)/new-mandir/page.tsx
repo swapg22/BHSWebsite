@@ -6,12 +6,13 @@ import type { Media } from '@/payload-types'
 import { getAppeal, getPayloadClient, mediaAlt, mediaUrl } from '@/lib/data'
 import { getAppealTotals } from '@/lib/reports'
 import { formatGBP } from '@/lib/money'
-import { ButtonLink, LotusMark, SectionHeading } from '@/components/ui'
+import { ButtonLink, SectionHeading } from '@/components/ui'
 import { AppealProgress, ArtistsImpressionLabel, ArrowLink } from '@/components/shared'
 import { ConceptMandir, ConceptPlan } from '@/components/home/ConceptMandir'
-import { MandirAnatomy, MandirElevation } from '@/components/temple/MandirAnatomy'
+import { MandirAnatomy } from '@/components/temple/MandirAnatomy'
+import { NewMandirHero } from '@/components/temple/NewMandirHero'
 import { SacredJourney } from '@/components/temple/SacredJourney'
-import { DeepaStambha, EngravedBackdrop, LotusPond, MarigoldToran } from '@/components/temple/Motifs'
+import { DeepaStambha, EngravedBackdrop } from '@/components/temple/Motifs'
 import { PetalShower, ScallopEdge } from '@/components/temple/Animated'
 import { CountUp } from '@/components/temple/CountUp'
 
@@ -55,40 +56,7 @@ export default async function NewMandirPage() {
   return (
     <>
       {/* Hero: the vision, in engraved line-work at dusk */}
-      <section aria-labelledby="mandir-title" className="bg-festival relative isolate overflow-hidden text-ivory-50">
-        <EngravedBackdrop className="text-gold-300 opacity-[0.06]" />
-        <PetalShower count={12} />
-        <MarigoldToran className="absolute inset-x-0 top-0 z-10 h-14 w-full sm:h-20" swags={7} />
-        <div className="container-page relative grid items-center gap-10 pb-6 pt-24 lg:grid-cols-12 lg:pt-28">
-          <div className="lg:col-span-6">
-            <div className="mb-6">
-              <ArtistsImpressionLabel />
-            </div>
-            <p className="eyebrow !text-gold-300 before:!bg-gold-300">The new Mandir · {appeal.stageLabel ?? 'Vision stage'}</p>
-            <p lang="hi" className="mt-3 font-indic text-2xl text-marigold-300 sm:text-3xl">
-              नया मंदिर · आने वाली पीढ़ियों के लिए
-            </p>
-            <h1 id="mandir-title" className="mt-2 text-5xl text-white sm:text-7xl">
-              A Mandir for the <span className="text-gradient-gold italic">next fifty years</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-ivory-100">Same name, same site, a new home for worship, learning and seva. Every gift lays a stone towards {formatGBP(totals.target)}.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/donate" size="lg" variant="marigold">
-                <LotusMark className="h-5 w-5" />
-                Give to the new Mandir
-              </ButtonLink>
-              <ButtonLink href="/donate/sponsor" size="lg" variant="outline-light">
-                Sponsor a brick or pillar
-              </ButtonLink>
-            </div>
-          </div>
-          <div className="relative lg:col-span-6">
-            <div aria-hidden="true" className="absolute inset-x-8 bottom-8 top-4 rounded-full bg-[radial-gradient(closest-side,rgb(255_166_43/0.35),transparent)]" />
-            <MandirElevation className="relative h-auto w-full text-gold-300 drop-shadow-[0_10px_30px_rgb(0_0_0/0.4)]" />
-          </div>
-        </div>
-        <LotusPond className="relative block h-16 w-full text-gold-300/70 sm:h-24" />
-      </section>
+      <NewMandirHero as="h1" id="mandir-title" stageLabel={appeal.stageLabel} totals={totals} />
 
       {/* At a glance */}
       <section aria-label="The appeal at a glance" className="bg-marigold-400 text-kumkum-900">
@@ -125,6 +93,59 @@ export default async function NewMandirPage() {
         </div>
       </section>
 
+      {/* The vision: elevation and site plan of the new Mandir complex */}
+      <section aria-labelledby="vision-title" className="bg-ivory-100 py-16 sm:py-24">
+        <div className="container-page">
+          <SectionHeading eyebrow="The vision" id="vision-title" title="The new Mandir complex" intro={appeal.visionIntro} />
+          {visuals.length > 0 ? (
+            <ul className="grid gap-6 md:grid-cols-2">
+              {visuals.map((v, i) => (
+                <li key={i}>
+                  <figure className="sheen relative overflow-hidden rounded-3xl ring-1 ring-gold-500/40">
+                    <div className="relative aspect-[16/10]">
+                      <Image src={mediaUrl(v.image as Media, 'hero')!} alt={mediaAlt(v.image as Media, "Artist's impression")} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+                    </div>
+                    <ArtistsImpressionLabel className="absolute left-4 top-4" />
+                    {v.caption && <figcaption className="bg-white p-4 text-sm text-charcoal-600">{v.caption}</figcaption>}
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <figure className="reveal relative overflow-hidden rounded-3xl bg-midnight-900 shadow-2xl shadow-kumkum-900/30 ring-1 ring-gold-500/40">
+              <ConceptMandir className="aspect-[16/9] h-auto w-full" />
+              <ArtistsImpressionLabel className="absolute left-4 top-4" />
+              <figcaption className="border-t border-white/10 bg-charcoal-900 px-6 py-4 text-sm text-ivory-200">
+                Front elevation at dusk: the shikhara over the sanctum rises behind the prayer hall, with the multi-purpose hall on one side and the library, office, kitchen and dining hall on the other. An early concept; the design will be developed with a temple architect.
+              </figcaption>
+            </figure>
+          )}
+          <div className="mt-14 grid gap-10">
+            <figure className="reveal card relative overflow-hidden p-3 sm:p-5">
+              <ConceptPlan className="h-auto w-full" />
+              <ArtistsImpressionLabel className="absolute bottom-16 right-6 !bg-kumkum-800 sm:bottom-20 sm:right-8" />
+              <figcaption className="px-2 pb-1 pt-3 text-sm text-charcoal-600">Indicative site plan. Sizes and positions will be set with the architect and through planning.</figcaption>
+            </figure>
+            <div className="reveal">
+              <h2 className="text-3xl">Spaces for worship, learning and seva</h2>
+              <ol className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+                {(appeal.spaces ?? []).map((s, i) => (
+                  <li key={s.name} className="flex gap-3">
+                    <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-kumkum-700 text-sm font-bold text-ivory-50" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <span>
+                      <span className="font-semibold">{s.name}</span>
+                      {s.description && <span className="block text-charcoal-600">{s.description}</span>}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Our Mandir today: our own photographs */}
       <section aria-labelledby="memories-title" className="bg-ivory-100 py-16 sm:py-24">
         <div className="container-page">
@@ -157,54 +178,6 @@ export default async function NewMandirPage() {
         </div>
       </section>
       <ScallopEdge flip className="-mt-px bg-ivory-100 text-ivory-200" />
-
-      {/* The vision: concept visuals and spaces */}
-      <section aria-labelledby="vision-title" className="bg-ivory-100 py-16 sm:py-24">
-        <div className="container-page">
-          <SectionHeading eyebrow="The vision" id="vision-title" title="Concept visuals" intro={appeal.visionIntro} />
-          {visuals.length > 0 ? (
-            <ul className="grid gap-6 md:grid-cols-2">
-              {visuals.map((v, i) => (
-                <li key={i}>
-                  <figure className="sheen relative overflow-hidden rounded-3xl ring-1 ring-gold-500/40">
-                    <div className="relative aspect-[16/10]">
-                      <Image src={mediaUrl(v.image as Media, 'hero')!} alt={mediaAlt(v.image as Media, "Artist's impression")} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-                    </div>
-                    <ArtistsImpressionLabel className="absolute left-4 top-4" />
-                    {v.caption && <figcaption className="bg-white p-4 text-sm text-charcoal-600">{v.caption}</figcaption>}
-                  </figure>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <figure className="reveal relative overflow-hidden rounded-3xl shadow-2xl shadow-kumkum-900/30 ring-1 ring-gold-500/40">
-              <ConceptMandir className="aspect-[16/9] h-auto w-full" />
-              <ArtistsImpressionLabel className="absolute left-4 top-4" />
-            </figure>
-          )}
-          <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div className="reveal card relative p-4">
-              <ConceptPlan spaces={appeal.spaces ?? []} />
-            </div>
-            <div className="reveal">
-              <h2 className="text-3xl">Spaces for worship, learning and seva</h2>
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-                {(appeal.spaces ?? []).map((s) => (
-                  <li key={s.name} className="flex gap-3">
-                    <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-marigold-300/60 text-kumkum-800" aria-hidden="true">
-                      <LotusMark className="h-4 w-4" />
-                    </span>
-                    <span>
-                      <span className="font-semibold">{s.name}</span>
-                      {s.description && <span className="block text-charcoal-600">{s.description}</span>}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* The sacred journey */}
       <section aria-labelledby="journey-title" className="bg-peacock relative overflow-hidden py-16 text-ivory-100 sm:py-24">

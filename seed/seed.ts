@@ -13,6 +13,7 @@ import config from '../src/payload.config'
 import { lexical } from './lexical'
 import { ACTIVITIES, CEREMONIES, FESTIVALS_2026, PAGES } from './content'
 import { ukDateTime } from '../src/lib/booking'
+import { NEW_MANDIR_SPACES, TICKER_NOTICES } from './newMandirSpaces'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const asset = (f: string) => path.resolve(dirname, 'assets', f)
@@ -119,6 +120,7 @@ async function main() {
     data: {
       _status: 'published',
       heroImage: m('ram-darbar.jpg'),
+      ticker: { show: true, includeEvents: true, eventCount: 5, items: TICKER_NOTICES },
       heritageLine: 'Serving Peterborough since 1973 · Shree Ram Mandir since 1995',
       stats: [
         { value: '1973', label: 'Year the Samaj was founded' },
@@ -167,13 +169,7 @@ async function main() {
       },
       visionIntro:
         'No architect’s drawings exist yet. These early concept visuals show the spirit of what we hope to build: a traditional shikhara over the sanctum, a hall for festivals, a kitchen for seva and classrooms for the next generation.',
-      spaces: [
-        { name: 'Sanctum (garbhagriha)', description: 'The heart of the Mandir, beneath the shikhara.' },
-        { name: 'Prayer and community hall', description: 'For aarti, festivals, weddings and gatherings.' },
-        { name: 'Kitchen and dining', description: 'For prasad, lunch club and community meals.' },
-        { name: 'Classrooms', description: 'For language classes, youth groups and learning.' },
-        { name: 'Entrance, shoes and welcome', description: 'A dignified, accessible arrival for everyone.' },
-      ],
+      spaces: NEW_MANDIR_SPACES,
       gofundme: {
         show: true,
         heading: 'Help Our Cause',

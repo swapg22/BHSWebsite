@@ -45,6 +45,8 @@ A lost authenticator: another administrator unticks "Two-factor sign-in enabled"
 - **Record cash/cheque gifts:** CMS → Fundraising → Donations → create, method "Cash / cheque", status Paid; or add the total to *Raised offline* on the appeal.
 - **Mark a bank transfer received:** open the donation (status *Awaiting bank transfer*) and set *Paid* with the date.
 - **Donor wall:** tick *Approved for display* on donations whose donors consented.
+- **Home page "What's on" ticker:** CMS → Settings → Home page → *What's on ticker*. Upcoming published events appear automatically (choose how many); add notices such as "Navratri garba every evening, 11–19 October" with an optional link and show-from / show-until dates. Turn the ticker off with *Show*. The welcome line beside the deities is *Hero heading* on the same page.
+- **New Mandir spaces:** CMS → Settings → New Mandir appeal → Vision → *Named spaces*. The list appears beside the site plan on the New Mandir page.
 - **Gift Aid claim:** download the HMRC schedule, submit via Charities Online, then fill *Claimed in batch* on those donations so they are not claimed twice.
 
 ## Rollback

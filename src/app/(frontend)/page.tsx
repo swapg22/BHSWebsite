@@ -1,38 +1,46 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { FileText, HeartHandshake, Landmark, Repeat, Gift, Users, QrCode, ShieldCheck } from 'lucide-react'
+import { FileText, HeartHandshake, Landmark, Repeat, Gift, Users, ShieldCheck, ChevronDown, ExternalLink } from 'lucide-react'
 import type { Media } from '@/payload-types'
-import { getAppeal, getGovernance, getHome, getPayloadClient, getSettings, getTimes, getUpcomingEvents, mediaAlt, mediaUrl } from '@/lib/data'
+import { getAppeal, getGovernance, getHome, getPayloadClient, getSettings, getTimes, mediaAlt, mediaUrl } from '@/lib/data'
 import { getAppealTotals } from '@/lib/reports'
 import { formatGBP } from '@/lib/money'
-import { JaaliBand, LotusMark, SectionHeading } from '@/components/ui'
-import { AppealProgress, ArrowLink, ArtistsImpressionLabel, EventCard } from '@/components/shared'
-import { ConceptMandir, ConceptPlan } from '@/components/home/ConceptMandir'
+import { LotusMark, SectionHeading } from '@/components/ui'
+import { ArrowLink } from '@/components/shared'
 import { TempleHero } from '@/components/home/TempleHero'
-import { FestivalMarquee, ScallopEdge } from '@/components/temple/Animated'
-import { CountUp } from '@/components/temple/CountUp'
-import { DeepaStambha, EngravedBackdrop, MarigoldToran } from '@/components/temple/Motifs'
+import { WhatsOnTicker } from '@/components/home/WhatsOnTicker'
 import { ProgressMarker } from '@/components/home/ProgressMarker'
+import { ScallopEdge } from '@/components/temple/Animated'
+import { CountUp } from '@/components/temple/CountUp'
+import { EngravedBackdrop, MarigoldToran } from '@/components/temple/Motifs'
+import { MandirAnatomy } from '@/components/temple/MandirAnatomy'
+import { NewMandirHero } from '@/components/temple/NewMandirHero'
 
 export const revalidate = 300
 
+/** Seva and community-centre work (details on the charity and community pages). */
+const SEVA = [
+  { title: 'Food bank and soup kitchen', text: 'Food bags for homeless and vulnerable people, and regular donations to Peterborough Foodbank.', image: '/images/soup-kitchen.jpg', alt: 'Food donations for Soup Kitchen Peterborough', href: '/charity' },
+  { title: 'Lunch club', text: 'A hot vegetarian meal and good company for older members every Monday and Tuesday.', image: '/images/lunch-club.jpg', alt: 'Seniors enjoying a festive meal at the lunch club', href: '/services#meal' },
+  { title: 'NHS and neighbours', text: 'Hot meals for hospital staff and groceries for shielding families, cooked and delivered by volunteers.', image: '/images/nhs-meals.jpg', alt: 'Hot vegetarian meals packed by volunteers for NHS staff', href: '/charity' },
+  { title: 'Health and wellbeing', text: 'Dementia awareness, an Alzheimer’s support group, yoga and first-aider training.', image: '/images/dementia-support.jpg', alt: 'A dementia awareness and support session', href: '/charity' },
+  { title: 'Sport and clubs', text: 'Badminton, table tennis, cricket, Shakha family games and trips for every age.', image: '/images/badminton.jpg', alt: 'Badminton in the sports hall', href: '/activities' },
+  { title: 'A hall for the community', text: 'Weddings, birthdays, meetings and celebrations: hire the hall and kitchen.', image: '/images/community-support.jpg', alt: 'Volunteers sorting groceries and supplies for the community', href: '/services#hall' },
+]
+
 export default async function HomePage() {
   const payload = await getPayloadClient()
-  const [home, appeal, governance, times, settings, totals, events, sponsorships] = await Promise.all([
+  const [home, appeal, governance, times, settings, totals, sponsorships] = await Promise.all([
     getHome(),
     getAppeal(),
     getGovernance(),
     getTimes(),
     getSettings(),
     getAppealTotals(payload),
-    getUpcomingEvents(3),
     payload.find({ collection: 'sponsorship-items', where: { active: { equals: true } }, sort: 'sortOrder', limit: 4, depth: 0 }),
   ])
   const heroUrl = mediaUrl(home.heroImage as Media, 'hero') ?? '/images/ram-darbar.jpg'
   const heroAlt = mediaAlt(home.heroImage as Media, 'The murtis of Shree Ram, Sita and Lakshman in the Mandir, dressed in yellow and red')
-  const fundraisingEvents = events.filter((e) => e.category === 'fundraising')
-  const strip = fundraisingEvents.length ? fundraisingEvents : events
-  const visuals = (appeal.conceptVisuals ?? []).filter((v) => mediaUrl(v.image as Media))
   const court = appeal.courtNotice
   const gofundme = appeal.gofundme
   const voices = (home.voices ?? []).filter((v) => v.consent)
@@ -41,17 +49,59 @@ export default async function HomePage() {
     <>
       <ProgressMarker />
 
-      {/* 1. Welcome: darshan inside today's Mandir */}
-      <TempleHero image={heroUrl} alt={heroAlt} heritageLine={home.heritageLine} times={times} />
-      <div className="bg-marigold-400 py-4 text-kumkum-900">
-        <FestivalMarquee items={FESTIVALS} />
-      </div>
+      {/* 1. Welcome: darshan inside today's Mandir, with times */}
+      <TempleHero image={heroUrl} alt={heroAlt} heading={home.heroHeading || 'Celebrating 50 years of Bharat Hindu Samaj'} times={times} />
+      <WhatsOnTicker ticker={home.ticker} />
+
+      {/* Notice from the trustees: the High Court case (wording unchanged, kept compact) */}
+      {court?.show && court.heading && (
+        <section aria-labelledby="court-title" className="border-b border-gold-500/30 bg-ivory-200/80">
+          <div className="container-page py-5">
+            <div className="flex flex-col gap-4 rounded-2xl border-l-4 border-kumkum-700 bg-ivory-50 px-5 py-4 shadow-[var(--shadow-soft)] lg:flex-row lg:items-center lg:gap-8">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold uppercase tracking-wide text-kumkum-800">Notice from the trustees</p>
+                <h2 id="court-title" className="mt-1 font-serif text-2xl text-charcoal-900">
+                  {court.heading}
+                </h2>
+                {court.subheading && <p className="text-sm font-semibold text-charcoal-700">{court.subheading}</p>}
+                {court.body && (
+                  <details className="group mt-2">
+                    <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 font-semibold text-kumkum-800 hover:underline [&::-webkit-details-marker]:hidden">
+                      Read the full notice <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p className="mt-2 max-w-3xl whitespace-pre-line text-charcoal-700">{court.body}</p>
+                  </details>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {mediaUrl(court.pdf as Media) && (
+                  <a href={mediaUrl(court.pdf as Media)!} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-kumkum-700 px-5 text-sm font-semibold text-white hover:bg-kumkum-800" download>
+                    <FileText aria-hidden="true" className="h-4 w-4" />
+                    {court.pdfLabel || 'Download PDF'}
+                    <span className="sr-only"> (court report, PDF)</span>
+                  </a>
+                )}
+                {gofundme?.show && gofundme.url && (
+                  <a href={gofundme.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-kumkum-700 px-5 text-sm font-semibold text-kumkum-800 hover:bg-kumkum-50">
+                    {gofundme.heading || 'Help Our Cause'}: legal fund on GoFundMe
+                    <ExternalLink aria-hidden="true" className="h-4 w-4" />
+                    <span className="sr-only"> (opens in a new tab; separate from gifts to the new Mandir)</span>
+                  </a>
+                )}
+                {gofundme?.show && mediaUrl(gofundme.qrImage as Media) && (
+                  <Image src={mediaUrl(gofundme.qrImage as Media, 'card')!} alt="QR code for the Bharat Hindu Samaj Legal Fund on GoFundMe" width={72} height={72} className="hidden rounded-lg sm:block" />
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 2. Our community today */}
-      <section aria-labelledby="community-title" className="bg-haldi relative overflow-hidden py-20 sm:py-28">
+      <section aria-labelledby="community-title" className="bg-haldi relative overflow-hidden py-16 sm:py-24">
         <EngravedBackdrop className="text-gold-500 opacity-[0.08]" />
-        <div className="container-page">
-          <div className="reveal grid gap-12 lg:grid-cols-12 lg:items-end">
+        <div className="container-page relative">
+          <div className="reveal grid gap-8 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-6">
               <p className="eyebrow mb-3">Our community today</p>
               <h2 id="community-title" className="text-4xl sm:text-5xl">
@@ -63,19 +113,19 @@ export default async function HomePage() {
             </p>
           </div>
           {home.stats && home.stats.length > 0 && (
-            <dl className="reveal-stagger relative mt-14 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <dl className="reveal-stagger relative mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {home.stats.map((s, i) => (
-                <div key={s.label} className={`lift relative flex flex-col-reverse overflow-hidden rounded-3xl border border-gold-500/30 px-6 py-8 ${STAT_TONES[i % STAT_TONES.length]}`}>
+                <div key={s.label} className={`lift relative flex flex-col-reverse overflow-hidden rounded-3xl border border-gold-500/30 px-6 py-7 ${STAT_TONES[i % STAT_TONES.length]}`}>
                   <span aria-hidden="true" className="absolute -right-6 -top-6 h-20 w-20 rounded-full border border-current opacity-20" />
                   <dt className="mt-2 font-medium opacity-90">{s.label}</dt>
-                  <dd className="font-serif text-5xl font-semibold sm:text-6xl">
+                  <dd className="font-serif text-5xl font-semibold">
                     <CountUp value={s.value} />
                   </dd>
                 </div>
               ))}
             </dl>
           )}
-          <ul className="reveal-stagger relative mt-14 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
+          <ul className="reveal-stagger relative mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
             {(home.activityCards ?? []).map((c) => {
               const img = mediaUrl(c.image as Media, 'card')
               return (
@@ -95,160 +145,67 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Why a new Mandir */}
-      <ScallopEdge className="-mb-px bg-ivory-100 text-peacock-900" />
-      <section aria-labelledby="why-title" className="bg-peacock relative overflow-hidden py-20 text-ivory-100 sm:py-28">
-        <EngravedBackdrop className="text-peacock-300 opacity-[0.07]" />
-        <DeepaStambha className="pointer-events-none absolute -right-6 bottom-0 hidden h-[30rem] w-auto text-gold-300/70 xl:block" />
-        <div className="container-page relative grid gap-14 lg:grid-cols-12">
-          <div className="reveal lg:col-span-6">
-            <p className="eyebrow mb-3 !text-gold-300 before:!bg-gold-300">Why a new Mandir</p>
-            <h2 id="why-title" className="text-4xl text-ivory-50 sm:text-5xl">
-              A permanent home for the next fifty years
-            </h2>
-            {appeal.trusteesWords && (
-              <blockquote className="mt-8 border-l-2 border-marigold-400 pl-6">
-                <p className="whitespace-pre-line font-serif text-2xl leading-snug text-ivory-50 sm:text-[1.7rem]">{appeal.trusteesWords}</p>
-                {appeal.trusteesAttribution && <footer className="mt-4 text-sm text-gold-300">— {appeal.trusteesAttribution}</footer>}
-              </blockquote>
-            )}
-            <div className="mt-10 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              {appeal.chairmanVideoUrl ? (
-                <div className="aspect-video">
-                  <iframe
-                    src={appeal.chairmanVideoUrl.replace('watch?v=', 'embed/').replace('youtube.com', 'youtube-nocookie.com')}
-                    title="A message from our chairman"
-                    loading="lazy"
-                    allow="accelerometer; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                    className="h-full w-full"
-                  />
-                </div>
-              ) : (
-                <div className="flex aspect-video flex-col items-center justify-center gap-3 p-8 text-center">
-                  <span className="grid h-14 w-14 place-items-center rounded-full border border-gold-400/50 text-gold-300">
-                    <LotusMark className="h-7 w-7" />
-                  </span>
-                  <p className="font-serif text-2xl text-ivory-50">A message from our chairman</p>
-                  <p className="max-w-sm text-sm text-ivory-300">A short film from the chairman will appear here, with captions and a transcript.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {court?.show && court.heading && (
-            <aside aria-labelledby="court-title" className="reveal lg:col-span-5 lg:col-start-8">
-              <div className="rounded-3xl border border-white/15 bg-ivory-50 p-7 text-charcoal-900 sm:p-9">
-                <p className="eyebrow">Notice from the trustees</p>
-                <h3 id="court-title" className="mt-3 text-3xl">
-                  {court.heading}
-                </h3>
-                {court.subheading && <p className="mt-3 font-semibold text-charcoal-800">{court.subheading}</p>}
-                {court.body && <p className="mt-4 whitespace-pre-line text-charcoal-700">{court.body}</p>}
-                {mediaUrl(court.pdf as Media) && (
-                  <a href={mediaUrl(court.pdf as Media)!} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-charcoal-900 px-6 font-semibold text-white hover:bg-charcoal-700" download>
-                    <FileText aria-hidden="true" className="h-5 w-5" />
-                    {court.pdfLabel || 'Download PDF'}
-                    <span className="sr-only"> (court report, PDF)</span>
-                  </a>
-                )}
-              </div>
-            </aside>
-          )}
-        </div>
-      </section>
-
-      {/* 4. The vision */}
-      <ScallopEdge flip className="-mt-px bg-ivory-100 text-peacock-900" />
-      <section id="vision" aria-labelledby="vision-title" className="bg-ivory-100 py-20 sm:py-28">
+      {/* 3. Seva and the community centre */}
+      <section id="seva" aria-labelledby="seva-title" className="relative overflow-hidden bg-ivory-100 pb-16 sm:pb-24">
+        <MarigoldToran className="mb-10 h-12 w-full sm:h-16" swags={8} />
         <div className="container-page">
-          <SectionHeading eyebrow="The vision" id="vision-title" title="The new Mandir, on the same site" intro={appeal.visionIntro} />
-          <figure className="reveal relative overflow-hidden rounded-3xl bg-charcoal-900 shadow-2xl shadow-kumkum-900/30 ring-1 ring-gold-500/40">
-            {visuals[0] ? (
-              <div className="relative aspect-[16/9]">
-                <Image src={mediaUrl(visuals[0].image as Media, 'hero')!} alt={mediaAlt(visuals[0].image as Media, "Artist's impression of the new Mandir")} fill sizes="100vw" className="object-cover" />
-              </div>
-            ) : (
-              <ConceptMandir className="aspect-[16/10] h-auto w-full sm:aspect-[16/9]" />
-            )}
-            <ArtistsImpressionLabel className="absolute left-4 top-4 sm:left-6 sm:top-6" />
-            <figcaption className="border-t border-white/10 bg-charcoal-900 px-6 py-4 text-sm text-ivory-200">
-              {visuals[0]?.caption ?? 'An early concept to show the spirit of the new Mandir: a shikhara over the sanctum, a welcoming hall and classrooms. The design will be developed with a temple architect.'}
-            </figcaption>
-          </figure>
-          <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:items-center">
-            <div className="reveal lg:col-span-5">
-              <h3 className="text-3xl">Spaces for worship, learning and seva</h3>
-              <ul className="mt-6 space-y-4">
-                {(appeal.spaces ?? []).map((s) => (
-                  <li key={s.name} className="flex gap-4">
-                    <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-marigold-300/60 text-kumkum-800" aria-hidden="true">
-                      <LotusMark className="h-4 w-4" />
-                    </span>
-                    <span>
-                      <span className="font-semibold">{s.name}</span>
-                      {s.description && <span className="block text-charcoal-600">{s.description}</span>}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <p className="eyebrow mb-3">Seva · selfless service</p>
+              <h2 id="seva-title" className="text-4xl sm:text-5xl">
+                Charity and our community centre
+              </h2>
+              <p className="mt-4 text-lg text-charcoal-600">Seva is at the heart of our faith. From the kitchen to the sports hall, our volunteers serve people across Peterborough, whatever their background.</p>
             </div>
-            <div className="reveal card relative p-4 lg:col-span-7">
-              <ConceptPlan spaces={appeal.spaces ?? []} />
-              <ArtistsImpressionLabel className="absolute right-4 top-4 !bg-kumkum-800" />
+            <div className="flex flex-wrap gap-4">
+              <ArrowLink href="/charity">Our charity work</ArrowLink>
+              <ArrowLink href="/community">Community life</ArrowLink>
             </div>
           </div>
+          <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SEVA.map((s) => (
+              <li key={s.title} className="card sheen lift group relative flex flex-col overflow-hidden">
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image src={s.image} alt={s.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-[1.2s] group-hover:scale-105" />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="font-serif text-2xl">{s.title}</h3>
+                  <p className="mt-2 flex-1 text-charcoal-700">{s.text}</p>
+                  <Link href={s.href} className="mt-4 font-semibold text-kumkum-800 after:absolute after:inset-0 hover:underline">
+                    Find out more<span className="sr-only"> about {s.title.toLowerCase()}</span> →
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <JaaliBand className="bg-ivory-100" />
+      {/* 4. The new Mandir: vision, progress and target */}
+      <div id="vision">
+        <NewMandirHero id="new-mandir-title" stageLabel={appeal.stageLabel} totals={totals} showProgress />
+      </div>
 
-      {/* 5. Progress and target */}
-      <section id="progress" aria-labelledby="progress-title" className="bg-haldi relative overflow-hidden py-20 sm:py-28">
-        <div className="container-page grid gap-14 lg:grid-cols-12">
-          <div className="reveal lg:col-span-6">
-            <p className="eyebrow mb-3">Progress and target</p>
-            <h2 id="progress-title" className="text-4xl sm:text-5xl">
-              Together towards {formatGBP(totals.target)}
-            </h2>
-            <div className="card mt-8 p-7 sm:p-9">
-              <AppealProgress raised={totals.raised} target={totals.target} donors={totals.donors} stageLabel={appeal.stageLabel} />
-              <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-ivory-300 pt-6 text-sm">
-                <div>
-                  <dt className="text-charcoal-500">Build budget</dt>
-                  <dd className="mt-1 font-semibold">{appeal.buildBudgetPence ? formatGBP(appeal.buildBudgetPence) : appeal.stageLabel || 'Vision stage'}</dd>
-                </div>
-                <div>
-                  <dt className="text-charcoal-500">Timeline</dt>
-                  <dd className="mt-1 font-semibold">{appeal.timelineText || appeal.stageLabel || 'Vision stage'}</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-          <div className="reveal lg:col-span-5 lg:col-start-8">
-            <h3 className="text-2xl">Milestones</h3>
-            <ol className="relative mt-6 space-y-8 border-l-2 border-ivory-400 pl-8">
-              {(appeal.milestones ?? []).map((m) => (
-                <li key={m.title} className="relative">
-                  <span
-                    aria-hidden="true"
-                    className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-items-center rounded-full border-2 ${m.status === 'done' ? 'border-kumkum-700 bg-kumkum-700' : m.status === 'current' ? 'animate-pulse border-sindoor-500 bg-marigold-300 ring-4 ring-marigold-300/50' : 'border-ivory-400 bg-ivory-50'}`}
-                  />
-                  <p className="text-sm font-semibold text-kumkum-800">
-                    {m.date}
-                    <span className="sr-only"> — {m.status === 'done' ? 'completed' : m.status === 'current' ? 'in progress' : 'upcoming'}</span>
-                  </p>
-                  <p className="font-serif text-2xl">{m.title}</p>
-                  {m.description && <p className="mt-1 text-charcoal-600">{m.description}</p>}
-                </li>
-              ))}
-            </ol>
+      {/* 5. The structure of a Mandir */}
+      <section aria-labelledby="anatomy-title" className="relative overflow-hidden bg-ivory-200 py-16 sm:py-24">
+        <EngravedBackdrop className="text-gold-500 opacity-[0.07]" />
+        <div className="container-page relative">
+          <SectionHeading
+            eyebrow="Understanding the Mandir"
+            id="anatomy-title"
+            title="How a Hindu temple is built"
+            intro="A traditional Mandir is a path from the everyday world to the divine: up the steps, through the hall, to the sanctum beneath the tower. Choose a part to learn its name and meaning."
+          />
+          <MandirAnatomy />
+          <div className="mt-10 text-center">
+            <ArrowLink href="/new-mandir">See the plan and elevation of our new Mandir</ArrowLink>
           </div>
         </div>
       </section>
+      <ScallopEdge flip className="-mt-px bg-ivory-100 text-ivory-200" />
 
       {/* 6. Be part of it */}
-      <section id="join" aria-labelledby="join-title" className="bg-ivory-100 py-20 sm:py-28">
+      <section id="join" aria-labelledby="join-title" className="bg-ivory-100 pb-16 pt-10 sm:pb-24">
         <div className="container-page">
           <SectionHeading eyebrow="Be part of it" id="join-title" title="Every gift lays a stone" intro="Give once or monthly in under a minute, add Gift Aid at no cost to you, or sponsor part of the Mandir in your family's name." />
           <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -301,47 +258,12 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-
-          {gofundme?.show && gofundme.url && (
-            <div className="reveal mt-8 grid items-center gap-6 rounded-3xl border border-ivory-300 bg-ivory-50 p-6 sm:grid-cols-[1fr_auto] sm:p-8">
-              <div>
-                <p className="eyebrow">Separate appeal</p>
-                <h3 className="mt-2 font-serif text-3xl">{gofundme.heading || 'Help Our Cause'}</h3>
-                {gofundme.body && <p className="mt-2 max-w-2xl whitespace-pre-line text-charcoal-700">{gofundme.body}</p>}
-                <p className="mt-2 text-sm text-charcoal-500">This GoFundMe appeal funds the legal fight and is separate from gifts to the new Mandir.</p>
-                <a href={gofundme.url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-12 items-center gap-2 rounded-full border border-charcoal-400 px-6 font-semibold hover:bg-ivory-200">
-                  Please Donate on GoFundMe<span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              </div>
-              {mediaUrl(gofundme.qrImage as Media) ? (
-                <Image src={mediaUrl(gofundme.qrImage as Media, 'card')!} alt="QR code for the Bharat Hindu Samaj Legal Fund on GoFundMe" width={180} height={180} className="rounded-2xl" />
-              ) : (
-                <QrCode aria-hidden="true" className="h-24 w-24 text-charcoal-400" />
-              )}
-            </div>
-          )}
-
-          {strip.length > 0 && (
-            <div className="mt-16">
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-                <h3 className="text-3xl">{fundraisingEvents.length ? 'Fundraising events' : 'Coming up at the Mandir'}</h3>
-                <ArrowLink href="/events">All events</ArrowLink>
-              </div>
-              <ul className="grid gap-5 md:grid-cols-3">
-                {strip.map((e) => (
-                  <li key={e.id}>
-                    <EventCard event={e} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </section>
 
       {/* 7. Voices and trust */}
-      <section aria-labelledby="voices-title" className="relative overflow-hidden bg-ivory-200/70 pb-20 sm:pb-28">
-        <MarigoldToran className="mb-12 h-14 w-full sm:h-20" swags={8} />
+      <section aria-labelledby="voices-title" className="relative overflow-hidden bg-ivory-200/70 pb-16 sm:pb-24">
+        <MarigoldToran className="mb-10 h-12 w-full sm:h-16" swags={8} />
         <div className="container-page">
           <SectionHeading eyebrow="Voices and trust" id="voices-title" title="In the words of our community" />
           {voices.length > 0 && (
@@ -383,24 +305,14 @@ export default async function HomePage() {
               <ArrowLink href="/governance">Governance & accounts</ArrowLink>
             </div>
           </div>
+          <p className="mt-10 flex items-center justify-center gap-2 text-center font-serif text-xl text-kumkum-800">
+            <LotusMark className="h-6 w-6" /> Jai Shri Ram
+          </p>
         </div>
       </section>
     </>
   )
 }
-
-const FESTIVALS = [
-  { hi: 'राम नवमी', en: 'Ram Navami' },
-  { hi: 'नवरात्रि', en: 'Navratri' },
-  { hi: 'दीपावली', en: 'Diwali' },
-  { hi: 'अन्नकूट', en: 'Annakut' },
-  { hi: 'होली', en: 'Holi' },
-  { hi: 'जन्माष्टमी', en: 'Janmashtami' },
-  { hi: 'गणेश चतुर्थी', en: 'Ganesh Chaturthi' },
-  { hi: 'महाशिवरात्रि', en: 'Maha Shivratri' },
-  { hi: 'हनुमान जयंती', en: 'Hanuman Jayanti' },
-  { hi: 'रक्षा बंधन', en: 'Raksha Bandhan' },
-]
 
 // Text colours chosen for WCAG AA on each fill
 const STAT_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-peacock-700 text-ivory-50', 'bg-ivory-50 text-kumkum-800']

@@ -2079,6 +2079,36 @@ export interface HomePage {
   heroVideoUrl?: string | null;
   heritageLine?: string | null;
   /**
+   * The welcome line beside the photograph of the deities.
+   */
+  heroHeading?: string | null;
+  /**
+   * The moving strip under the welcome. Upcoming events are added automatically; add your own notices below (e.g. "Navratri garba every evening, 11–19 October").
+   */
+  ticker?: {
+    show?: boolean | null;
+    includeEvents?: boolean | null;
+    eventCount?: number | null;
+    items?:
+      | {
+          text: string;
+          /**
+           * A page on this site, e.g. /events or /donate
+           */
+          href?: string | null;
+          /**
+           * Optional: first day to show
+           */
+          showFrom?: string | null;
+          /**
+           * Optional: last day to show
+           */
+          showUntil?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
    * Three or four numbers from real records.
    */
   stats?:
@@ -2325,6 +2355,23 @@ export interface HomePageSelect<T extends boolean = true> {
   heroImage?: T;
   heroVideoUrl?: T;
   heritageLine?: T;
+  heroHeading?: T;
+  ticker?:
+    | T
+    | {
+        show?: T;
+        includeEvents?: T;
+        eventCount?: T;
+        items?:
+          | T
+          | {
+              text?: T;
+              href?: T;
+              showFrom?: T;
+              showUntil?: T;
+              id?: T;
+            };
+      };
   stats?:
     | T
     | {
