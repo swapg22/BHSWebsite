@@ -34,7 +34,7 @@ test.describe('home page journey (FR-01 to FR-05)', () => {
   test('key pages pass automated WCAG 2.2 AA checks', async ({ page }) => {
     // Check the settled page: text mid-fade briefly has lower contrast than its final state
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    for (const path of ['/', '/donate', '/membership', '/events', '/services', '/contact', '/about', '/account/login']) {
+    for (const path of ['/', '/new-mandir', '/donate', '/membership', '/events', '/services', '/contact', '/about', '/account/login']) {
       await page.goto(path, { waitUntil: 'networkidle' })
       await axe(page)
     }
@@ -195,5 +195,17 @@ test.describe('communication and security', () => {
     expect((await request.get('/api/members')).status()).toBe(403)
     const login = await request.get('/admin/login', { maxRedirects: 0 })
     expect(login.status()).toBe(307)
+  })
+})
+
+test.describe('new Mandir page', () => {
+  test('explains the parts of a Mandir interactively', async ({ page }) => {
+    await page.goto('/new-mandir')
+    await expect(page.getByRole('heading', { name: 'The anatomy of a Hindu temple' })).toBeVisible()
+    const detail = page.locator('#anatomy-detail')
+    await expect(detail).toContainText('Shikhara')
+    await page.getByRole('button', { name: /Garbhagriha/ }).click()
+    await expect(page.getByRole('button', { name: /Garbhagriha/ })).toHaveAttribute('aria-pressed', 'true')
+    await expect(detail).toContainText('womb chamber')
   })
 })

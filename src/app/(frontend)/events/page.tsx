@@ -3,12 +3,13 @@ import Link from 'next/link'
 import { CalendarDays, Rss } from 'lucide-react'
 import { getPayloadClient } from '@/lib/data'
 import { PageHeader } from '@/components/ui'
-import { EventCard, CATEGORY_LABEL } from '@/components/shared'
+import { EventCard } from '@/components/shared'
 
 export const metadata: Metadata = { title: 'Events', description: 'Festivals, workshops, fundraisers and community events at Bharat Hindu Samaj.' }
 export const revalidate = 300
 
 const FILTERS = ['all', 'festival', 'fundraising', 'workshop', 'community', 'class'] as const
+const FILTER_LABEL: Record<(typeof FILTERS)[number], string> = { all: 'All events', festival: 'Festivals', fundraising: 'Fundraisers', workshop: 'Workshops', community: 'Community', class: 'Classes' }
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const { category } = await searchParams
@@ -51,7 +52,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                   aria-current={active === f ? 'page' : undefined}
                   className={`inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold transition-colors ${active === f ? 'border-kumkum-700 bg-kumkum-700 text-white' : 'border-ivory-400 bg-white text-charcoal-700 hover:border-charcoal-400'}`}
                 >
-                  {f === 'all' ? 'All events' : f === 'class' ? 'Classes' : `${CATEGORY_LABEL[f]}s`}
+                  {FILTER_LABEL[f]}
                 </Link>
               </li>
             ))}

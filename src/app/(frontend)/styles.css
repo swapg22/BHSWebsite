@@ -56,6 +56,18 @@
   --color-midnight-800: #1b2246;
   --color-midnight-900: #151b3a;
 
+  /* Festive accents (vibrant redesign): marigold garlands, peacock teal, bright sindoor */
+  --color-marigold-300: #ffc56b;
+  --color-marigold-400: #ffa62b;
+  --color-marigold-500: #f28a1a;
+  --color-marigold-600: #c96a06;
+  --color-peacock-300: #6fc1c4;
+  --color-peacock-500: #128189;
+  --color-peacock-700: #0b5a60;
+  --color-peacock-900: #06353a;
+  --color-sindoor-500: #d7261e;
+  --color-sindoor-600: #b81d16;
+
   --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, 'Noto Serif Devanagari', serif;
   --font-sans: var(--font-mukta), Mukta, 'Noto Sans Gujarati', system-ui, sans-serif;
   --font-indic: var(--font-mukta), var(--font-gujarati), 'Noto Sans Gujarati', sans-serif;
@@ -299,6 +311,34 @@
     height: 2.25rem;
     color: var(--color-gold-500);
   }
+  /* Primary action: kumkum to sindoor, with a sweep of gold light on hover */
+  .btn-festive {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(120deg, var(--color-kumkum-700), var(--color-sindoor-600));
+    box-shadow: 0 10px 28px -14px rgb(163 29 29 / 0.9);
+    transition:
+      box-shadow 0.3s var(--ease-calm),
+      transform 0.3s var(--ease-calm);
+  }
+  .btn-festive::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(115deg, transparent 25%, rgb(255 210 122 / 0.55) 50%, transparent 75%);
+    transform: translateX(-110%);
+  }
+  .btn-festive:hover {
+    background: linear-gradient(120deg, var(--color-kumkum-800), var(--color-kumkum-700));
+    box-shadow: 0 14px 34px -14px rgb(163 29 29 / 1);
+    transform: translateY(-1px);
+  }
+  .btn-festive:hover::after {
+    transform: translateX(110%);
+    transition: transform 0.9s var(--ease-calm);
+  }
   .divider-lotus {
     display: flex;
     align-items: center;
@@ -312,6 +352,274 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
   }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Vibrant festival layer: marigold, sindoor and peacock accents, engraved line-work and motion.
+ * Every animation below is switched off by the reduced-motion block further down.
+ * ------------------------------------------------------------------------------------------- */
+.bg-festival {
+  background:
+    radial-gradient(70% 60% at 78% 30%, rgb(255 166 43 / 0.32), transparent 70%),
+    radial-gradient(60% 70% at 10% 90%, rgb(215 38 30 / 0.35), transparent 70%),
+    linear-gradient(160deg, #3a0b0b 0%, #6b1212 45%, #561010 100%);
+}
+.bg-peacock {
+  background:
+    radial-gradient(60% 80% at 85% 10%, rgb(111 193 196 / 0.22), transparent 70%),
+    linear-gradient(170deg, var(--color-peacock-900) 0%, #052b30 100%);
+}
+.bg-haldi {
+  background:
+    radial-gradient(80% 90% at 0% 0%, rgb(255 197 107 / 0.55), transparent 60%),
+    radial-gradient(70% 80% at 100% 100%, rgb(242 138 26 / 0.28), transparent 60%),
+    var(--color-ivory-100);
+}
+.text-gradient-gold {
+  background: linear-gradient(100deg, #ffe3a3 0%, #ffc56b 35%, #f28a1a 70%, #ffd27a 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 8s linear infinite;
+}
+@keyframes sheen {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Draw engraved line-work in, as if etched, when it first appears */
+.engrave-draw path,
+.engrave-draw line {
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  animation: engrave 3.2s var(--ease-calm) forwards;
+}
+.engrave-draw line {
+  animation-delay: 0.6s;
+}
+@keyframes engrave {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.torana-photo {
+  animation: darshan 2.4s var(--ease-calm) both;
+  transform-origin: 50% 70%;
+  transform-box: fill-box;
+}
+@keyframes darshan {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+    filter: brightness(0.4) saturate(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Garlands and bells sway gently */
+.sway {
+  animation: sway 5.5s ease-in-out infinite alternate;
+  transform-box: view-box;
+}
+.sway-slow {
+  animation: sway 7s ease-in-out infinite alternate;
+  transform-box: view-box;
+}
+@keyframes sway {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.6deg);
+  }
+}
+
+/* Falling marigold petals */
+.petal {
+  position: absolute;
+  top: -5%;
+  border-radius: 60% 0 60% 0;
+  opacity: 0;
+  animation-name: petal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(var(--drift, 30px), 110vh, 0) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+/* Marquee of festival names */
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Turning temple seal */
+.seal-spin {
+  animation: spin 40s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Lift and gold sheen on interactive cards */
+.lift {
+  transition:
+    transform 0.5s var(--ease-calm),
+    box-shadow 0.5s var(--ease-calm);
+}
+.lift:hover,
+.lift:focus-within {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
+}
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 227 163 / 0.45) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0s;
+}
+.sheen:hover::before,
+.sheen:focus-within::before {
+  transform: translateX(120%);
+  transition: transform 1.1s var(--ease-calm);
+}
+
+/* Slowly turning mandala behind page headers */
+.mandala-spin {
+  animation: spin 120s linear infinite;
+}
+
+/* Flag on the shikhara and the active anatomy marker */
+.flag-wave {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  animation: flag 2.2s ease-in-out infinite alternate;
+}
+@keyframes flag {
+  to {
+    transform: skewY(6deg) scaleX(0.92);
+  }
+}
+.hotspot-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hotspot 1.6s ease-out infinite;
+}
+@keyframes hotspot {
+  from {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Bookmark-style card (from the engraved reference): a ribbon notch at the foot */
+.bookmark {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 1.25rem), 0 100%);
+  padding-bottom: 2.75rem;
+}
+
+/* Page-enter transition (template.tsx) */
+.page-enter {
+  animation: page-in 0.7s var(--ease-calm) both;
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-sweep {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 60;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #ffc56b, #f28a1a, #d7261e, transparent);
+  transform: translateX(-100%);
+  animation: sweep 1.1s var(--ease-calm) forwards;
+}
+@keyframes sweep {
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Staggered children for reveal groups */
+.js-reveal .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(26px) scale(0.98);
+  transition:
+    opacity 0.8s var(--ease-calm),
+    transform 0.8s var(--ease-calm);
+}
+.js-reveal .reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+.js-reveal .reveal-stagger.is-visible > *:nth-child(2) {
+  transition-delay: 0.1s;
+}
+.js-reveal .reveal-stagger.is-visible > *:nth-child(3) {
+  transition-delay: 0.2s;
+}
+.js-reveal .reveal-stagger.is-visible > *:nth-child(4) {
+  transition-delay: 0.3s;
+}
+.js-reveal .reveal-stagger.is-visible > *:nth-child(5) {
+  transition-delay: 0.4s;
+}
+.js-reveal .reveal-stagger.is-visible > *:nth-child(n + 6) {
+  transition-delay: 0.5s;
 }
 
 /* Reveal-on-scroll: content is visible by default; JS opts elements in to the animation. */
@@ -338,9 +646,18 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .js-reveal .reveal {
+  .js-reveal .reveal,
+  .js-reveal .reveal-stagger > * {
     opacity: 1;
     transform: none;
+  }
+  .petal,
+  .page-sweep {
+    display: none;
+  }
+  .engrave-draw path,
+  .engrave-draw line {
+    stroke-dashoffset: 0;
   }
   .parallax {
     transform: none !important;

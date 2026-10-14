@@ -25,7 +25,8 @@
     "db:migration": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "db:check": "node scripts/db-check.mjs",
     "supabase": "node scripts/supabase.mjs",
-    "vercel-build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build"
+    "vercel-build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build",
+    "content:hero": "cross-env NODE_OPTIONS=--no-deprecation tsx seed/updates/2026-10-hero-deities.ts"
   },
   "dependencies": {
     "@googleapis/calendar": "^20.1.0",

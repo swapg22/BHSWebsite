@@ -1,17 +1,19 @@
 import Link from 'next/link'
 import type { ComponentProps, ReactNode } from 'react'
+import { EngravedBackdrop, LotusPond, MarigoldToran } from '@/components/temple/Motifs'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'light' | 'outline-light'
+type Variant = 'primary' | 'secondary' | 'ghost' | 'light' | 'outline-light' | 'marigold'
 type Size = 'md' | 'lg' | 'sm'
 
 const base =
   'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 text-center'
 const variants: Record<Variant, string> = {
-  primary: 'bg-kumkum-700 text-white hover:bg-kumkum-800 focus-visible:outline-kumkum-600',
+  primary: 'btn-festive text-white focus-visible:outline-kumkum-600',
   secondary: 'bg-ivory-50 text-kumkum-800 border border-gold-500/60 hover:border-kumkum-700 hover:bg-kumkum-50',
   ghost: 'text-kumkum-800 hover:bg-kumkum-50',
   light: 'bg-ivory-100 text-charcoal-900 hover:bg-white',
-  'outline-light': 'border border-white/70 text-white hover:bg-white/10',
+  'outline-light': 'border border-gold-300/80 text-white hover:bg-white/10 hover:border-gold-300',
+  marigold: 'bg-marigold-400 text-charcoal-900 hover:bg-marigold-300 shadow-[0_10px_30px_-12px_rgb(242_138_26/0.8)]',
 }
 const sizes: Record<Size, string> = {
   sm: 'min-h-10 px-4 text-sm',
@@ -41,15 +43,17 @@ export function Button({ variant = 'primary', size = 'md', className = '', child
 
 export function PageHeader({ eyebrow, title, intro, children }: { eyebrow?: string; title: string; intro?: ReactNode; children?: ReactNode }) {
   return (
-    <header className="relative overflow-hidden bg-ivory-200/70">
-      <MandalaBackdrop />
-      <JaaliBand className="absolute inset-x-0 bottom-0 opacity-60" />
-      <div className="container-page relative py-14 sm:py-20">
+    <header className="bg-haldi relative overflow-hidden">
+      <EngravedBackdrop className="text-gold-500 opacity-[0.08]" />
+      <MandalaBackdrop className="mandala-spin !text-marigold-500/25" />
+      <MarigoldToran className="absolute inset-x-0 top-0 h-10 w-full sm:h-14" swags={8} />
+      <div className="container-page page-enter relative pb-16 pt-16 sm:pb-24 sm:pt-24">
         {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
         <h1 className="max-w-3xl text-4xl text-charcoal-900 sm:text-6xl">{title}</h1>
-        {intro && <div className="mt-5 max-w-2xl text-lg text-charcoal-600">{intro}</div>}
+        {intro && <div className="mt-5 max-w-2xl text-lg text-charcoal-700">{intro}</div>}
         {children && <div className="mt-8">{children}</div>}
       </div>
+      <LotusPond className="pointer-events-none absolute inset-x-0 bottom-0 block h-12 w-full text-gold-500/60 sm:h-16" />
     </header>
   )
 }

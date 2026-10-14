@@ -118,7 +118,7 @@ async function main() {
     slug: 'home-page',
     data: {
       _status: 'published',
-      heroImage: m('bhajan-youth.jpg'),
+      heroImage: m('ram-darbar.jpg'),
       heritageLine: 'Serving Peterborough since 1973 · Shree Ram Mandir since 1995',
       stats: [
         { value: '1973', label: 'Year the Samaj was founded' },

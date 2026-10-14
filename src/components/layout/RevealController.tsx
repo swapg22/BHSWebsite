@@ -13,7 +13,7 @@ export function RevealController() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return
     const root = document.documentElement
     root.classList.add('js-reveal')
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)'))
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible), .reveal-stagger:not(.is-visible)'))
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {

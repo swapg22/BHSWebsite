@@ -1,14 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { FileText, HeartHandshake, Landmark, Repeat, Gift, Users, Flame, Clock, QrCode, ShieldCheck } from 'lucide-react'
+import { FileText, HeartHandshake, Landmark, Repeat, Gift, Users, QrCode, ShieldCheck } from 'lucide-react'
 import type { Media } from '@/payload-types'
 import { getAppeal, getGovernance, getHome, getPayloadClient, getSettings, getTimes, getUpcomingEvents, mediaAlt, mediaUrl } from '@/lib/data'
 import { getAppealTotals } from '@/lib/reports'
 import { formatGBP } from '@/lib/money'
-import { ButtonLink, JaaliBand, LotusMark, SectionHeading } from '@/components/ui'
+import { JaaliBand, LotusMark, SectionHeading } from '@/components/ui'
 import { AppealProgress, ArrowLink, ArtistsImpressionLabel, EventCard } from '@/components/shared'
 import { ConceptMandir, ConceptPlan } from '@/components/home/ConceptMandir'
-import { HeroMedia } from '@/components/home/HeroMedia'
+import { TempleHero } from '@/components/home/TempleHero'
+import { FestivalMarquee, ScallopEdge } from '@/components/temple/Animated'
+import { CountUp } from '@/components/temple/CountUp'
+import { DeepaStambha, EngravedBackdrop, MarigoldToran } from '@/components/temple/Motifs'
 import { ProgressMarker } from '@/components/home/ProgressMarker'
 
 export const revalidate = 300
@@ -25,8 +28,8 @@ export default async function HomePage() {
     getUpcomingEvents(3),
     payload.find({ collection: 'sponsorship-items', where: { active: { equals: true } }, sort: 'sortOrder', limit: 4, depth: 0 }),
   ])
-  const heroUrl = mediaUrl(home.heroImage as Media, 'hero') ?? '/images/bhajan-youth.jpg'
-  const heroAlt = mediaAlt(home.heroImage as Media, 'Young devotees singing bhajans at the Mandir')
+  const heroUrl = mediaUrl(home.heroImage as Media, 'hero') ?? '/images/ram-darbar.jpg'
+  const heroAlt = mediaAlt(home.heroImage as Media, 'The murtis of Shree Ram, Sita and Lakshman in the Mandir, dressed in yellow and red')
   const fundraisingEvents = events.filter((e) => e.category === 'fundraising')
   const strip = fundraisingEvents.length ? fundraisingEvents : events
   const visuals = (appeal.conceptVisuals ?? []).filter((v) => mediaUrl(v.image as Media))
@@ -38,52 +41,15 @@ export default async function HomePage() {
     <>
       <ProgressMarker />
 
-      {/* 1. Welcome: today's Mandir */}
-      <section id="today" aria-labelledby="welcome-title" className="relative isolate flex min-h-[calc(100svh-7.5rem)] items-end overflow-hidden text-ivory-50">
-        <HeroMedia image={heroUrl} alt={heroAlt} videoUrl={home.heroVideoUrl} />
-        <div className="scrim-bottom absolute inset-0" aria-hidden="true" />
-        <div className="container-page relative pb-14 pt-32 sm:pb-20">
-          <p className="eyebrow animate-fade-up !text-gold-300">{home.heritageLine ?? 'Serving Peterborough since 1973'}</p>
-          <h1 id="welcome-title" className="mt-4 max-w-4xl animate-fade-up text-5xl leading-[1.02] text-white [animation-delay:120ms] sm:text-7xl lg:text-8xl">
-            Bharat Hindu Samaj
-          </h1>
-          <p className="mt-5 max-w-2xl animate-fade-up text-lg text-ivory-100 [animation-delay:240ms] sm:text-xl">
-            Peterborough&apos;s Shree Ram Mandir and community centre — a home for worship, festivals and friendship for over fifty years, and now the beginning of a new Mandir.
-          </p>
-          <div className="mt-8 flex animate-fade-up flex-wrap gap-3 [animation-delay:360ms]">
-            <ButtonLink href="/donate" size="lg">
-              <LotusMark className="h-5 w-5" />
-              Donate to the new Mandir
-            </ButtonLink>
-            <ButtonLink href="/membership" size="lg" variant="outline-light">
-              Join for £20 a year
-            </ButtonLink>
-          </div>
-          <dl className="mt-10 grid max-w-3xl animate-fade-up gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md [animation-delay:480ms] sm:grid-cols-3">
-            <div className="bg-charcoal-900/40 px-5 py-4">
-              <dt className="flex items-center gap-2 text-sm text-gold-300">
-                <Flame aria-hidden="true" className="h-4 w-4" /> Daily aarti
-              </dt>
-              <dd className="mt-1 text-lg font-semibold">{times.aarti}</dd>
-            </div>
-            <div className="bg-charcoal-900/40 px-5 py-4">
-              <dt className="flex items-center gap-2 text-sm text-gold-300">
-                <Clock aria-hidden="true" className="h-4 w-4" /> Weekdays
-              </dt>
-              <dd className="mt-1 text-lg font-semibold">{times.weekdays}</dd>
-            </div>
-            <div className="bg-charcoal-900/40 px-5 py-4">
-              <dt className="flex items-center gap-2 text-sm text-gold-300">
-                <Clock aria-hidden="true" className="h-4 w-4" /> Weekends
-              </dt>
-              <dd className="mt-1 text-lg font-semibold">{times.weekends}</dd>
-            </div>
-          </dl>
-        </div>
-      </section>
+      {/* 1. Welcome: darshan inside today's Mandir */}
+      <TempleHero image={heroUrl} alt={heroAlt} heritageLine={home.heritageLine} times={times} />
+      <div className="bg-marigold-400 py-4 text-kumkum-900">
+        <FestivalMarquee items={FESTIVALS} />
+      </div>
 
       {/* 2. Our community today */}
-      <section aria-labelledby="community-title" className="bg-ivory-100 py-20 sm:py-28">
+      <section aria-labelledby="community-title" className="bg-haldi relative overflow-hidden py-20 sm:py-28">
+        <EngravedBackdrop className="text-gold-500 opacity-[0.08]" />
         <div className="container-page">
           <div className="reveal grid gap-12 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-6">
@@ -97,25 +63,28 @@ export default async function HomePage() {
             </p>
           </div>
           {home.stats && home.stats.length > 0 && (
-            <dl className="reveal mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-ivory-300 bg-ivory-300 lg:grid-cols-4">
-              {home.stats.map((s) => (
-                <div key={s.label} className="bg-ivory-50 px-6 py-8">
-                  <dd className="font-serif text-5xl text-kumkum-700 sm:text-6xl">{s.value}</dd>
-                  <dt className="mt-2 text-charcoal-600">{s.label}</dt>
+            <dl className="reveal-stagger relative mt-14 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {home.stats.map((s, i) => (
+                <div key={s.label} className={`lift relative flex flex-col-reverse overflow-hidden rounded-3xl border border-gold-500/30 px-6 py-8 ${STAT_TONES[i % STAT_TONES.length]}`}>
+                  <span aria-hidden="true" className="absolute -right-6 -top-6 h-20 w-20 rounded-full border border-current opacity-20" />
+                  <dt className="mt-2 font-medium opacity-90">{s.label}</dt>
+                  <dd className="font-serif text-5xl font-semibold sm:text-6xl">
+                    <CountUp value={s.value} />
+                  </dd>
                 </div>
               ))}
             </dl>
           )}
-          <ul className="mt-14 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
+          <ul className="reveal-stagger relative mt-14 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-5">
             {(home.activityCards ?? []).map((c) => {
               const img = mediaUrl(c.image as Media, 'card')
               return (
                 <li key={c.title}>
-                  <Link href={c.href ?? '/activities'} className="torana group relative block aspect-[3/4] bg-midnight-800">
-                    {img && <Image src={img} alt="" fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" />}
+                  <Link href={c.href ?? '/activities'} className="torana sheen lift group relative block aspect-[3/4] bg-kumkum-900">
+                    {img && <Image src={img} alt="" fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover opacity-90 transition-transform duration-[1.2s] group-hover:scale-110" />}
                     <span className="scrim-bottom absolute inset-0" aria-hidden="true" />
                     <span className="absolute inset-x-0 bottom-0 p-5 text-ivory-50">
-                      <span className="block font-serif text-2xl">{c.title}</span>
+                      <span className="block font-serif text-2xl transition-colors group-hover:text-marigold-300">{c.title}</span>
                       {c.text && <span className="mt-1 block text-sm text-ivory-200">{c.text}</span>}
                     </span>
                   </Link>
@@ -126,19 +95,19 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <JaaliBand className="bg-ivory-100" />
-
       {/* 3. Why a new Mandir */}
-      <section aria-labelledby="why-title" className="relative overflow-hidden bg-midnight-900 py-20 text-ivory-100 sm:py-28">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(60%_100%_at_50%_0%,rgb(227_162_26/0.18),transparent)]" />
-        <div className="container-page grid gap-14 lg:grid-cols-12">
+      <ScallopEdge className="-mb-px bg-ivory-100 text-peacock-900" />
+      <section aria-labelledby="why-title" className="bg-peacock relative overflow-hidden py-20 text-ivory-100 sm:py-28">
+        <EngravedBackdrop className="text-peacock-300 opacity-[0.07]" />
+        <DeepaStambha className="pointer-events-none absolute -right-6 bottom-0 hidden h-[30rem] w-auto text-gold-300/70 xl:block" />
+        <div className="container-page relative grid gap-14 lg:grid-cols-12">
           <div className="reveal lg:col-span-6">
-            <p className="eyebrow mb-3 !text-gold-300">Why a new Mandir</p>
+            <p className="eyebrow mb-3 !text-gold-300 before:!bg-gold-300">Why a new Mandir</p>
             <h2 id="why-title" className="text-4xl text-ivory-50 sm:text-5xl">
               A permanent home for the next fifty years
             </h2>
             {appeal.trusteesWords && (
-              <blockquote className="mt-8 border-l-2 border-gold-400 pl-6">
+              <blockquote className="mt-8 border-l-2 border-marigold-400 pl-6">
                 <p className="whitespace-pre-line font-serif text-2xl leading-snug text-ivory-50 sm:text-[1.7rem]">{appeal.trusteesWords}</p>
                 {appeal.trusteesAttribution && <footer className="mt-4 text-sm text-gold-300">— {appeal.trusteesAttribution}</footer>}
               </blockquote>
@@ -190,10 +159,11 @@ export default async function HomePage() {
       </section>
 
       {/* 4. The vision */}
+      <ScallopEdge flip className="-mt-px bg-ivory-100 text-peacock-900" />
       <section id="vision" aria-labelledby="vision-title" className="bg-ivory-100 py-20 sm:py-28">
         <div className="container-page">
           <SectionHeading eyebrow="The vision" id="vision-title" title="The new Mandir, on the same site" intro={appeal.visionIntro} />
-          <figure className="reveal relative overflow-hidden rounded-3xl bg-charcoal-900 shadow-2xl shadow-charcoal-900/20">
+          <figure className="reveal relative overflow-hidden rounded-3xl bg-charcoal-900 shadow-2xl shadow-kumkum-900/30 ring-1 ring-gold-500/40">
             {visuals[0] ? (
               <div className="relative aspect-[16/9]">
                 <Image src={mediaUrl(visuals[0].image as Media, 'hero')!} alt={mediaAlt(visuals[0].image as Media, "Artist's impression of the new Mandir")} fill sizes="100vw" className="object-cover" />
@@ -212,7 +182,9 @@ export default async function HomePage() {
               <ul className="mt-6 space-y-4">
                 {(appeal.spaces ?? []).map((s) => (
                   <li key={s.name} className="flex gap-4">
-                    <span className="mt-2 h-2.5 w-2.5 shrink-0 rotate-45 bg-kumkum-600" aria-hidden="true" />
+                    <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-marigold-300/60 text-kumkum-800" aria-hidden="true">
+                      <LotusMark className="h-4 w-4" />
+                    </span>
                     <span>
                       <span className="font-semibold">{s.name}</span>
                       {s.description && <span className="block text-charcoal-600">{s.description}</span>}
@@ -232,7 +204,7 @@ export default async function HomePage() {
       <JaaliBand className="bg-ivory-100" />
 
       {/* 5. Progress and target */}
-      <section id="progress" aria-labelledby="progress-title" className="bg-ivory-200/70 py-20 sm:py-28">
+      <section id="progress" aria-labelledby="progress-title" className="bg-haldi relative overflow-hidden py-20 sm:py-28">
         <div className="container-page grid gap-14 lg:grid-cols-12">
           <div className="reveal lg:col-span-6">
             <p className="eyebrow mb-3">Progress and target</p>
@@ -260,7 +232,7 @@ export default async function HomePage() {
                 <li key={m.title} className="relative">
                   <span
                     aria-hidden="true"
-                    className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-items-center rounded-full border-2 ${m.status === 'done' ? 'border-kumkum-700 bg-kumkum-700' : m.status === 'current' ? 'border-kumkum-700 bg-ivory-50 ring-4 ring-kumkum-100' : 'border-ivory-400 bg-ivory-50'}`}
+                    className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-items-center rounded-full border-2 ${m.status === 'done' ? 'border-kumkum-700 bg-kumkum-700' : m.status === 'current' ? 'animate-pulse border-sindoor-500 bg-marigold-300 ring-4 ring-marigold-300/50' : 'border-ivory-400 bg-ivory-50'}`}
                   />
                   <p className="text-sm font-semibold text-kumkum-800">
                     {m.date}
@@ -279,15 +251,15 @@ export default async function HomePage() {
       <section id="join" aria-labelledby="join-title" className="bg-ivory-100 py-20 sm:py-28">
         <div className="container-page">
           <SectionHeading eyebrow="Be part of it" id="join-title" title="Every gift lays a stone" intro="Give once or monthly in under a minute, add Gift Aid at no cost to you, or sponsor part of the Mandir in your family's name." />
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: Gift, title: 'One-off gift', text: 'Card, Apple Pay or Google Pay with an instant receipt.', href: '/donate', cta: 'Give now' },
               { icon: Repeat, title: 'Give monthly', text: 'By Direct Debit or card. Steady support that lets us plan.', href: '/donate?frequency=monthly', cta: 'Give monthly' },
               { icon: Landmark, title: 'Sponsor a brick, pillar or day', text: 'Dedicate part of the new Mandir in a loved one’s name.', href: '/donate/sponsor', cta: 'See sponsorships' },
               { icon: HeartHandshake, title: 'Pledge a major gift', text: 'Spread a larger gift over time, with a trustee as your contact.', href: '/donate/pledge', cta: 'Make a pledge' },
-            ].map(({ icon: Icon, title, text, href, cta }) => (
-              <li key={title} className="card relative flex flex-col p-6 transition-shadow hover:shadow-[var(--shadow-lift)]">
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-kumkum-50 text-kumkum-700">
+            ].map(({ icon: Icon, title, text, href, cta }, i) => (
+              <li key={title} className="card bookmark sheen lift relative flex flex-col p-6">
+                <span className={`grid h-14 w-14 place-items-center rounded-full ring-4 ring-ivory-50 ${CHIP_TONES[i % CHIP_TONES.length]}`}>
                   <Icon aria-hidden="true" className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 font-serif text-2xl">{title}</h3>
@@ -300,10 +272,10 @@ export default async function HomePage() {
           </ul>
 
           {sponsorships.docs.length > 0 && (
-            <div className="reveal mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-gold-300 bg-gold-300/15 px-6 py-5">
+            <div className="reveal mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-marigold-400/60 bg-marigold-300/25 px-6 py-5">
               <p className="mr-2 font-semibold">Sponsor in your family&apos;s name:</p>
               {sponsorships.docs.map((s) => (
-                <Link key={s.id} href={`/donate/sponsor#item-${s.id}`} className="rounded-full border border-gold-400 bg-ivory-50 px-4 py-2 text-sm font-semibold text-charcoal-800 hover:border-kumkum-700">
+                <Link key={s.id} href={`/donate/sponsor#item-${s.id}`} className="rounded-full border border-marigold-500 bg-ivory-50 px-4 py-2 text-sm font-semibold text-charcoal-800 transition hover:-translate-y-0.5 hover:border-kumkum-700 hover:bg-white">
                   {s.name} · {formatGBP(s.amount)}
                 </Link>
               ))}
@@ -367,17 +339,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <JaaliBand className="bg-ivory-100" />
-
       {/* 7. Voices and trust */}
-      <section aria-labelledby="voices-title" className="bg-ivory-200/70 py-20 sm:py-28">
+      <section aria-labelledby="voices-title" className="relative overflow-hidden bg-ivory-200/70 pb-20 sm:pb-28">
+        <MarigoldToran className="mb-12 h-14 w-full sm:h-20" swags={8} />
         <div className="container-page">
           <SectionHeading eyebrow="Voices and trust" id="voices-title" title="In the words of our community" />
           {voices.length > 0 && (
-            <ul className="grid gap-5 md:grid-cols-3">
+            <ul className="reveal-stagger grid gap-5 md:grid-cols-3">
               {voices.map((v) => (
-                <li key={v.name} className="card flex flex-col p-7">
-                  <span aria-hidden="true" className="font-serif text-6xl leading-none text-gold-400">
+                <li key={v.name} className="card lift flex flex-col border-t-4 !border-t-marigold-400 p-7">
+                  <span aria-hidden="true" className="font-serif text-6xl leading-none text-marigold-500">
                     “
                   </span>
                   <blockquote className="-mt-4 flex-1 font-serif text-xl leading-snug text-charcoal-800">{v.quote}</blockquote>
@@ -417,3 +388,20 @@ export default async function HomePage() {
     </>
   )
 }
+
+const FESTIVALS = [
+  { hi: 'राम नवमी', en: 'Ram Navami' },
+  { hi: 'नवरात्रि', en: 'Navratri' },
+  { hi: 'दीपावली', en: 'Diwali' },
+  { hi: 'अन्नकूट', en: 'Annakut' },
+  { hi: 'होली', en: 'Holi' },
+  { hi: 'जन्माष्टमी', en: 'Janmashtami' },
+  { hi: 'गणेश चतुर्थी', en: 'Ganesh Chaturthi' },
+  { hi: 'महाशिवरात्रि', en: 'Maha Shivratri' },
+  { hi: 'हनुमान जयंती', en: 'Hanuman Jayanti' },
+  { hi: 'रक्षा बंधन', en: 'Raksha Bandhan' },
+]
+
+// Text colours chosen for WCAG AA on each fill
+const STAT_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-peacock-700 text-ivory-50', 'bg-ivory-50 text-kumkum-800']
+const CHIP_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-peacock-700 text-ivory-50', 'bg-tulsi-700 text-ivory-50']
