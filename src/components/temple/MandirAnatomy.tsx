@@ -21,9 +21,60 @@ export const MANDIR_PARTS = [
   { name: 'Pradakshina patha', hi: 'प्रदक्षिणा पथ', x: 520, y: 448, text: 'The walkway around the sanctum, walked clockwise in devotion, keeping the deity always to one’s right.' },
 ] as const
 
-export function MandirAnatomy() {
+export function MandirAnatomy({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   const [active, setActive] = useState(0)
   const part = MANDIR_PARTS[active]
+  const dark = tone === 'dark'
+  const chips = (
+    <ol className={dark ? 'flex flex-wrap justify-center gap-2' : 'grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2'}>
+      {MANDIR_PARTS.map((p, i) => (
+        <li key={p.name}>
+          <button
+            type="button"
+            aria-pressed={active === i}
+            aria-controls="anatomy-detail"
+            onClick={() => setActive(i)}
+            onMouseEnter={() => setActive(i)}
+            className={`flex min-h-11 w-full items-center gap-2 rounded-full border px-3 py-1.5 text-left text-sm font-semibold transition ${
+              active === i
+                ? dark
+                  ? 'border-marigold-400 bg-marigold-400 text-kumkum-900 shadow-[0_8px_24px_-10px_rgb(255_166_43/0.9)]'
+                  : 'border-kumkum-700 bg-kumkum-700 text-ivory-50 shadow-[var(--shadow-soft)]'
+                : dark
+                  ? 'border-gold-300/40 bg-white/5 text-ivory-50 hover:border-marigold-300 hover:bg-white/10'
+                  : 'border-gold-500/50 bg-ivory-50 text-charcoal-800 hover:border-kumkum-700'
+            }`}
+          >
+            <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs ${active === i ? (dark ? 'bg-kumkum-800 text-ivory-50' : 'bg-marigold-400 text-kumkum-900') : dark ? 'bg-gold-300/20 text-marigold-300' : 'bg-kumkum-50 text-kumkum-800'}`}>{i + 1}</span>
+            {p.name}
+          </button>
+        </li>
+      ))}
+    </ol>
+  )
+  const detail = (
+    <div id="anatomy-detail" aria-live="polite" className={`card p-6 ${dark ? 'mt-4' : 'bookmark mt-5'}`}>
+      <p className="flex items-baseline gap-3">
+        <span className="font-serif text-3xl text-kumkum-800">{part.name}</span>
+        <span lang="hi" className="font-indic text-xl text-gold-700">
+          {part.hi}
+        </span>
+      </p>
+      <p className="mt-2 text-charcoal-700">{part.text}</p>
+    </div>
+  )
+  if (dark) {
+    return (
+      <div>
+        <figure className="relative">
+          <MandirElevation active={active} onPick={setActive} className="mx-auto h-auto w-full max-w-2xl text-gold-300 drop-shadow-[0_10px_30px_rgb(0_0_0/0.45)]" />
+          <figcaption className="sr-only">Engraved illustration of a traditional nagara-style Mandir, with its parts numbered.</figcaption>
+        </figure>
+        <div className="mt-4">{chips}</div>
+        {detail}
+      </div>
+    )
+  }
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
       <figure className="relative lg:col-span-7">
@@ -31,32 +82,8 @@ export function MandirAnatomy() {
         <figcaption className="mt-2 text-center text-sm text-charcoal-500">Engraved illustration of a traditional nagara-style Mandir — not the design of our new Mandir.</figcaption>
       </figure>
       <div className="lg:col-span-5">
-        <ol className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
-          {MANDIR_PARTS.map((p, i) => (
-            <li key={p.name}>
-              <button
-                type="button"
-                aria-pressed={active === i}
-                aria-controls="anatomy-detail"
-                onClick={() => setActive(i)}
-                onMouseEnter={() => setActive(i)}
-                className={`flex min-h-12 w-full items-center gap-2 rounded-full border px-3 py-2 text-left text-sm font-semibold transition ${active === i ? 'border-kumkum-700 bg-kumkum-700 text-ivory-50 shadow-[var(--shadow-soft)]' : 'border-gold-500/50 bg-ivory-50 text-charcoal-800 hover:border-kumkum-700'}`}
-              >
-                <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs ${active === i ? 'bg-marigold-400 text-kumkum-900' : 'bg-kumkum-50 text-kumkum-800'}`}>{i + 1}</span>
-                {p.name}
-              </button>
-            </li>
-          ))}
-        </ol>
-        <div id="anatomy-detail" aria-live="polite" className="card bookmark mt-5 p-6">
-          <p className="flex items-baseline gap-3">
-            <span className="font-serif text-3xl text-kumkum-800">{part.name}</span>
-            <span lang="hi" className="font-indic text-xl text-gold-700">
-              {part.hi}
-            </span>
-          </p>
-          <p className="mt-2 text-charcoal-700">{part.text}</p>
-        </div>
+        {chips}
+        {detail}
       </div>
     </div>
   )

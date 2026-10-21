@@ -133,7 +133,7 @@ export function ArrowLink({ href, children, light = false }: { href: string; chi
 
 export function ArtistsImpressionLabel({ className = '' }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full bg-midnight-900/85 px-3.5 py-1.5 text-sm font-medium text-ivory-50 backdrop-blur ${className}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full bg-kumkum-900/85 px-3.5 py-1.5 text-sm font-medium text-ivory-50 backdrop-blur ${className}`}>
       Artist&apos;s impression, not final design
     </span>
   )

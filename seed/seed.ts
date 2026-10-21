@@ -14,6 +14,7 @@ import { lexical } from './lexical'
 import { ACTIVITIES, CEREMONIES, FESTIVALS_2026, PAGES } from './content'
 import { ukDateTime } from '../src/lib/booking'
 import { NEW_MANDIR_SPACES, TICKER_NOTICES } from './newMandirSpaces'
+import { COMMUNITY_CARDS } from './homeCards'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const asset = (f: string) => path.resolve(dirname, 'assets', f)
@@ -108,8 +109,8 @@ async function main() {
       registeredAddress: 'Unit 6, New England Complex, Rock Road, Peterborough PE1 3BU',
       facebookUrl: 'https://www.facebook.com/bharathindusamaj',
       instagramUrl: 'https://www.instagram.com/bhspbo',
-      announcement: 'Navratri 11–19 October: garba every evening at the Mandir',
-      announcementLink: '/events',
+      announcement: 'Jai Sri Ram',
+      festivalBanner: { show: true, text: 'Navratri 11–19 October: garba every evening at the Mandir', link: '/events', showUntil: '2026-10-19T23:00:00.000Z' },
     },
     overrideAccess: true,
     context: ctxObj(),
@@ -128,13 +129,7 @@ async function main() {
         { value: '15+', label: 'Weekly classes and activities' },
         { value: '2', label: 'Aartis every day of the year' },
       ],
-      activityCards: [
-        { title: 'Worship', text: 'Daily aarti and festivals', image: m('bhajan-sabha.jpg'), href: '/daily-rituals' },
-        { title: 'Youth', text: 'Bhajans, dance and Shakha', image: m('bhajan-children.jpg'), href: '/activities' },
-        { title: 'Seniors', text: 'Table tennis and support groups', image: m('table-tennis.jpg'), href: '/activities' },
-        { title: 'Classes', text: 'Gujarati, Hindi, yoga and more', image: m('bollywood-dance.jpg'), href: '/activities' },
-        { title: 'Lunch club', text: 'Monday and Tuesday meals', image: m('lunch-club.jpg'), href: '/services#meal' },
-      ],
+      activityCards: COMMUNITY_CARDS.map(({ file, ...c }) => ({ ...c, image: m(file) })),
       voices: [],
     },
     overrideAccess: true,
@@ -229,6 +224,7 @@ async function main() {
         sections: p.sections.map((s) => {
           if (s.blockType === 'text') return { blockType: 'text', heading: s.heading, body: lexical(s.body) }
           if (s.blockType === 'imageText') return { blockType: 'imageText', heading: s.heading, body: lexical(s.body), image: m(s.image), imageSide: s.imageSide ?? 'right' }
+          if (s.blockType === 'cards') return { ...s, items: s.items.map(({ file, ...c }) => ({ ...c, image: m(file) })) }
           return s
         }) as never,
       },

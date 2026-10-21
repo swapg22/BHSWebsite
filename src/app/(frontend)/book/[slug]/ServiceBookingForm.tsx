@@ -188,7 +188,7 @@ export function ServiceBookingForm({ token, service, isMember, minDate, maxDate,
         )}
       </fieldset>
 
-      <div className="flex flex-col gap-4 rounded-2xl bg-charcoal-900 p-6 text-ivory-50 sm:flex-row sm:items-center sm:justify-between" aria-live="polite">
+      <div className="flex flex-col gap-4 rounded-2xl bg-kumkum-900 p-6 text-ivory-50 sm:flex-row sm:items-center sm:justify-between" aria-live="polite">
         <div>
           <p className="text-sm text-ivory-300">{service.priceOnRequest ? 'Price' : isMember ? 'Member price' : 'Estimated cost'}</p>
           <p className="text-2xl font-semibold">{estimate === null ? 'Confirmed on approval' : estimate ? formatGBP(estimate) : 'Free'}</p>

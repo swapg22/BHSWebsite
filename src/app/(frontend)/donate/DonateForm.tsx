@@ -183,7 +183,7 @@ export function DonateForm({ token, defaults, directDebitDemo }: { token: string
         <Checkbox name="marketing" label="Email me updates about the new Mandir appeal. I can unsubscribe at any time." />
       </fieldset>
 
-      <div className="sticky bottom-3 z-10 rounded-3xl bg-charcoal-900 p-4 shadow-2xl sm:static sm:p-6">
+      <div className="sticky bottom-3 z-10 rounded-3xl bg-kumkum-900 p-4 shadow-2xl sm:static sm:p-6">
         <SubmitButton className="w-full" pendingLabel="Connecting securely…">
           <Lock aria-hidden="true" className="h-5 w-5" /> {label}
         </SubmitButton>

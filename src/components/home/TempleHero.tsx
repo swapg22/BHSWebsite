@@ -1,7 +1,7 @@
 import { preload } from 'react-dom'
 import { Clock, Flame } from 'lucide-react'
 import { ButtonLink, LotusMark } from '@/components/ui'
-import { EngravedBackdrop, MarigoldToran, ToranaArch } from '@/components/temple/Motifs'
+import { EngravedBackdrop, FlowerStrand, MandalaHalo, MarigoldToran, ToranaArch } from '@/components/temple/Motifs'
 import { PetalShower } from '@/components/temple/Animated'
 
 type Times = { aarti: string; weekdays: string; weekends: string; overrideLabel?: string | null }
@@ -23,8 +23,9 @@ export function TempleHero({ image, alt, heading, times }: { image: string; alt:
       <MarigoldToran className="absolute inset-x-0 top-0 z-10 h-10 w-full sm:h-14" swags={8} />
 
       <div className="container-page relative grid items-center gap-4 pb-4 pt-11 sm:pt-14 lg:grid-cols-12 lg:gap-10 lg:pb-4">
-        <div className="mx-auto w-full max-w-[22rem] sm:max-w-[30rem] lg:col-span-6 lg:max-w-none">
-          <ToranaArch image={src} alt={alt} className="mx-auto block h-auto max-h-[min(72svh,36rem)] w-full text-gold-300 drop-shadow-[0_20px_40px_rgb(0_0_0/0.45)]" />
+        <div className="relative mx-auto w-full max-w-[22rem] sm:max-w-[30rem] lg:col-span-6 lg:max-w-none">
+          <MandalaHalo className="pointer-events-none absolute left-1/2 top-[40%] h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 opacity-70" />
+          <ToranaArch image={src} alt={alt} className="relative mx-auto block h-auto max-h-[min(72svh,36rem)] w-full text-gold-300 drop-shadow-[0_20px_40px_rgb(0_0_0/0.45)]" />
         </div>
 
         <div className="pb-6 text-center lg:col-span-6 lg:pb-0 lg:text-left">
@@ -55,7 +56,7 @@ export function TempleHero({ image, alt, heading, times }: { image: string; alt:
               Donate to the new Mandir
             </ButtonLink>
             <ButtonLink href="/membership" variant="outline-light">
-              Join for £20 a year
+              Join as a member
             </ButtonLink>
             <ButtonLink href="/visit" variant="outline-light">
               Plan your visit
@@ -63,6 +64,7 @@ export function TempleHero({ image, alt, heading, times }: { image: string; alt:
           </div>
         </div>
       </div>
+      <FlowerStrand className="relative h-7 sm:h-8" count={26} />
     </section>
   )
 }

@@ -65,6 +65,8 @@
   --color-peacock-500: #128189;
   --color-peacock-700: #0b5a60;
   --color-peacock-900: #06353a;
+  --color-rani-500: #d6246e;
+  --color-rani-600: #b0195a;
   --color-sindoor-500: #d7261e;
   --color-sindoor-600: #b81d16;
 
@@ -374,6 +376,67 @@
     radial-gradient(80% 90% at 0% 0%, rgb(255 197 107 / 0.55), transparent 60%),
     radial-gradient(70% 80% at 100% 100%, rgb(242 138 26 / 0.28), transparent 60%),
     var(--color-ivory-100);
+}
+.bg-temple-night {
+  background:
+    radial-gradient(50% 60% at 15% 0%, rgb(255 166 43 / 0.12), transparent 70%),
+    linear-gradient(180deg, #3a0b0b 0%, #26080a 100%);
+}
+.bg-saffron-wash {
+  background:
+    radial-gradient(55% 45% at 12% 0%, rgb(255 197 107 / 0.42), transparent 70%),
+    radial-gradient(45% 40% at 100% 30%, rgb(242 138 26 / 0.14), transparent 70%),
+    linear-gradient(180deg, #f6efe2 0%, #f8e9cc 70%, #f6e2bd 100%);
+}
+/* One continuous sky: the community section's saffron deepens into a temple-maroon dusk behind the
+   new Mandir, then rises back to cream, so the page reads as one flowing piece rather than blocks */
+.bg-sunset {
+  background:
+    radial-gradient(42% 30% at 72% 40%, rgb(255 190 90 / 0.3), transparent 70%),
+    linear-gradient(
+      180deg,
+      #f6e2bd 0,
+      #f2b866 80px,
+      #d9622a 170px,
+      #a3261d 270px,
+      #6b1212 400px,
+      #4a0d14 58%,
+      #5c1014 calc(100% - 280px),
+      #a3261d calc(100% - 170px),
+      #e98b45 calc(100% - 90px),
+      #f6d7a6 calc(100% - 36px),
+      #f6efe2 100%
+    );
+}
+.bg-dusk {
+  background:
+    radial-gradient(55% 60% at 72% 42%, rgb(255 166 43 / 0.28), transparent 70%),
+    radial-gradient(50% 50% at 10% 100%, rgb(214 36 110 / 0.28), transparent 70%),
+    linear-gradient(175deg, #151b3a 0%, #2a1a45 38%, #5a1530 76%, #7f1616 100%);
+}
+.bg-peacock-rich {
+  background:
+    radial-gradient(60% 70% at 100% 0%, rgb(255 166 43 / 0.2), transparent 65%),
+    radial-gradient(50% 60% at 0% 100%, rgb(214 36 110 / 0.18), transparent 65%),
+    linear-gradient(160deg, #0b5a60 0%, #06353a 60%, #042428 100%);
+}
+.bg-lotus {
+  background:
+    radial-gradient(60% 80% at 0% 0%, rgb(214 36 110 / 0.12), transparent 65%),
+    radial-gradient(60% 80% at 100% 100%, rgb(255 166 43 / 0.22), transparent 65%),
+    var(--color-ivory-100);
+}
+.twinkle {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 .text-gradient-gold {
   background: linear-gradient(100deg, #ffe3a3 0%, #ffc56b 35%, #f28a1a 70%, #ffd27a 100%);

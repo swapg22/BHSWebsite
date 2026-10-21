@@ -5,6 +5,8 @@
  * committee before launch.
  */
 
+import { SEVA_CARDS } from './homeCards'
+
 export interface SeedPage {
   slug: string
   title: string
@@ -17,6 +19,7 @@ export interface SeedPage {
     | { blockType: 'faq'; heading?: string; items: { question: string; answer: string }[] }
     | { blockType: 'mantra'; heading: string; original?: string; transliteration?: string; meaning?: string }
     | { blockType: 'callToAction'; heading: string; text?: string; label: string; href: string }
+    | { blockType: 'cards'; heading?: string; intro?: string; items: { title: string; text?: string; file: string; href?: string }[] }
   )[]
 }
 
@@ -168,6 +171,7 @@ The deities' clothes are changed regularly. Volunteers wash and iron the clothes
     intro: 'Seva — selfless service — is at the heart of our faith. Our volunteers support people in need across Peterborough.',
     hero: 'food-bank.jpg',
     sections: [
+      { blockType: 'cards', ...SEVA_CARDS },
       {
         blockType: 'imageText',
         heading: 'Feeding people who need it most',

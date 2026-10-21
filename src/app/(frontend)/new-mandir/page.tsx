@@ -115,7 +115,7 @@ export default async function NewMandirPage() {
             <figure className="reveal relative overflow-hidden rounded-3xl bg-midnight-900 shadow-2xl shadow-kumkum-900/30 ring-1 ring-gold-500/40">
               <ConceptMandir className="aspect-[16/9] h-auto w-full" />
               <ArtistsImpressionLabel className="absolute left-4 top-4" />
-              <figcaption className="border-t border-white/10 bg-charcoal-900 px-6 py-4 text-sm text-ivory-200">
+              <figcaption className="border-t border-white/10 bg-kumkum-900 px-6 py-4 text-sm text-ivory-200">
                 Front elevation at dusk: the shikhara over the sanctum rises behind the prayer hall, with the multi-purpose hall on one side and the library, office, kitchen and dining hall on the other. An early concept; the design will be developed with a temple architect.
               </figcaption>
             </figure>
@@ -180,8 +180,8 @@ export default async function NewMandirPage() {
       <ScallopEdge flip className="-mt-px bg-ivory-100 text-ivory-200" />
 
       {/* The sacred journey */}
-      <section aria-labelledby="journey-title" className="bg-peacock relative overflow-hidden py-16 text-ivory-100 sm:py-24">
-        <EngravedBackdrop className="text-peacock-300 opacity-[0.07]" />
+      <section aria-labelledby="journey-title" className="bg-festival relative overflow-hidden py-16 text-ivory-100 sm:py-24">
+        <EngravedBackdrop className="text-gold-300 opacity-[0.06]" />
         <DeepaStambha className="pointer-events-none absolute -left-4 bottom-0 hidden h-[26rem] w-auto text-gold-300/60 2xl:block" />
         <DeepaStambha className="pointer-events-none absolute -right-4 bottom-0 hidden h-[26rem] w-auto text-gold-300/60 2xl:block" />
         <div className="container-page relative">

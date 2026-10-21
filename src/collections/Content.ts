@@ -239,6 +239,26 @@ export const Pages: CollectionConfig = withAudit({
           ],
         },
         {
+          slug: 'cards',
+          labels: { singular: 'Picture cards', plural: 'Picture cards' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            { name: 'intro', type: 'textarea' },
+            {
+              name: 'items',
+              type: 'array',
+              minRows: 1,
+              maxRows: 9,
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'text', type: 'textarea' },
+                { name: 'image', type: 'upload', relationTo: 'media' },
+                { name: 'href', type: 'text', label: 'Link (optional)' },
+              ],
+            },
+          ],
+        },
+        {
           slug: 'callToAction',
           labels: { singular: 'Call to action', plural: 'Calls to action' },
           fields: [

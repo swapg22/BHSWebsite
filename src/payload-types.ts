@@ -279,6 +279,22 @@ export interface Page {
             blockType: 'mantra';
           }
         | {
+            heading?: string | null;
+            intro?: string | null;
+            items?:
+              | {
+                  title: string;
+                  text?: string | null;
+                  image?: (number | null) | Media;
+                  href?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cards';
+          }
+        | {
             heading: string;
             text?: string | null;
             label: string;
@@ -1372,6 +1388,23 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        cards?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    image?: T;
+                    href?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         callToAction?:
           | T
           | {
@@ -2049,10 +2082,28 @@ export interface SiteSetting {
   instagramUrl?: string | null;
   whatsappUrl?: string | null;
   /**
-   * Optional short banner at the very top of every page.
+   * The greeting at the very top of every page, shown between two flowers. Default: Jai Sri Ram.
    */
   announcement?: string | null;
   announcementLink?: string | null;
+  /**
+   * The second strip. Leave the text blank to show the next festival from the events calendar automatically.
+   */
+  festivalBanner?: {
+    show?: boolean | null;
+    /**
+     * e.g. "Navratri 11–19 October: garba every evening at the Mandir"
+     */
+    text?: string | null;
+    /**
+     * Where the banner goes when clicked
+     */
+    link?: string | null;
+    /**
+     * After this day the next festival is shown automatically
+     */
+    showUntil?: string | null;
+  };
   bank?: {
     accountName?: string | null;
     sortCode?: string | null;
@@ -2334,6 +2385,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   whatsappUrl?: T;
   announcement?: T;
   announcementLink?: T;
+  festivalBanner?:
+    | T
+    | {
+        show?: T;
+        text?: T;
+        link?: T;
+        showUntil?: T;
+      };
   bank?:
     | T
     | {

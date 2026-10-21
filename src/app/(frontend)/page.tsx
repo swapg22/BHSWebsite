@@ -10,23 +10,11 @@ import { ArrowLink } from '@/components/shared'
 import { TempleHero } from '@/components/home/TempleHero'
 import { WhatsOnTicker } from '@/components/home/WhatsOnTicker'
 import { ProgressMarker } from '@/components/home/ProgressMarker'
-import { ScallopEdge } from '@/components/temple/Animated'
 import { CountUp } from '@/components/temple/CountUp'
-import { EngravedBackdrop, MarigoldToran } from '@/components/temple/Motifs'
-import { MandirAnatomy } from '@/components/temple/MandirAnatomy'
+import { EngravedBackdrop, MarigoldToran, RangoliBand } from '@/components/temple/Motifs'
 import { NewMandirHero } from '@/components/temple/NewMandirHero'
 
 export const revalidate = 300
-
-/** Seva and community-centre work (details on the charity and community pages). */
-const SEVA = [
-  { title: 'Food bank and soup kitchen', text: 'Food bags for homeless and vulnerable people, and regular donations to Peterborough Foodbank.', image: '/images/soup-kitchen.jpg', alt: 'Food donations for Soup Kitchen Peterborough', href: '/charity' },
-  { title: 'Lunch club', text: 'A hot vegetarian meal and good company for older members every Monday and Tuesday.', image: '/images/lunch-club.jpg', alt: 'Seniors enjoying a festive meal at the lunch club', href: '/services#meal' },
-  { title: 'NHS and neighbours', text: 'Hot meals for hospital staff and groceries for shielding families, cooked and delivered by volunteers.', image: '/images/nhs-meals.jpg', alt: 'Hot vegetarian meals packed by volunteers for NHS staff', href: '/charity' },
-  { title: 'Health and wellbeing', text: 'Dementia awareness, an Alzheimer’s support group, yoga and first-aider training.', image: '/images/dementia-support.jpg', alt: 'A dementia awareness and support session', href: '/charity' },
-  { title: 'Sport and clubs', text: 'Badminton, table tennis, cricket, Shakha family games and trips for every age.', image: '/images/badminton.jpg', alt: 'Badminton in the sports hall', href: '/activities' },
-  { title: 'A hall for the community', text: 'Weddings, birthdays, meetings and celebrations: hire the hall and kitchen.', image: '/images/community-support.jpg', alt: 'Volunteers sorting groceries and supplies for the community', href: '/services#hall' },
-]
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -55,7 +43,7 @@ export default async function HomePage() {
 
       {/* Notice from the trustees: the High Court case (wording unchanged, kept compact) */}
       {court?.show && court.heading && (
-        <section aria-labelledby="court-title" className="border-b border-gold-500/30 bg-ivory-200/80">
+        <section aria-labelledby="court-title" className="bg-ivory-100">
           <div className="container-page py-5">
             <div className="flex flex-col gap-4 rounded-2xl border-l-4 border-kumkum-700 bg-ivory-50 px-5 py-4 shadow-[var(--shadow-soft)] lg:flex-row lg:items-center lg:gap-8">
               <div className="min-w-0 flex-1">
@@ -98,24 +86,24 @@ export default async function HomePage() {
       )}
 
       {/* 2. Our community today */}
-      <section aria-labelledby="community-title" className="bg-haldi relative overflow-hidden py-16 sm:py-24">
-        <EngravedBackdrop className="text-gold-500 opacity-[0.08]" />
-        <div className="container-page relative">
+      <section id="community" aria-labelledby="community-title" className="bg-saffron-wash relative overflow-hidden pb-6 sm:pb-10">
+        <EngravedBackdrop className="text-gold-500 opacity-[0.07]" />
+        <div className="container-page relative pt-16 sm:pt-20">
           <div className="reveal grid gap-8 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-6">
               <p className="eyebrow mb-3">Our community today</p>
               <h2 id="community-title" className="text-4xl sm:text-5xl">
-                Fifty years of worship, service and togetherness
+                Fifty years of worship, <span className="italic text-kumkum-700">service and togetherness</span>
               </h2>
             </div>
-            <p className="text-lg text-charcoal-600 lg:col-span-5 lg:col-start-8">
+            <p className="text-lg text-charcoal-700 lg:col-span-5 lg:col-start-8">
               What began in 1973 with thirty families settling in Peterborough is today a Mandir and community centre serving around a thousand members — open every day, run almost entirely by volunteers.
             </p>
           </div>
           {home.stats && home.stats.length > 0 && (
             <dl className="reveal-stagger relative mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {home.stats.map((s, i) => (
-                <div key={s.label} className={`lift relative flex flex-col-reverse overflow-hidden rounded-3xl border border-gold-500/30 px-6 py-7 ${STAT_TONES[i % STAT_TONES.length]}`}>
+                <div key={s.label} className={`lift relative flex flex-col-reverse overflow-hidden rounded-3xl px-6 py-7 shadow-[0_18px_40px_-22px_rgb(0_0_0/0.8)] ${STAT_TONES[i % STAT_TONES.length]}`}>
                   <span aria-hidden="true" className="absolute -right-6 -top-6 h-20 w-20 rounded-full border border-current opacity-20" />
                   <dt className="mt-2 font-medium opacity-90">{s.label}</dt>
                   <dd className="font-serif text-5xl font-semibold">
@@ -130,7 +118,7 @@ export default async function HomePage() {
               const img = mediaUrl(c.image as Media, 'card')
               return (
                 <li key={c.title}>
-                  <Link href={c.href ?? '/activities'} className="torana sheen lift group relative block aspect-[3/4] bg-kumkum-900">
+                  <Link href={c.href ?? '/activities'} className="torana sheen lift group relative block aspect-[3/4] bg-kumkum-900 ring-2 ring-gold-500/50 hover:ring-marigold-500">
                     {img && <Image src={img} alt="" fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover opacity-90 transition-transform duration-[1.2s] group-hover:scale-110" />}
                     <span className="scrim-bottom absolute inset-0" aria-hidden="true" />
                     <span className="absolute inset-x-0 bottom-0 p-5 text-ivory-50">
@@ -145,68 +133,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Seva and the community centre */}
-      <section id="seva" aria-labelledby="seva-title" className="relative overflow-hidden bg-ivory-100 pb-16 sm:pb-24">
-        <MarigoldToran className="mb-10 h-12 w-full sm:h-16" swags={8} />
-        <div className="container-page">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-2xl">
-              <p className="eyebrow mb-3">Seva · selfless service</p>
-              <h2 id="seva-title" className="text-4xl sm:text-5xl">
-                Charity and our community centre
-              </h2>
-              <p className="mt-4 text-lg text-charcoal-600">Seva is at the heart of our faith. From the kitchen to the sports hall, our volunteers serve people across Peterborough, whatever their background.</p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <ArrowLink href="/charity">Our charity work</ArrowLink>
-              <ArrowLink href="/community">Community life</ArrowLink>
-            </div>
-          </div>
-          <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SEVA.map((s) => (
-              <li key={s.title} className="card sheen lift group relative flex flex-col overflow-hidden">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image src={s.image} alt={s.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-[1.2s] group-hover:scale-105" />
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-serif text-2xl">{s.title}</h3>
-                  <p className="mt-2 flex-1 text-charcoal-700">{s.text}</p>
-                  <Link href={s.href} className="mt-4 font-semibold text-kumkum-800 after:absolute after:inset-0 hover:underline">
-                    Find out more<span className="sr-only"> about {s.title.toLowerCase()}</span> →
-                  </Link>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 4. The new Mandir: vision, progress and target */}
+      {/* 3. The new Mandir: the appeal, its progress and the parts of a Mandir */}
       <div id="vision">
-        <NewMandirHero id="new-mandir-title" stageLabel={appeal.stageLabel} totals={totals} showProgress />
+        <NewMandirHero id="new-mandir-title" stageLabel={appeal.stageLabel} totals={totals} interactive />
       </div>
 
-      {/* 5. The structure of a Mandir */}
-      <section aria-labelledby="anatomy-title" className="relative overflow-hidden bg-ivory-200 py-16 sm:py-24">
-        <EngravedBackdrop className="text-gold-500 opacity-[0.07]" />
-        <div className="container-page relative">
-          <SectionHeading
-            eyebrow="Understanding the Mandir"
-            id="anatomy-title"
-            title="How a Hindu temple is built"
-            intro="A traditional Mandir is a path from the everyday world to the divine: up the steps, through the hall, to the sanctum beneath the tower. Choose a part to learn its name and meaning."
-          />
-          <MandirAnatomy />
-          <div className="mt-10 text-center">
-            <ArrowLink href="/new-mandir">See the plan and elevation of our new Mandir</ArrowLink>
-          </div>
-        </div>
-      </section>
-      <ScallopEdge flip className="-mt-px bg-ivory-100 text-ivory-200" />
-
-      {/* 6. Be part of it */}
-      <section id="join" aria-labelledby="join-title" className="bg-ivory-100 pb-16 pt-10 sm:pb-24">
-        <div className="container-page">
+      {/* 4. Be part of it */}
+      <section id="join" aria-labelledby="join-title" className="relative overflow-hidden bg-ivory-100 pb-16 sm:pb-24">
+        <RangoliBand className="h-12 sm:h-14" count={12} />
+        <div className="container-page pt-12">
           <SectionHeading eyebrow="Be part of it" id="join-title" title="Every gift lays a stone" intro="Give once or monthly in under a minute, add Gift Aid at no cost to you, or sponsor part of the Mandir in your family's name." />
           <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -261,11 +196,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 7. Voices and trust */}
-      <section aria-labelledby="voices-title" className="relative overflow-hidden bg-ivory-200/70 pb-16 sm:pb-24">
+      {/* 5. Voices and trust */}
+      <section aria-labelledby="voices-title" className="bg-saffron-wash relative overflow-hidden pb-16 sm:pb-24">
         <MarigoldToran className="mb-10 h-12 w-full sm:h-16" swags={8} />
         <div className="container-page">
-          <SectionHeading eyebrow="Voices and trust" id="voices-title" title="In the words of our community" />
+          <SectionHeading eyebrow="Voices and trust" id="voices-title" title={voices.length ? 'In the words of our community' : 'Run by our community, accountable to you'} />
           {voices.length > 0 && (
             <ul className="reveal-stagger grid gap-5 md:grid-cols-3">
               {voices.map((v) => (
@@ -280,7 +215,7 @@ export default async function HomePage() {
               ))}
             </ul>
           )}
-          <div className="reveal mt-12 grid gap-8 rounded-3xl border border-ivory-300 bg-ivory-50 p-7 sm:p-10 lg:grid-cols-3">
+          <div className={`reveal grid gap-8 rounded-3xl border border-ivory-300 border-t-4 !border-t-marigold-400 bg-ivory-50 p-7 shadow-[var(--shadow-soft)] sm:p-10 lg:grid-cols-3 ${voices.length ? 'mt-12' : ''}`}>
             <div>
               <h3 className="font-serif text-2xl">Our trustees</h3>
               <ul className="mt-3 space-y-1 text-charcoal-700">
@@ -315,5 +250,5 @@ export default async function HomePage() {
 }
 
 // Text colours chosen for WCAG AA on each fill
-const STAT_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-peacock-700 text-ivory-50', 'bg-ivory-50 text-kumkum-800']
-const CHIP_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-peacock-700 text-ivory-50', 'bg-tulsi-700 text-ivory-50']
+const STAT_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-sindoor-600 text-ivory-50', 'bg-ivory-50 text-kumkum-800 ring-1 ring-gold-500/40']
+const CHIP_TONES = ['bg-kumkum-700 text-ivory-50', 'bg-marigold-400 text-kumkum-900', 'bg-sindoor-600 text-ivory-50', 'bg-tulsi-700 text-ivory-50']

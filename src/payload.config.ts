@@ -57,7 +57,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
-    meta: { titleSuffix: ' · Bharat Hindu Samaj CMS' },
+    meta: { titleSuffix: ' · Bharat Hindu Samaj CMS', icons: [{ rel: 'icon', type: 'image/png', url: '/images/apple-icon.png' }] },
     components: {
       beforeDashboard: ['@/components/admin/StaffDashboard#StaffDashboard'],
       graphics: {

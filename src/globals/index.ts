@@ -69,8 +69,28 @@ export const SiteSettings: GlobalConfig = {
             { name: 'facebookUrl', type: 'text' },
             { name: 'instagramUrl', type: 'text' },
             { name: 'whatsappUrl', type: 'text' },
-            { name: 'announcement', type: 'text', admin: { description: 'Optional short banner at the very top of every page.' } },
-            { name: 'announcementLink', type: 'text' },
+          ],
+        },
+        {
+          label: 'Header banners',
+          description: 'The two strips above the menu on every page.',
+          fields: [
+            { name: 'announcement', type: 'text', defaultValue: 'Jai Sri Ram', label: 'Top banner', admin: { description: 'The greeting at the very top of every page, shown between two flowers. Default: Jai Sri Ram.' } },
+            { name: 'announcementLink', type: 'text', label: 'Top banner link (optional)' },
+            {
+              name: 'festivalBanner',
+              type: 'group',
+              label: 'Festival banner',
+              admin: { description: 'The second strip. Leave the text blank to show the next festival from the events calendar automatically.' },
+              fields: [
+                { name: 'show', type: 'checkbox', defaultValue: true },
+                { name: 'text', type: 'text', maxLength: 120, admin: { description: 'e.g. "Navratri 11–19 October: garba every evening at the Mandir"' } },
+                { type: 'row', fields: [
+                  { name: 'link', type: 'text', defaultValue: '/events', admin: { description: 'Where the banner goes when clicked' } },
+                  { name: 'showUntil', type: 'date', admin: { description: 'After this day the next festival is shown automatically' } },
+                ] },
+              ],
+            },
           ],
         },
         {

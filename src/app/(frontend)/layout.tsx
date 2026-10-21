@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     'Bharat Hindu Samaj is the Hindu temple and community centre in Peterborough, serving the community since 1973. Daily aarti, festivals, classes, bookings and the appeal for our new Mandir. Registered charity 274404.',
   openGraph: { type: 'website', locale: 'en_GB', siteName: 'Bharat Hindu Samaj' },
-  icons: { icon: '/icon.svg' },
+  icons: { icon: [{ url: '/images/apple-icon.png', type: 'image/png' }], apple: '/images/apple-icon.png' },
 }
 
 export const viewport: Viewport = {

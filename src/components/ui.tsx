@@ -63,7 +63,7 @@ export function Section({ id, className = '', children, tone = 'ivory', labelled
     ivory: 'bg-ivory-100',
     white: 'bg-ivory-50',
     warm: 'bg-ivory-200/70',
-    dark: 'bg-charcoal-900 text-ivory-100',
+    dark: 'bg-festival text-ivory-100',
   }
   return (
     <section id={id} aria-labelledby={labelledBy} className={`${tones[tone]} py-16 sm:py-24 ${className}`}>

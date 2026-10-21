@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 const STAGES = [
   { id: 'today', label: 'Today' },
-  { id: 'seva', label: 'Seva' },
+  { id: 'community', label: 'Community' },
   { id: 'vision', label: 'New Mandir' },
   { id: 'join', label: 'Join' },
 ]

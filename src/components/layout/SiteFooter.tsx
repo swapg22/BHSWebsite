@@ -1,7 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Phone, Mail } from 'lucide-react'
 import { getSettings, getTimes } from '@/lib/data'
-import { LotusMark } from '@/components/ui'
 import { NewsletterForm } from '@/components/NewsletterForm'
 import { formStartToken } from '@/lib/formGuard'
 import { FOOTER_LINKS } from './nav'
@@ -40,18 +40,15 @@ export async function SiteFooter() {
   ].filter(Boolean) as { href: string; label: string; Icon: () => React.JSX.Element }[]
 
   return (
-    <footer className="bg-charcoal-900 text-ivory-200" aria-labelledby="footer-heading">
+    <footer className="bg-temple-night text-ivory-200" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Site footer
       </h2>
       <div className="container-page grid gap-12 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-kumkum-700 text-ivory-50">
-              <LotusMark className="h-7 w-7" />
-            </span>
-            <span className="font-serif text-2xl text-ivory-50">Bharat Hindu Samaj</span>
-          </div>
+          <span className="inline-flex rounded-2xl bg-ivory-50 px-4 py-3 shadow-[var(--shadow-soft)]">
+            <Image src="/images/bhs-logo.png" alt="Bharat Hindu Samaj. SEWA: Serving, Encouraging, Working for Assisting the Community" width={875} height={105} className="h-9 w-auto sm:h-10" />
+          </span>
           <address className="mt-6 space-y-3 not-italic">
             <p className="flex gap-3">
               <MapPin aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-gold-400" />

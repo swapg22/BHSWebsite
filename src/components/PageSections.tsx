@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Media, Page } from '@/payload-types'
 import { mediaAlt, mediaUrl } from '@/lib/data'
 import { RichText } from '@/components/shared'
@@ -76,9 +77,39 @@ export function PageSections({ sections }: { sections: Section[] }) {
                 )}
               </section>
             )
+          case 'cards':
+            return (
+              <section key={s.id ?? i}>
+                {s.heading && <h2 className="mb-3 text-3xl sm:text-4xl">{s.heading}</h2>}
+                {s.intro && <p className="mb-8 max-w-3xl text-lg text-charcoal-700">{s.intro}</p>}
+                <ul className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {(s.items ?? []).map((card) => {
+                    const img = mediaUrl(card.image as Media, 'card')
+                    return (
+                      <li key={card.id ?? card.title} className="card sheen lift group relative flex flex-col overflow-hidden">
+                        {img && (
+                          <div className="relative aspect-[16/10] overflow-hidden">
+                            <Image src={img} alt={mediaAlt(card.image as Media)} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-[1.2s] group-hover:scale-105" />
+                          </div>
+                        )}
+                        <div className="flex flex-1 flex-col border-t-4 border-marigold-400 p-6">
+                          <h3 className="font-serif text-2xl">{card.title}</h3>
+                          {card.text && <p className="mt-2 flex-1 text-charcoal-700">{card.text}</p>}
+                          {card.href && (
+                            <Link href={card.href} className="mt-4 font-semibold text-kumkum-800 after:absolute after:inset-0 hover:underline">
+                              Find out more<span className="sr-only"> about {card.title.toLowerCase()}</span> →
+                            </Link>
+                          )}
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </section>
+            )
           case 'callToAction':
             return (
-              <section key={s.id ?? i} className="reveal flex flex-col items-start justify-between gap-6 rounded-[var(--radius-panel)] bg-midnight-900 p-8 text-ivory-50 sm:flex-row sm:items-center sm:p-10">
+              <section key={s.id ?? i} className="reveal flex flex-col items-start justify-between gap-6 bg-festival rounded-[var(--radius-panel)] p-8 text-ivory-50 sm:flex-row sm:items-center sm:p-10">
                 <div>
                   <h2 className="text-3xl text-ivory-50">{s.heading}</h2>
                   {s.text && <p className="mt-2 text-ivory-200">{s.text}</p>}

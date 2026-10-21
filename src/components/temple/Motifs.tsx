@@ -359,3 +359,174 @@ export function SunMoon({ kind, className = '' }: { kind: 'sun' | 'moon'; classN
     </svg>
   )
 }
+
+const RANGOLI = ['#ffa62b', '#d6246e', '#128189', '#d7261e', '#e3a21a', '#6b2fa3']
+
+/** A border of rangoli flowers and kolam dots in festival colours. */
+export function RangoliBand({ className = '', count = 12 }: { className?: string; count?: number }) {
+  const step = 1200 / count
+  return (
+    <svg viewBox="0 0 1200 64" preserveAspectRatio="xMidYMid slice" className={`block w-full ${className}`} aria-hidden="true">
+      <line x1="0" y1="32" x2="1200" y2="32" stroke="#e3a21a" strokeWidth="1.2" strokeDasharray="2 6" />
+      {Array.from({ length: count }).map((_, i) => {
+        const cx = step / 2 + i * step
+        const c1 = RANGOLI[i % RANGOLI.length]
+        const c2 = RANGOLI[(i + 2) % RANGOLI.length]
+        const c3 = RANGOLI[(i + 4) % RANGOLI.length]
+        return (
+          <g key={i} transform={`translate(${cx} 32)`}>
+            {Array.from({ length: 8 }).map((__, k) => (
+              <ellipse key={k} cx="0" cy="-15" rx="6" ry="13" fill={k % 2 ? c1 : c2} transform={`rotate(${k * 45})`} opacity="0.95" />
+            ))}
+            {Array.from({ length: 8 }).map((__, k) => (
+              <ellipse key={`i${k}`} cx="0" cy="-8" rx="3.2" ry="6.5" fill="#fff4dc" transform={`rotate(${k * 45 + 22.5})`} />
+            ))}
+            <circle r="5.5" fill={c3} />
+            <circle r="2" fill="#fff4dc" />
+            {[-1, 1].map((sx) => (
+              <g key={sx}>
+                <circle cx={sx * step * 0.5} cy="0" r="3" fill={c1} />
+                <circle cx={sx * step * 0.32} cy="-12" r="1.8" fill="#e3a21a" />
+                <circle cx={sx * step * 0.32} cy="12" r="1.8" fill="#e3a21a" />
+              </g>
+            ))}
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+/** A slowly turning mandala of petals, used as a halo (prabhamandala) behind the deities. */
+export function MandalaHalo({ className = '' }: { className?: string }) {
+  const id = useSvgId('halo')
+  return (
+    <svg viewBox="-200 -200 400 400" className={className} aria-hidden="true">
+      <defs>
+        <radialGradient id={id}>
+          <stop offset="0" stopColor="#ffd27a" stopOpacity="0.75" />
+          <stop offset="0.55" stopColor="#ff8a1a" stopOpacity="0.28" />
+          <stop offset="1" stopColor="#ff8a1a" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle r="200" fill={`url(#${id})`} />
+      <g className="mandala-spin" fill="none" stroke="#ffd27a" strokeWidth="1.2" opacity="0.75">
+        {Array.from({ length: 24 }).map((_, k) => (
+          <path key={k} d="M 0 -120 Q 14 -150 0 -184 Q -14 -150 0 -120 Z" transform={`rotate(${k * 15})`} />
+        ))}
+        {Array.from({ length: 16 }).map((_, k) => (
+          <path key={`m${k}`} d="M 0 -78 Q 18 -98 0 -116 Q -18 -98 0 -78 Z" transform={`rotate(${k * 22.5 + 11.25})`} fill="#ffa62b" fillOpacity="0.18" />
+        ))}
+        <circle r="120" strokeDasharray="2 5" />
+        <circle r="186" />
+        <circle r="76" />
+      </g>
+    </svg>
+  )
+}
+
+/** Twinkling stars for evening skies. Deterministic positions so server and client match. */
+export function Stars({ count = 28, className = '' }: { count?: number; className?: string }) {
+  return (
+    <div className={`pointer-events-none absolute inset-0 ${className}`} aria-hidden="true">
+      {Array.from({ length: count }, (_, i) => (
+        <span
+          key={i}
+          className="twinkle absolute rounded-full bg-ivory-50"
+          style={{ left: `${(i * 37) % 100}%`, top: `${(i * 53) % 60}%`, width: i % 4 ? 2 : 3, height: i % 4 ? 2 : 3, animationDelay: `${(i % 7) * 0.6}s` }}
+        />
+      ))}
+    </div>
+  )
+}
+
+/**
+ * Distant silhouettes of nagara Mandirs on the horizon, for the dusk sky: each has a curved
+ * shikhara with smaller spires, an amalaka, kalash and flag, and a stepped mandapa roof (the same
+ * forms as the new Mandir drawing). Palms between them. No domes.
+ */
+export function TempleSkyline({ className = '' }: { className?: string }) {
+  const G = 120
+  const spire = (cx: number, h: number, w: number) => {
+    const top = G - h
+    const tw = Math.max(4, w * 0.28)
+    return `M ${cx - w} ${G} C ${cx - w} ${G - h * 0.45} ${cx - tw - w * 0.2} ${top + h * 0.2} ${cx - tw} ${top} L ${cx + tw} ${top} C ${cx + tw + w * 0.2} ${top + h * 0.2} ${cx + w} ${G - h * 0.45} ${cx + w} ${G} Z`
+  }
+  const temple = (cx: number, k: number) => {
+    const h = 92 * k
+    const w = 30 * k
+    const top = G - h
+    const tw = Math.max(4, w * 0.28)
+    return (
+      <g key={cx}>
+        {/* side spires (urushringas) */}
+        <path d={spire(cx - w * 0.9, h * 0.55, w * 0.5)} />
+        <path d={spire(cx + w * 0.9, h * 0.55, w * 0.5)} />
+        {/* main shikhara, amalaka, kalash and flag */}
+        <path d={spire(cx, h, w)} />
+        <ellipse cx={cx} cy={top - 2 * k} rx={tw * 1.7} ry={3 * k} />
+        <path d={`M ${cx - 3 * k} ${top - 4 * k} Q ${cx} ${top - 14 * k} ${cx + 3 * k} ${top - 4 * k} Z`} />
+        <rect x={cx - 0.8} y={top - 30 * k} width="1.6" height={18 * k} />
+        <path d={`M ${cx + 0.8} ${top - 30 * k} L ${cx + 14 * k} ${top - 26 * k} L ${cx + 0.8} ${top - 22 * k} Z`} />
+        {/* mandapa with a stepped (phamsana) roof in front */}
+        {[0, 1, 2, 3].map((t) => (
+          <rect key={t} x={cx - w * 2.6 + t * 6 * k} y={G - 28 * k - t * 7 * k} width={w * 2.2 - t * 12 * k} height={7 * k} />
+        ))}
+        <rect x={cx - w * 2.6} y={G - 28 * k} width={w * 2.2} height={28 * k} />
+      </g>
+    )
+  }
+  const palm = (x: number, h: number) =>
+    `M ${x - 1.5} ${G} L ${x - 1} ${G - h} L ${x + 1} ${G - h} L ${x + 1.5} ${G} Z M ${x} ${G - h} q -14 -2 -22 8 q 10 -10 22 -8 q -12 -10 -24 -4 q 14 -6 24 4 q 4 -12 18 -14 q -12 4 -18 14 q 14 -4 22 6 q -12 -8 -22 -6 Z`
+  return (
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="xMidYMax slice" className={className} aria-hidden="true">
+      <g fill="currentColor">
+        <rect x="0" y="108" width="1200" height="12" />
+        <path d={palm(40, 58)} />
+        {temple(170, 0.62)}
+        <path d={palm(270, 50)} />
+        <path d={palm(310, 64)} />
+        {temple(470, 0.8)}
+        <path d={palm(560, 56)} />
+        {temple(700, 1)}
+        <path d={palm(800, 60)} />
+        <path d={palm(840, 46)} />
+        {temple(990, 0.7)}
+        <path d={palm(1090, 62)} />
+        {temple(1170, 0.5)}
+      </g>
+    </svg>
+  )
+}
+
+/** A gentle strand of marigold and jasmine flowers: a quieter border than the rangoli. */
+export function FlowerStrand({ className = '', count = 22 }: { className?: string; count?: number }) {
+  const step = 1200 / count
+  return (
+    <svg viewBox="0 0 1200 40" preserveAspectRatio="xMidYMid slice" className={`block w-full ${className}`} aria-hidden="true">
+      <path d="M0 20 Q 300 26 600 20 T 1200 20" fill="none" stroke="#e3a21a" strokeOpacity="0.45" strokeWidth="1" />
+      {Array.from({ length: count }).map((_, i) => {
+        const cx = step / 2 + i * step
+        const cy = 20 + Math.sin(i * 0.9) * 2
+        if (i % 2) {
+          // jasmine bud cluster
+          return (
+            <g key={i} transform={`translate(${cx} ${cy})`} opacity="0.85">
+              {[0, 120, 240].map((r) => (
+                <ellipse key={r} cy="-4" rx="2" ry="4" fill="#fff4dc" transform={`rotate(${r})`} />
+              ))}
+            </g>
+          )
+        }
+        return (
+          <g key={i} transform={`translate(${cx} ${cy})`} opacity="0.9">
+            {Array.from({ length: 10 }).map((__, k) => (
+              <ellipse key={k} cy="-5.5" rx="2.6" ry="5" fill={k % 2 ? '#ffa62b' : '#f28a1a'} transform={`rotate(${k * 36})`} />
+            ))}
+            <circle r="2.6" fill="#c96a06" />
+          </g>
+        )
+      })}
+    </svg>
+  )
+}

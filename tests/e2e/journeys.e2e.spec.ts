@@ -23,17 +23,25 @@ test.describe('home page journey (FR-01 to FR-05)', () => {
     const ticker = page.getByRole('region', { name: "What's on" })
     await expect(ticker).toBeVisible()
     await ticker.getByRole('button', { name: /pause/i }).click()
+    await expect(page.getByRole('link', { name: /Community services/ })).toHaveAttribute('href', '/charity')
+    await expect(page.getByRole('button', { name: /Garbhagriha/ })).toBeAttached()
+    await expect(page.getByRole('link', { name: /Join as a member/ })).toBeVisible()
     await expect(ticker.getByRole('button', { name: /play/i })).toHaveAttribute('aria-pressed', 'true')
-    for (const heading of ['Fifty years of worship', 'Charity and our community centre', 'A Mandir for the next fifty years', 'How a Hindu temple is built', 'Every gift lays a stone', 'In the words of our community']) {
+    for (const heading of ['Fifty years of worship', 'A Mandir for the next fifty years', 'Every gift lays a stone', 'In the words of our community|accountable to you']) {
       await expect(page.getByRole('heading', { name: new RegExp(heading) })).toBeAttached()
     }
     await expect(page.getByText("Artist's impression, not final design").first()).toBeAttached()
     await expect(page.getByRole('progressbar', { name: /appeal progress/i })).toBeAttached()
     await expect(page.getByText('High Court case update after final day hearing')).toBeAttached()
-    await expect(page.getByRole('link', { name: /Donate$/ }).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: /^Join/ }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: /Donate$/ }).filter({ visible: true }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Bharat Hindu Samaj, home' }).locator('img')).toHaveAttribute('src', /bhs-logo/)
+    await expect(page.getByRole('link', { name: /^Join/ }).filter({ visible: true }).first()).toBeVisible()
+    // Header banners: the greeting, and the festival strip linking to the events page
+    await expect(page.getByText('Jai Sri Ram').first()).toBeVisible()
+    await expect(page.getByRole('link', { name: /festival/i }).first()).toHaveAttribute('href', '/events')
+    // Opening and aarti times are in the footer of every page (FR-02)
     await page.goto('/visit')
-    await expect(page.getByText('Aarti daily').first()).toBeVisible()
+    await expect(page.getByRole('contentinfo').getByText(/Daily at/)).toBeVisible()
   })
 
   test('key pages pass automated WCAG 2.2 AA checks', async ({ page }) => {
@@ -215,5 +223,15 @@ test.describe('new Mandir page', () => {
     await expect(page.getByRole('img', { name: /new Mandir complex at dusk/ })).toBeVisible()
     await expect(page.getByRole('img', { name: /Indicative site plan/ })).toBeVisible()
     await expect(page.getByText(/Seating for 500\+/)).toBeVisible()
+  })
+})
+
+test.describe('community pages', () => {
+  test('the charity work page shows the seva picture cards', async ({ page }) => {
+    await page.goto('/charity')
+    await expect(page.getByRole('heading', { name: 'Seva in our community' })).toBeVisible()
+    for (const title of ['Food bank and soup kitchen', 'Lunch club', 'NHS and neighbours', 'Health and wellbeing']) {
+      await expect(page.getByRole('heading', { name: title })).toBeVisible()
+    }
   })
 })

@@ -51,7 +51,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
   return (
     <article>
-      <header className="relative overflow-hidden bg-charcoal-900 text-ivory-50">
+      <header className="bg-festival relative overflow-hidden text-ivory-50">
         {img && <Image src={img} alt={mediaAlt(event.image as Media)} fill priority sizes="100vw" className="object-cover opacity-50" />}
         <div className="scrim-left absolute inset-0" aria-hidden="true" />
         <div className="container-page relative py-16 sm:py-24">

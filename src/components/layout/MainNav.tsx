@@ -97,7 +97,7 @@ export function MainNav({ groups, signedIn }: { groups: NavGroup[]; signedIn: bo
       </nav>
 
       <div className="flex items-center gap-1.5 xl:hidden">
-        <Link href="/membership" className="inline-flex min-h-11 items-center rounded-full border border-gold-500/60 bg-ivory-50 px-3 text-sm font-semibold text-kumkum-800 hover:border-kumkum-700">
+        <Link href="/membership" className="hidden min-h-11 items-center rounded-full border border-gold-500/60 bg-ivory-50 px-3 text-sm font-semibold text-kumkum-800 hover:border-kumkum-700 sm:inline-flex">
           Join
         </Link>
         <Link href="/donate" className="inline-flex min-h-11 items-center rounded-full bg-kumkum-700 px-3.5 text-sm font-semibold text-white hover:bg-kumkum-800">
