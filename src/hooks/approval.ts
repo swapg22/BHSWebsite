@@ -36,7 +36,7 @@ export const readyForReviewField = {
 }
 
 /** Content types the administrator has marked as "major" (approval settings). */
-export const MAJOR_DEFAULTS = ['home-page', 'appeal', 'services']
+export const MAJOR_DEFAULTS = ['home-page', 'appeal', 'services', 'sponsorship-items']
 
 async function isMajor(req: PayloadRequest, entity: string): Promise<boolean> {
   try {

@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { adminFieldOnly, adminOnly, contentEditors, hasRole } from '@/access/roles'
+import { adminOnly, contentEditorField, contentEditors, hasRole } from '@/access/roles'
 import { auditGlobalAfterChange } from '@/hooks/audit'
 import { MAJOR_DEFAULTS, readyForReviewField, requireApproverToPublishGlobal, trackGlobalChangeRequest } from '@/hooks/approval'
 import { revalidateGlobal } from '@/hooks/revalidate'
@@ -100,7 +100,7 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'bank',
               type: 'group',
-              access: { read: () => true, update: ({ req }) => hasRole(req.user, 'administrator', 'treasurer') },
+              access: { read: () => true, update: ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer') },
               fields: [
                 { name: 'accountName', type: 'text' },
                 { name: 'sortCode', type: 'text' },
@@ -161,8 +161,8 @@ export const Appeal: GlobalConfig = {
               name: 'courtNotice',
               type: 'group',
               label: 'High Court case notice',
-              admin: { description: 'Shown exactly as on the current site. Only the administrator (on behalf of the trustees) may change it.' },
-              access: { update: adminFieldOnly },
+              admin: { description: 'Editors draft updates on the instruction of the trustees; the administrator publishes them.' },
+              access: { update: contentEditorField },
               fields: [
                 { name: 'show', type: 'checkbox', defaultValue: true },
                 { name: 'heading', type: 'text' },
@@ -334,6 +334,7 @@ export const ApprovalSettings: GlobalConfig = {
         { label: 'Home page', value: 'home-page' },
         { label: 'New Mandir appeal (text, figures, case notice, visuals)', value: 'appeal' },
         { label: 'Service catalogue and prices', value: 'services' },
+        { label: 'Sponsorship items and amounts', value: 'sponsorship-items' },
         { label: 'Site settings and times', value: 'site-settings' },
         { label: 'Trustees, policies and accounts', value: 'governance' },
         { label: 'Pages', value: 'pages' },

@@ -815,6 +815,10 @@ export interface Donation {
  */
 export interface SponsorshipItem {
   id: number;
+  /**
+   * Editors: tick this when the draft is ready for the approver to publish.
+   */
+  readyForReview?: boolean | null;
   name: string;
   type: 'brick' | 'pillar' | 'room' | 'day';
   /**
@@ -832,6 +836,7 @@ export interface SponsorshipItem {
   sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -883,7 +888,7 @@ export interface User {
   id: number;
   name: string;
   /**
-   * One role per person. Administrator = approver; editors draft content and prices but cannot publish; treasurer = finance view.
+   * One role per person. Administrator = approver and publisher; editor = maintains the whole website (content as drafts, plus members, bookings and reports); treasurer = finance view.
    */
   roles: ('administrator' | 'editor' | 'treasurer')[];
   /**
@@ -1702,6 +1707,7 @@ export interface DonationsSelect<T extends boolean = true> {
  * via the `definition` "sponsorship-items_select".
  */
 export interface SponsorshipItemsSelect<T extends boolean = true> {
+  readyForReview?: T;
   name?: T;
   type?: T;
   amount?: T;
@@ -1713,6 +1719,7 @@ export interface SponsorshipItemsSelect<T extends boolean = true> {
   sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2242,7 +2249,7 @@ export interface Appeal {
   chairmanVideoUrl?: string | null;
   chairmanVideoTranscript?: string | null;
   /**
-   * Shown exactly as on the current site. Only the administrator (on behalf of the trustees) may change it.
+   * Editors draft updates on the instruction of the trustees; the administrator publishes them.
    */
   courtNotice?: {
     show?: boolean | null;
@@ -2343,7 +2350,18 @@ export interface Governance {
 export interface ApprovalSetting {
   id: number;
   majorChanges?:
-    | ('home-page' | 'appeal' | 'services' | 'site-settings' | 'governance' | 'pages' | 'events' | 'news' | 'albums')[]
+    | (
+        | 'home-page'
+        | 'appeal'
+        | 'services'
+        | 'sponsorship-items'
+        | 'site-settings'
+        | 'governance'
+        | 'pages'
+        | 'events'
+        | 'news'
+        | 'albums'
+      )[]
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;

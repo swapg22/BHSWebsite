@@ -11,7 +11,10 @@ const STEPS: [string, string[]][] = [
   ['Updating the appeal', ['CMS → Settings → New Mandir appeal → Progress: enter money raised offline and add milestones with photos.', 'Online gifts to the New Mandir fund are added automatically. The administrator publishes the change.']],
   ['Editing pages', ['CMS → Content → Pages. Change text and images within the fixed layouts — you cannot break the design.', 'Every save is kept in Versions; open a version and click “Restore” to go back.']],
   ['Bookings (office)', ['CMS → Bookings → Bookings, filter “Pending approval”.', 'For price-on-request hall hire, set the Amount (pence) first, then change status to “Awaiting payment” — the booker is emailed a payment link.', 'Set “Confirmed” for free bookings, or “Rejected” with a note to the booker.']],
-  ['Service catalogue', ['CMS → Bookings → Service catalogue. Add, change, pause or remove services. Removing hides a service but keeps its past bookings.', 'Only the administrator and treasurer can change prices.']],
+  ['Service catalogue', ['CMS → Bookings → Service catalogue. Add, change, pause or remove services. Removing hides a service but keeps its past bookings.', 'Price changes are saved as drafts and go live when the administrator publishes them.']],
+  ['Court case notice', ['CMS → Settings → New Mandir appeal → Why a new Mandir → High Court case notice. Change the wording only on the instruction of the trustees.', 'Save draft and tick “Ready for review”; the administrator publishes it.']],
+  ['Sponsorship items', ['CMS → Fundraising → Sponsorship catalogue: bricks, pillars, rooms and days with their amounts (pence).', 'New items and amount changes are drafts until the administrator publishes them.']],
+  ['Members and reports', ['CMS → People → Members to find, add or update a member; /staff/import for the Excel list.', '/staff/reports for Gift Aid, donations, payments, bookings and member exports. Exports contain personal data: store them securely and delete them when done.']],
   ['Users', ['CMS → Admin → Staff users → Create new: enter name, email and role. They receive an email to set their password.', 'Tick “Suspended” to remove access; the audit log shows who changed what.']],
 ]
 

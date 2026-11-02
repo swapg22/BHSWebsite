@@ -333,7 +333,7 @@ async function main() {
     { name: 'Classroom', type: 'room', amount: 2500100, description: 'Name a classroom for the next generation of learners.', totalAvailable: 4 },
   ] as const
   for (const [i, s] of sponsorships.entries()) {
-    await payload.create({ collection: 'sponsorship-items', data: { ...s, totalAvailable: s.totalAvailable ?? undefined, sortOrder: i, plaque: true, active: true }, overrideAccess: true, context: ctxObj() })
+    await payload.create({ collection: 'sponsorship-items', data: { ...s, totalAvailable: s.totalAvailable ?? undefined, sortOrder: i, plaque: true, active: true, _status: 'published' }, overrideAccess: true, context: ctxObj() })
   }
 
   payload.logger.info('Events from the 2026 festival calendar…')

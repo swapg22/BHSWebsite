@@ -3,11 +3,12 @@ import type { Access, FieldAccess, PayloadRequest } from 'payload'
 /**
  * Profiles (spec section 15, FR-51/52). Visitors and members are not staff; members use the
  * `members` collection. Staff hold exactly one role:
- *  - administrator: approves and publishes every change, manages members, editors and bookings
- *  - editor: creates and edits content, timings, services and prices as drafts; cannot publish
- *    and never sees members' personal details
- *  - treasurer: the limited finance view (donations, Gift Aid, payments) and co-approves bookings
- *    (section 15 leaves this "to confirm" with the trustees)
+ *  - administrator: approves and publishes every change and manages staff accounts
+ *  - editor: maintains the whole website: all content, settings, prices, the court notice and
+ *    sponsorship items as drafts (the administrator publishes them), plus members, bookings,
+ *    donations and reports, which take effect straight away and are audited
+ *  - treasurer: the finance view (donations, Gift Aid, payments) and co-approves bookings
+ * Two steps for the website: the editor prepares, the administrator publishes.
  */
 export type StaffRole = 'administrator' | 'editor' | 'treasurer'
 
@@ -50,9 +51,11 @@ export const anyone: Access = () => true
 export const staffOnly: Access = ({ req }) => isStaff(req.user)
 export const adminOnly: Access = ({ req }) => hasRole(req.user, 'administrator')
 export const contentEditors: Access = ({ req }) => hasRole(req.user, 'administrator', 'editor')
-export const finance: Access = ({ req }) => hasRole(req.user, 'administrator', 'treasurer')
-/** Booking requests are approved by the administrator, with the treasurer (section 15). */
-export const bookingApprovers: Access = ({ req }) => hasRole(req.user, 'administrator', 'treasurer')
+export const finance: Access = ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer')
+/** Booking requests are approved by the office: administrator, editor or treasurer. */
+export const bookingApprovers: Access = ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer')
+/** Member, volunteer and enquiry records: the administrator and the editor. */
+export const peopleTeam: Access = ({ req }) => hasRole(req.user, 'administrator', 'editor')
 
 /** Published content is public; staff can also see drafts. */
 export const publishedOrStaff: Access = ({ req }) => {
@@ -62,4 +65,5 @@ export const publishedOrStaff: Access = ({ req }) => {
 
 export const staffFieldOnly: FieldAccess = ({ req }) => isStaff(req.user)
 export const adminFieldOnly: FieldAccess = ({ req }) => hasRole(req.user, 'administrator')
-export const financeFieldOnly: FieldAccess = ({ req }) => hasRole(req.user, 'administrator', 'treasurer')
+export const financeFieldOnly: FieldAccess = ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer')
+export const contentEditorField: FieldAccess = ({ req }) => hasRole(req.user, 'administrator', 'editor')

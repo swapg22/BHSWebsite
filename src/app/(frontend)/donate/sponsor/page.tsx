@@ -10,7 +10,7 @@ export const revalidate = 60
 
 export default async function SponsorPage() {
   const payload = await getPayloadClient()
-  const { docs } = await payload.find({ collection: 'sponsorship-items', where: { active: { equals: true } }, sort: 'sortOrder', limit: 50, depth: 0 })
+  const { docs } = await payload.find({ collection: 'sponsorship-items', where: { active: { equals: true }, _status: { equals: 'published' } }, sort: 'sortOrder', limit: 50, depth: 0 })
   return (
     <>
       <PageHeader eyebrow="Sponsorship" title="Sponsor part of the new Mandir" intro="Choose a sponsorship with a fixed amount. Most include your family’s name or a dedication on a plaque in the new Mandir." />

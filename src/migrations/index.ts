@@ -4,6 +4,7 @@ import * as migration_20261011_183854_storage_object_keys from './20261011_18385
 import * as migration_20261014_223638_home_ticker from './20261014_223638_home_ticker';
 import * as migration_20261021_161927_header_banners from './20261021_161927_header_banners';
 import * as migration_20261021_205838_page_cards from './20261021_205838_page_cards';
+import * as migration_20261102_172703_editor_maintains_site from './20261102_172703_editor_maintains_site';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261021_205838_page_cards.up,
     down: migration_20261021_205838_page_cards.down,
-    name: '20261021_205838_page_cards'
+    name: '20261021_205838_page_cards',
+  },
+  {
+    up: migration_20261102_172703_editor_maintains_site.up,
+    down: migration_20261102_172703_editor_maintains_site.down,
+    name: '20261102_172703_editor_maintains_site'
   },
 ];

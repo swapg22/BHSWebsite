@@ -71,7 +71,7 @@ export async function startDonation(_prev: FormState, fd: FormData): Promise<For
   let sponsorship: { id: number; amount: number; name: string; plaque?: boolean | null } | null = null
   if (values.sponsorshipId) {
     const item = await payload.findByID({ collection: 'sponsorship-items', id: Number(values.sponsorshipId), overrideAccess: true }).catch(() => null)
-    if (!item || !item.active) return { ok: false, message: 'That sponsorship is no longer available.', values }
+    if (!item || !item.active || item._status !== 'published') return { ok: false, message: 'That sponsorship is no longer available.', values }
     if (item.totalAvailable && (item.sponsoredCount ?? 0) >= item.totalAvailable) return { ok: false, message: `Sorry, every ${item.name} has now been sponsored.`, values }
     sponsorship = { id: item.id, amount: item.amount, name: item.name, plaque: item.plaque }
   }

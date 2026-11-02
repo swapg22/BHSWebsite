@@ -13,9 +13,9 @@ export async function StaffDashboard() {
   if (!user) return null
   const stats = await getDashboardStats(payload)
   const isAdmin = hasRole(user, 'administrator')
-  const isFinance = hasRole(user, 'administrator', 'treasurer')
-  const isMembership = hasRole(user, 'administrator')
-  const isBookings = hasRole(user, 'administrator', 'treasurer')
+  const isFinance = hasRole(user, 'administrator', 'editor', 'treasurer')
+  const isMembership = hasRole(user, 'administrator', 'editor')
+  const isBookings = hasRole(user, 'administrator', 'editor', 'treasurer')
 
   const card: React.CSSProperties = { background: 'var(--theme-elevation-50)', borderRadius: 12, padding: '16px 18px', border: '1px solid var(--theme-elevation-150)' }
   const label: React.CSSProperties = { fontSize: 13, opacity: 0.75, marginBottom: 4 }

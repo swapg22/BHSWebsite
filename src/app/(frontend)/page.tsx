@@ -25,7 +25,7 @@ export default async function HomePage() {
     getTimes(),
     getSettings(),
     getAppealTotals(payload),
-    payload.find({ collection: 'sponsorship-items', where: { active: { equals: true } }, sort: 'sortOrder', limit: 4, depth: 0 }),
+    payload.find({ collection: 'sponsorship-items', where: { active: { equals: true }, _status: { equals: 'published' } }, sort: 'sortOrder', limit: 4, depth: 0 }),
   ])
   const heroUrl = mediaUrl(home.heroImage as Media, 'hero') ?? '/images/ram-darbar.jpg'
   const heroAlt = mediaAlt(home.heroImage as Media, 'The murtis of Shree Ram, Sita and Lakshman in the Mandir, dressed in yellow and red')

@@ -8,12 +8,12 @@ import { buildHmrcScheduleRows, HMRC_SCHEDULE_HEADER } from '@/lib/giftaid'
 import type { Booking, Donation, Member, Payment } from '@/payload-types'
 
 const ROLES: Record<string, StaffRole[]> = {
-  'gift-aid': ['administrator', 'treasurer'],
-  donations: ['administrator', 'treasurer'],
-  payments: ['administrator', 'treasurer'],
-  members: ['administrator'],
-  'members-xlsx': ['administrator'],
-  bookings: ['administrator', 'treasurer'],
+  'gift-aid': ['administrator', 'editor', 'treasurer'],
+  donations: ['administrator', 'editor', 'treasurer'],
+  payments: ['administrator', 'editor', 'treasurer'],
+  members: ['administrator', 'editor'],
+  'members-xlsx': ['administrator', 'editor'],
+  bookings: ['administrator', 'editor', 'treasurer'],
 }
 
 const pounds = (p?: number | null) => ((p ?? 0) / 100).toFixed(2)

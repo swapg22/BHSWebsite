@@ -7,7 +7,7 @@ These were filled with placeholders or drafts so the site works end to end. Each
 | Item | Where to change | Current state |
 |---|---|---|
 | Database region and backups | Supabase dashboard | Confirm the project is in a UK/EU region (e.g. London `eu-west-2`); daily backups need the Supabase Pro plan or an alternative — confirm and test a restore (section 16) |
-| Treasurer access | CMS → Staff users | Section 15 leaves the treasurer's view "to confirm": currently finance records and booking approvals only |
+| Editor and treasurer access | CMS → Staff users | Editors now maintain the whole site (incl. members and finance records); confirm the trustees and privacy notice agree |
 | Visual identity sign-off | Live site | Section 17 palette, fonts and motifs are a proposed direction — trustees to react on real screens |
 | Gift Aid declaration wording | `src/lib/giftaid.ts` (`GIFT_AID_DECLARATION_TEXT`) | HMRC model wording — needs treasurer and administrator approval (FR-20) |
 | First HMRC export | `/staff/reports` → HMRC Gift Aid schedule | Treasurer must review the column format before any claim |
@@ -29,13 +29,13 @@ These were filled with placeholders or drafts so the site works end to end. Each
 
 One role per person. Visitors and members use the public site; staff roles are:
 
-- **Administrator** (approver): publishes every change, approves major changes, manages members (view, edit, export, import) and staff, approves bookings; must use two-factor sign-in. Keep a second administrator account (NFR-08).
-- **Editor:** drafts events, photos, timings, festivals, news, pages, services **and prices**; ticks "Ready for review"; cannot publish and never sees members' personal details.
-- **Treasurer (limited finance view — to confirm with trustees):** donations, Gift Aid, payments, pledges, sponsorships; approves bookings with the administrator; no access to the member list.
+Two steps: the editor maintains the whole website, the administrator publishes it.
 
-Every draft marked "Ready for review" appears in **CMS → Admin → Changes awaiting approval**, flagged *Major* when its type is listed in **Approval settings** (default: home page, appeal, services and prices). Publishing marks the request approved; the administrator can also decline it with a note.
+- **Administrator** (approver): publishes every change, approves or declines changes awaiting approval, manages staff accounts and roles, approval settings and the audit log; the only role that can delete members, media or pages, or empty the bin; must use two-factor sign-in. Keep a second administrator account (NFR-08).
+- **Editor:** drafts everything on the website: events, photos, timings, header banners, home page, pages, news, the New Mandir appeal **including the High Court case notice**, services and prices, **sponsorship items**, bank details; ticks "Ready for review"; cannot publish. Also manages records that take effect straight away and are audited: members (view, edit, import, export), volunteers, newsletter list, contact messages, bookings, donations, pledges and payments; runs every report and export at `/staff/reports`. The privacy notice must allow editors to see member and donor details.
+- **Treasurer:** donations, Gift Aid, payments, pledges, sponsorship items (as drafts), bank details (as drafts); approves bookings; finance reports; no access to the member list.
 
-The earlier "membership officer" role is gone: section 15 gives the member list to the administrator only.
+Every draft marked "Ready for review" appears in **CMS → Admin → Changes awaiting approval**, flagged *Major* when its type is listed in **Approval settings** (default: home page, appeal, services and prices, sponsorship items). Publishing marks the request approved; the administrator can also decline it with a note.
 
 A lost authenticator: another administrator unticks "Two-factor sign-in enabled" on the user, who then sets it up again at `/staff/2fa`.
 

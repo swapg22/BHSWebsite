@@ -3,8 +3,8 @@ import { hasRole, isMember } from '@/access/roles'
 import { withAudit } from '@/hooks/audit'
 import { renderEmail } from '@/lib/email'
 
-// Only the administrator views, edits and exports the member list (section 15)
-const membershipTeamField: FieldAccess = ({ req }) => hasRole(req.user, 'administrator')
+// The administrator and the editor view, edit and export the member list; every change is audited
+const membershipTeamField: FieldAccess = ({ req }) => hasRole(req.user, 'administrator', 'editor')
 
 /** Fields a member may not change themselves. */
 const staffManaged = { update: membershipTeamField, create: membershipTeamField }
@@ -39,14 +39,14 @@ export const Members: CollectionConfig = withAudit({
   },
   access: {
     admin: () => false,
-    create: ({ req }) => hasRole(req.user, 'administrator'),
+    create: ({ req }) => hasRole(req.user, 'administrator', 'editor'),
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator')) return true
+      if (hasRole(req.user, 'administrator', 'editor')) return true
       if (isMember(req.user)) return { id: { equals: req.user!.id } }
       return false
     },
     update: ({ req }) => {
-      if (hasRole(req.user, 'administrator')) return true
+      if (hasRole(req.user, 'administrator', 'editor')) return true
       if (isMember(req.user)) return { id: { equals: req.user!.id } }
       return false
     },

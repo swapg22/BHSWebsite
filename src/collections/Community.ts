@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { adminOnly, hasRole, staffOnly } from '@/access/roles'
+import { adminOnly, hasRole, peopleTeam, staffOnly } from '@/access/roles'
 import { withAudit } from '@/hooks/audit'
 
 export const VOLUNTEER_SKILLS = [
@@ -20,7 +20,7 @@ export const Volunteers: CollectionConfig = withAudit({
   slug: 'volunteers',
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'email', 'skills', 'status', 'createdAt'], group: 'People' },
   // Personal details: administrator only (editors never see other people's details, section 15)
-  access: { read: adminOnly, create: adminOnly, update: adminOnly, delete: adminOnly },
+  access: { read: peopleTeam, create: peopleTeam, update: peopleTeam, delete: adminOnly },
   fields: [
     { type: 'row', fields: [{ name: 'name', type: 'text', required: true }, { name: 'email', type: 'email', required: true }, { name: 'phone', type: 'text' }] },
     { name: 'skills', type: 'select', hasMany: true, options: VOLUNTEER_SKILLS },
@@ -52,7 +52,7 @@ export const VolunteerShifts: CollectionConfig = withAudit({
     {
       name: 'signups',
       type: 'array',
-      access: { read: ({ req }) => hasRole(req.user, 'administrator') },
+      access: { read: ({ req }) => hasRole(req.user, 'administrator', 'editor') },
       fields: [
         { name: 'name', type: 'text', required: true },
         { name: 'email', type: 'email', required: true },
@@ -75,9 +75,9 @@ export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'topic', 'status', 'createdAt'], group: 'People' },
   access: {
-    read: ({ req }) => hasRole(req.user, 'administrator', 'treasurer'),
+    read: ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer'),
     create: () => false,
-    update: ({ req }) => hasRole(req.user, 'administrator', 'treasurer'),
+    update: ({ req }) => hasRole(req.user, 'administrator', 'editor', 'treasurer'),
     delete: adminOnly,
   },
   fields: [
@@ -93,7 +93,7 @@ export const ContactMessages: CollectionConfig = {
 export const NewsletterSubscribers: CollectionConfig = {
   slug: 'newsletter-subscribers',
   admin: { useAsTitle: 'email', defaultColumns: ['email', 'status', 'source', 'consentedAt'], group: 'People' },
-  access: { read: adminOnly, create: () => false, update: adminOnly, delete: adminOnly },
+  access: { read: peopleTeam, create: () => false, update: peopleTeam, delete: adminOnly },
   fields: [
     { name: 'email', type: 'email', required: true, unique: true },
     { name: 'name', type: 'text' },
@@ -115,7 +115,7 @@ export const EmailOutbox: CollectionConfig = {
     group: 'Admin',
     description: 'Emails the site would send. Shown here because SMTP is not configured.',
   },
-  access: { read: adminOnly, create: () => false, update: () => false, delete: adminOnly },
+  access: { read: peopleTeam, create: () => false, update: () => false, delete: adminOnly },
   fields: [
     { name: 'to', type: 'text', required: true },
     { name: 'subject', type: 'text', required: true },

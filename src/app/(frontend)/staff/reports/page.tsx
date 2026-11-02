@@ -10,17 +10,17 @@ export const dynamic = 'force-dynamic'
 
 /** Dashboard and CSV exports (FR-46), HMRC Gift Aid schedule (FR-20). */
 export default async function ReportsPage() {
-  const user = await requireStaff('administrator', 'treasurer')
+  const user = await requireStaff('administrator', 'editor', 'treasurer')
   const payload = await getPayloadClient()
   const s = await getDashboardStats(payload)
-  const finance = hasRole(user, 'administrator', 'treasurer')
+  const finance = hasRole(user, 'administrator', 'editor', 'treasurer')
   const year = new Date().getUTCFullYear()
   const exports = [
     finance && { href: '/exports/gift-aid', label: 'HMRC Gift Aid schedule (CSV)', text: 'Eligible, unclaimed personal gifts in the Charities Online column order. The treasurer must review the first export before any claim.' },
     finance && { href: '/exports/donations', label: 'All donations (CSV)', text: 'Every gift with fund, method, Gift Aid status and campaign code.' },
     finance && { href: '/exports/payments', label: 'Membership and booking payments (CSV)', text: 'Receipts for the treasurer’s reconciliation.' },
-    hasRole(user, 'administrator') && { href: '/exports/members', label: 'Members (CSV)', text: 'The member database with status, renewal dates and consents.' },
-    hasRole(user, 'administrator') && { href: '/exports/members-xlsx', label: 'Members (Excel)', text: 'The member list as an Excel workbook, in the same nine columns as the original list plus status and consents.' },
+    hasRole(user, 'administrator', 'editor') && { href: '/exports/members', label: 'Members (CSV)', text: 'The member database with status, renewal dates and consents.' },
+    hasRole(user, 'administrator', 'editor') && { href: '/exports/members-xlsx', label: 'Members (Excel)', text: 'The member list as an Excel workbook, in the same nine columns as the original list plus status and consents.' },
     { href: '/exports/bookings', label: 'Bookings (CSV)', text: 'All bookings with status and amounts.' },
   ].filter(Boolean) as { href: string; label: string; text: string }[]
   return (

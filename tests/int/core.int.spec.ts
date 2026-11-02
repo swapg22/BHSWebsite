@@ -59,12 +59,14 @@ describe('approval workflow (FR-43)', () => {
 })
 
 describe('role-based access (FR-41)', () => {
-  it('only finance roles can read donations', async () => {
+  it('office staff read donations; members see only their own', async () => {
     await payload.create({ collection: 'donations', data: { status: 'pending', reference: 'BHS-D-AAAAAA', amount: 1000, method: 'card', fund: 'new-mandir', firstName: 'X', lastName: 'Y', email: 'x@test.test', frequency: 'one-off', source: 'personal' }, overrideAccess: true })
     const asTreasurer = await payload.find({ collection: 'donations', user: treasurer, overrideAccess: false })
     expect(asTreasurer.totalDocs).toBeGreaterThan(0)
-    const asEditor = payload.find({ collection: 'donations', user: editor, overrideAccess: false })
-    await expect(asEditor).rejects.toThrow()
+    const asEditor = await payload.find({ collection: 'donations', user: editor, overrideAccess: false })
+    expect(asEditor.totalDocs).toBeGreaterThan(0)
+    const asMember = await payload.find({ collection: 'donations', user: memberA, overrideAccess: false })
+    expect(asMember.docs.every((d) => d.email !== 'x@test.test')).toBe(true)
   })
 
   it('members see only their own record, never committee notes', async () => {
@@ -97,13 +99,29 @@ describe('role-based access (FR-41)', () => {
     expect(cr2.status).toBe('approved')
   })
 
-  it('only the administrator sees the member list; editors and treasurer do not (section 15)', async () => {
-    await expect(payload.find({ collection: 'members', user: editor, overrideAccess: false })).rejects.toThrow()
+  it('the administrator and editor manage the member list; the treasurer does not', async () => {
+    const asEditor = await payload.find({ collection: 'members', user: editor, overrideAccess: false })
+    expect(asEditor.totalDocs).toBeGreaterThanOrEqual(2)
+    await payload.find({ collection: 'volunteers', user: editor, overrideAccess: false })
     const t = { ...treasurer, suspended: false }
     await expect(payload.find({ collection: 'members', user: t, overrideAccess: false })).rejects.toThrow()
-    await expect(payload.find({ collection: 'volunteers', user: editor, overrideAccess: false })).rejects.toThrow()
+    await expect(payload.delete({ collection: 'members', id: memberB.id, user: editor, overrideAccess: false })).rejects.toThrow()
     const all = await payload.find({ collection: 'members', user: admin, overrideAccess: false })
     expect(all.totalDocs).toBeGreaterThanOrEqual(2)
+  })
+
+  it('editors draft sponsorship items and the court notice; only the administrator publishes', async () => {
+    const item = await payload.create({ collection: 'sponsorship-items', data: { name: 'Brick', type: 'brick', amount: 5100, _status: 'published' }, overrideAccess: true, context: ctx })
+    await expect(payload.update({ collection: 'sponsorship-items', id: item.id, data: { amount: 6100, _status: 'published' }, user: editor, overrideAccess: false, context: ctx })).rejects.toThrow(/approver/i)
+    await payload.update({ collection: 'sponsorship-items', id: item.id, data: { amount: 6100, readyForReview: true }, user: editor, overrideAccess: false, draft: true, context: ctx })
+    const live = await payload.findByID({ collection: 'sponsorship-items', id: item.id, overrideAccess: false })
+    expect(live.amount).toBe(5100)
+    const draftItem = await payload.create({ collection: 'sponsorship-items', data: { name: 'Window', type: 'room', amount: 9900 }, user: editor, overrideAccess: false, draft: true, context: ctx })
+    const pub = await payload.find({ collection: 'sponsorship-items', where: { id: { equals: draftItem.id } }, overrideAccess: false })
+    expect(pub.totalDocs).toBe(0)
+    await payload.updateGlobal({ slug: 'appeal', data: { courtNotice: { heading: 'Draft notice update' } } as never, user: editor, overrideAccess: false, draft: true, context: ctx })
+    const appealDraft = await payload.findGlobal({ slug: 'appeal', draft: true, overrideAccess: true })
+    expect((appealDraft as { courtNotice?: { heading?: string } }).courtNotice?.heading).toBe('Draft notice update')
   })
 
   it('allows exactly one role per person', async () => {

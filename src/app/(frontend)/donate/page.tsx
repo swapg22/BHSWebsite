@@ -20,7 +20,7 @@ export default async function DonatePage({ searchParams }: { searchParams: Promi
   let sponsorship = null
   if (sp.sponsor && /^\d+$/.test(sp.sponsor)) {
     const item = await payload.findByID({ collection: 'sponsorship-items', id: Number(sp.sponsor), depth: 0 }).catch(() => null)
-    if (item?.active) sponsorship = { id: item.id, name: item.name, amount: item.amount, plaque: Boolean(item.plaque) }
+    if (item?.active && item._status === 'published') sponsorship = { id: item.id, name: item.name, amount: item.amount, plaque: Boolean(item.plaque) }
   }
   const mode = paymentsMode()
 

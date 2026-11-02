@@ -48,7 +48,7 @@ export default async function NewMandirPage() {
     getAppeal(),
     getAppealTotals(payload),
     payload.find({ collection: 'news', where: { and: [{ _status: { equals: 'published' } }, { category: { equals: 'appeal' } }] }, sort: '-publishedAt', limit: 3, depth: 0 }),
-    payload.find({ collection: 'sponsorship-items', where: { active: { equals: true } }, sort: 'sortOrder', limit: 6, depth: 0 }),
+    payload.find({ collection: 'sponsorship-items', where: { active: { equals: true }, _status: { equals: 'published' } }, sort: 'sortOrder', limit: 6, depth: 0 }),
   ])
   const visuals = (appeal.conceptVisuals ?? []).filter((v) => mediaUrl(v.image as Media))
   const percent = totals.target ? Math.min(100, Math.round((totals.raised / totals.target) * 100)) : 0

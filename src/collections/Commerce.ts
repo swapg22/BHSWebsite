@@ -129,7 +129,7 @@ export const Bookings: CollectionConfig = withAudit({
   },
   access: {
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'treasurer')) return true
+      if (hasRole(req.user, 'administrator', 'editor', 'treasurer')) return true
       if (isMember(req.user)) return { member: { equals: req.user!.id } }
       return false
     },
@@ -233,7 +233,7 @@ export const Donations: CollectionConfig = withAudit({
   },
   access: {
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'treasurer')) return true
+      if (hasRole(req.user, 'administrator', 'editor', 'treasurer')) return true
       if (isMember(req.user)) return { member: { equals: req.user!.id } }
       return false
     },
@@ -377,9 +377,22 @@ export const Donations: CollectionConfig = withAudit({
 export const SponsorshipItems: CollectionConfig = withAudit({
   slug: 'sponsorship-items',
   labels: { singular: 'Sponsorship', plural: 'Sponsorship catalogue' },
-  admin: { useAsTitle: 'name', defaultColumns: ['name', 'type', 'amount', 'totalAvailable', 'sponsoredCount'], group: 'Fundraising' },
-  access: { read: () => true, create: finance, update: finance, delete: () => false },
+  admin: { useAsTitle: 'name', defaultColumns: ['name', 'type', 'amount', 'totalAvailable', 'sponsoredCount', '_status'], group: 'Fundraising' },
+  // Editors and the treasurer draft items and amounts; only the administrator publishes them
+  access: {
+    read: ({ req }): Where | boolean => (isStaff(req.user) ? true : { _status: { equals: 'published' } }),
+    create: finance,
+    update: finance,
+    delete: () => false,
+    readVersions: finance,
+  },
+  versions: { drafts: true, maxPerDoc: 50 },
+  hooks: {
+    beforeChange: [requireApproverToPublish],
+    afterChange: [revalidateAfterChange('/donate/sponsor'), trackChangeRequest],
+  },
   fields: [
+    readyForReviewField,
     { name: 'name', type: 'text', required: true },
     {
       name: 'type',
@@ -444,7 +457,7 @@ export const Payments: CollectionConfig = withAudit({
   admin: { useAsTitle: 'receiptNumber', defaultColumns: ['receiptNumber', 'purpose', 'amount', 'status', 'paidAt'], group: 'Fundraising' },
   access: {
     read: ({ req }) => {
-      if (hasRole(req.user, 'administrator', 'treasurer')) return true
+      if (hasRole(req.user, 'administrator', 'editor', 'treasurer')) return true
       if (isMember(req.user)) return { member: { equals: req.user!.id } }
       return false
     },

@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 async function markAttended(fd: FormData) {
   'use server'
-  await requireStaff('administrator', 'treasurer')
+  await requireStaff('administrator', 'editor', 'treasurer')
   const payload = await getPayloadClient()
   const ids = fd.getAll('attended').map(Number)
   const all = fd.getAll('booking').map(Number)
@@ -21,7 +21,7 @@ async function markAttended(fd: FormData) {
 
 /** Registers for classes and activities (FR-36). */
 export default async function RegistersPage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
-  await requireStaff('administrator', 'treasurer')
+  await requireStaff('administrator', 'editor', 'treasurer')
   const date = (await searchParams).date ?? new Date().toISOString().slice(0, 10)
   const payload = await getPayloadClient()
   const start = `${date}T00:00:00.000Z`
